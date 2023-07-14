@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = egeturboapp
+PRODUCT_NAME = turboapp
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.egeturbo.egeturboapp
+PRODUCT_BUNDLE_IDENTIFIER = com.example.turboapp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.egeturbo. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.

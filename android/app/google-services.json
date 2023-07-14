@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1009990067213",
+    "project_id": "my-ege-turbo",
+    "storage_bucket": "my-ege-turbo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009990067213:android:5d193c849daf952a416144",
+        "android_client_info": {
+          "package_name": "com.example.turboapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009990067213-juepiitbq57ntcl7bm9d9rj3jva2buq9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZ0jYsBnh07y3LItYTQYh6Ea2GHOaCVQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009990067213-juepiitbq57ntcl7bm9d9rj3jva2buq9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

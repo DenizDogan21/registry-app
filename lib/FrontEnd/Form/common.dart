@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'empty_form.dart';
-import 'filled_forms.dart';
+import 'input.dart';
+import 'output.dart';
 
 
 Widget background(BuildContext context) {
@@ -58,14 +58,14 @@ Widget bottomNav(BuildContext context) {
         // Navigate to "kampüs" page
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => EmptyFormPage()),
+            MaterialPageRoute(builder: (_) => InputPage()),
           );
           break;
         case 1:
         // Navigate to "kamera" page
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => FilledFormsPage()),);
+            MaterialPageRoute(builder: (_) => OutputPage()),);
           break;
         case 2:
           break;

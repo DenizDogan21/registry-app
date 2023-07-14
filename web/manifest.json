@@ -1,11 +1,11 @@
 {
-    "name": "egeturboapp",
-    "short_name": "egeturboapp",
+    "name": "turboapp",
+    "short_name": "turboapp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Form App",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

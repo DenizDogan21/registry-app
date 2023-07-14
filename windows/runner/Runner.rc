@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.egeturbo" "\0"
-            VALUE "FileDescription", "egeturboapp" "\0"
+            VALUE "CompanyName", "com.example" "\0"
+            VALUE "FileDescription", "turboapp" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "egeturboapp" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.egeturbo. All rights reserved." "\0"
-            VALUE "OriginalFilename", "egeturboapp.exe" "\0"
-            VALUE "ProductName", "egeturboapp" "\0"
+            VALUE "InternalName", "turboapp" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
+            VALUE "OriginalFilename", "turboapp.exe" "\0"
+            VALUE "ProductName", "turboapp" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

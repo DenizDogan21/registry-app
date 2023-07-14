@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1009990067213-o2r06bqt03o063huqm60m868q4plb0ve.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1009990067213-o2r06bqt03o063huqm60m868q4plb0ve</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDHOcq6q7XsufoJMApYK-r553YDG6mcP58</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1009990067213</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.turboapp.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>my-ege-turbo</string>
+	<key>STORAGE_BUCKET</key>
+	<string>my-ege-turbo.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1009990067213:ios:a07b8c24244b50bc416144</string>
+</dict>
+</plist>

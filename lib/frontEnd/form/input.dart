@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'common.dart';
+import '../widgets/common.dart';
 import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
 
@@ -109,10 +109,14 @@ class _InputPageState extends State<InputPage> {
                       return null;
                     },
                     controller: TextEditingController(
-                      text: DateFormat('yyyy-MM-dd HH:mm').format(tarih!),
+                      text: DateFormat('yyyy-MM-dd HH:mm').format(
+                        tarih!.toLocal(), // Adjust to local time zone
+                      ),
                     ),
                     onSaved: (value) {
-                      tarih = DateFormat('yyyy-MM-dd HH:mm').parse(value!);
+                      tarih = DateFormat('yyyy-MM-dd HH:mm').parse(
+                        value!,
+                      );
                     },
                   ),
                   TextFormField(

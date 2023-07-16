@@ -22,13 +22,13 @@ class InProgressFormModel {
 
   const InProgressFormModel({
     this.id,
-    required this.turboNo,
+    this.turboNo=-1,
     required this.tarih,
-    required this.aracBilgileri,
-    required this.musteriBilgileri,
-    required this.musteriSikayetleri,
-    required this.tespitEdilen,
-    required this.yapilanIslemler,
+    this.aracBilgileri="null",
+    this.musteriBilgileri="null",
+    this.musteriSikayetleri="null",
+    this.tespitEdilen="null",
+    this.yapilanIslemler="null",
   });
 
 }

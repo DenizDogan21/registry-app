@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'common.dart';
+import '../widgets/common.dart';
 import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
 
@@ -80,7 +80,7 @@ class _OutputPageState extends State<OutputPage> {
         children: [
           background(context),
           if (_filteredForms.isEmpty)
-            Center(child: Text('No data available'))
+            Center(child: Text('Kayıtlı Form Bulunamadı'))
           else
             ListView.builder(
               itemCount: _filteredForms.length,

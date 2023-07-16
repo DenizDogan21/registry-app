@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'input.dart';
-import 'output.dart';
+import '../form/input.dart';
+import '../form/output.dart';
+import '../utils/customColors.dart';
 
 
 Widget background(BuildContext context) {
@@ -73,3 +74,30 @@ Widget bottomNav(BuildContext context) {
     },
   );
 }
+
+
+
+
+class CustomTextButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String buttonText;
+  final Color textColor;
+  const CustomTextButton({
+    super.key,
+    required this.onPressed,
+    required this.buttonText,
+    this.textColor = CustomColors.pinkColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      child: Text(
+        buttonText,
+        style: TextStyle(color: textColor),
+      ),
+    );
+  }
+}
+

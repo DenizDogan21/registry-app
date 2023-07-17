@@ -51,7 +51,7 @@ class _InputPageState extends State<InputPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.black),
+      appBar: appBar(context,""),
       bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [

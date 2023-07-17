@@ -22,23 +22,23 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
-    String topImage = "assets/images/topImage.png";
+    String logo = "assets/images/logo.png";
     return Scaffold(
       body: Stack(children:[
         background(context),
-        appBody(height, topImage),
+        appBody(height, logo),
       ]
       ),
     );
   }
 
-  SingleChildScrollView appBody(double height, String topImage) {
+  SingleChildScrollView appBody(double height, String logo) {
     return SingleChildScrollView(
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            topImageContainer(height, topImage),
+            logoContainer(height, logo),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Form(
@@ -169,12 +169,12 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Container topImageContainer(double height, String topImage) {
+  Container logoContainer(double height, String logo) {
     return Container(
       height: height * .25,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(topImage),
+          image: AssetImage(logo),
         ),
       ),
     );

@@ -42,6 +42,7 @@ Widget bottomNav(BuildContext context) {
     unselectedItemColor: Colors.deepPurple,
     showUnselectedLabels: false,
     showSelectedLabels: false,
+
     items: [
       BottomNavigationBarItem(
         icon: Icon(Icons.car_crash),
@@ -56,14 +57,12 @@ Widget bottomNav(BuildContext context) {
       // Handle navigation based on the tapped item
       switch (index) {
         case 0:
-        // Navigate to "kampüs" page
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => InputPage()),
           );
           break;
         case 1:
-        // Navigate to "kamera" page
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => OutputPage()),);
@@ -74,6 +73,34 @@ Widget bottomNav(BuildContext context) {
     },
   );
 }
+
+
+PreferredSizeWidget? appBar(BuildContext context, String pageTitle, {List<Widget>? actions}) {
+  return PreferredSize(
+    preferredSize: Size.fromHeight(kToolbarHeight),
+    child: AppBar(
+      backgroundColor: Colors.black,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Image.asset(
+            'assets/images/logo.png',
+            fit: BoxFit.contain,
+            height: 32,
+          ),
+          Container(
+            padding: const EdgeInsets.all(8),
+            child: Text(pageTitle),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+
+
 
 
 

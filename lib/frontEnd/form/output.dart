@@ -61,20 +61,26 @@ class _OutputPageState extends State<OutputPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
+      appBar: appBar(
+        context,
+        "",
         actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: _SearchDelegate(_filterForms),
-              );
-            },
+          OverflowBox(
+            minWidth: 0.0,
+            maxWidth: double.infinity,
+            child: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: _SearchDelegate(_filterForms),
+                );
+              },
+            ),
           ),
         ],
       ),
+
       bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [

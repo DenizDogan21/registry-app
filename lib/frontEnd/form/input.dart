@@ -35,7 +35,6 @@ class _InputPageState extends State<InputPage> {
 
       // Create an instance of InProgressFormModel with the entered data
       final inProgressForm = InProgressFormModel(
-        turboNo: turboNo!,
         tarih: tarih!,
         aracBilgileri: aracBilgileri!,
         musteriBilgileri: musteriBilgileri!,
@@ -47,6 +46,27 @@ class _InputPageState extends State<InputPage> {
       _inProgressFormRepo.createInProgressForm(inProgressForm);
     }
   }
+
+  String? selectedAracBilgisi;
+  String? selectedMusteriBilgileri;
+
+  final List<String> aracBilgileriList = [
+    'Arac Bilgisi 1',
+    'Arac Bilgisi 2',
+    'Arac Bilgisi 3',
+    // Add more items as needed
+  ];
+
+  final List<String> musteriBilgileriList = [
+    'Musteri Bilgisi 1',
+    'Musteri Bilgisi 2',
+    'Musteri Bilgisi 3',
+    // Add more items as needed
+  ];
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,17 +82,28 @@ class _InputPageState extends State<InputPage> {
               key: _formKey,
               child: ListView(
                 children: [
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(labelText: 'Turbo No'),
+                  DropdownButtonFormField<String>(
+                    value: selectedAracBilgisi,
+                    decoration: InputDecoration(labelText: 'Araç Bilgileri'),
+                    items: aracBilgileriList.map((String arac) {
+                      return DropdownMenuItem<String>(
+                        value: arac,
+                        child: Text(arac),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedAracBilgisi = value;
+                      });
+                    },
                     validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'Lütfen bir turbo numarası giriniz';
+                      if (value == null || value.isEmpty) {
+                        return 'Lütfen bir araç bilgisi seçin';
                       }
                       return null;
                     },
                     onSaved: (value) {
-                      turboNo = int.parse(value!);
+                      aracBilgileri = value;
                     },
                   ),
                   TextFormField(
@@ -119,25 +150,23 @@ class _InputPageState extends State<InputPage> {
                       );
                     },
                   ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(labelText: 'Araç Bilgileri'),
-                    validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'Lütfen araç bilgisi girin';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      aracBilgileri = value;
-                    },
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
+                  DropdownButtonFormField<String>(
+                    value: selectedMusteriBilgileri,
                     decoration: InputDecoration(labelText: 'Müşteri Bilgileri'),
+                    items: musteriBilgileriList.map((String musteri) {
+                      return DropdownMenuItem<String>(
+                        value: musteri,
+                        child: Text(musteri),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedMusteriBilgileri = value;
+                      });
+                    },
                     validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'Lütfen müşteri bilgisi girin';
+                      if (value == null || value.isEmpty) {
+                        return 'Lütfen bir müşteri bilgisi seçin';
                       }
                       return null;
                     },

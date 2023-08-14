@@ -50,28 +50,19 @@ class _InputPageState extends State<InputPage> {
   String? selectedAracBilgisi;
   String? selectedMusteriBilgileri;
 
-  final List<String> aracBilgileriList = [
-    'Arac Bilgisi 1',
-    'Arac Bilgisi 2',
-    'Arac Bilgisi 3',
-    // Add more items as needed
-  ];
-
-  final List<String> musteriBilgileriList = [
-    'Musteri Bilgisi 1',
-    'Musteri Bilgisi 2',
-    'Musteri Bilgisi 3',
-    // Add more items as needed
-  ];
-
-
+  final Map<String, List<String>> aracToMusteriMap = {
+    'Arac Bilgisi 1': ['Musteri Bilgisi 1', 'Musteri Bilgisi 2'],
+    'Arac Bilgisi 2': ['Musteri Bilgisi 3', 'Musteri Bilgisi 4'],
+    'Arac Bilgisi 3': ['Musteri Bilgisi 5', 'Musteri Bilgisi 6'],
+    // Add more mappings as needed
+  };
 
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context,""),
+      appBar: appBar(context, ""),
       bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [
@@ -85,7 +76,7 @@ class _InputPageState extends State<InputPage> {
                   DropdownButtonFormField<String>(
                     value: selectedAracBilgisi,
                     decoration: InputDecoration(labelText: 'Araç Bilgileri'),
-                    items: aracBilgileriList.map((String arac) {
+                    items: aracToMusteriMap.keys.map((String arac) {
                       return DropdownMenuItem<String>(
                         value: arac,
                         child: Text(arac),
@@ -94,16 +85,8 @@ class _InputPageState extends State<InputPage> {
                     onChanged: (String? value) {
                       setState(() {
                         selectedAracBilgisi = value;
+                        selectedMusteriBilgileri = null; // Reset selected option
                       });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Lütfen bir araç bilgisi seçin';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      aracBilgileri = value;
                     },
                   ),
                   TextFormField(
@@ -153,12 +136,16 @@ class _InputPageState extends State<InputPage> {
                   DropdownButtonFormField<String>(
                     value: selectedMusteriBilgileri,
                     decoration: InputDecoration(labelText: 'Müşteri Bilgileri'),
-                    items: musteriBilgileriList.map((String musteri) {
-                      return DropdownMenuItem<String>(
-                        value: musteri,
-                        child: Text(musteri),
-                      );
-                    }).toList(),
+                    items: selectedAracBilgisi != null
+                        ? aracToMusteriMap[selectedAracBilgisi!]!.map(
+                          (String musteri) {
+                        return DropdownMenuItem<String>(
+                          value: musteri,
+                          child: Text(musteri),
+                        );
+                      },
+                    ).toList()
+                        : [],
                     onChanged: (String? value) {
                       setState(() {
                         selectedMusteriBilgileri = value;

@@ -1,8 +1,12 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../widgets/common.dart';
 import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class InputPage extends StatefulWidget {
   const InputPage({Key? key}) : super(key: key);
@@ -23,41 +27,83 @@ class _InputPageState extends State<InputPage> {
   String? tespitEdilen;
   String? yapilanIslemler;
 
+  File? katricMontageImage;
+  File? turboMontageImage;
+  File? balanceResultsImage;
+
   @override
   void initState() {
     super.initState();
     tarih = DateTime.now();
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      // Create an instance of InProgressFormModel with the entered data
-      final inProgressForm = InProgressFormModel(
-        tarih: tarih!,
-        aracBilgileri: aracBilgileri!,
-        musteriBilgileri: musteriBilgileri!,
-        musteriSikayetleri: musteriSikayetleri!,
-        tespitEdilen: tespitEdilen!,
-        yapilanIslemler: yapilanIslemler!,
-      );
-
-      _inProgressFormRepo.createInProgressForm(inProgressForm);
+  Future<void> _getImage(ImageSource source, Function(File?) setImage) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+    if (pickedFile != null) {
+      setImage(File(pickedFile.path));
     }
   }
 
-  String? selectedAracBilgisi;
-  String? selectedMusteriBilgileri;
+  Future<void> _uploadPhotos(String userId) async {
+    final storage = FirebaseStorage.instance;
+    final Reference storageRef = storage.ref().child(userId);
 
-  final Map<String, List<String>> aracToMusteriMap = {
-    'Arac Bilgisi 1': ['Musteri Bilgisi 1', 'Musteri Bilgisi 2'],
-    'Arac Bilgisi 2': ['Musteri Bilgisi 3', 'Musteri Bilgisi 4'],
-    'Arac Bilgisi 3': ['Musteri Bilgisi 5', 'Musteri Bilgisi 6'],
-    // Add more mappings as needed
-  };
+    if (katricMontageImage != null) {
+      final katricMontageImageRef = storageRef.child('katric_montage.jpg');
+      await katricMontageImageRef.putFile(katricMontageImage!);
+      final katricMontageImageUrl = await katricMontageImageRef.getDownloadURL();
+      katricMontageImage = null;
+      // Save the URL to your InProgressFormModel
+      // ...
+    }
 
+    if (turboMontageImage != null) {
+      final turboMontageImageRef = storageRef.child('turbo_montage.jpg');
+      await turboMontageImageRef.putFile(turboMontageImage!);
+      final turboMontageImageUrl = await turboMontageImageRef.getDownloadURL();
+      turboMontageImage = null;
+      // Save the URL to your InProgressFormModel
+      // ...
+    }
 
+    if (balanceResultsImage != null) {
+      final balanceResultsImageRef = storageRef.child('balance_results.jpg');
+      await balanceResultsImageRef.putFile(balanceResultsImage!);
+      final balanceResultsImageUrl = await balanceResultsImageRef.getDownloadURL();
+      balanceResultsImage = null;
+      // Save the URL to your InProgressFormModel
+      // ...
+    }
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userId = user.uid;
+
+        // Upload photos first
+        await _uploadPhotos(userId);
+
+        // Create an instance of InProgressFormModel with the entered data
+        final inProgressForm = InProgressFormModel(
+          tarih: tarih!,
+          aracBilgileri: aracBilgileri!,
+          musteriBilgileri: musteriBilgileri!,
+          musteriSikayetleri: musteriSikayetleri!,
+          tespitEdilen: tespitEdilen!,
+          yapilanIslemler: yapilanIslemler!,
+          katricMontageUrl: null, // Set to actual URL after uploading
+          turboMontageUrl: null, // Set to actual URL after uploading
+          balanceResultsUrl: null, // Set to actual URL after uploading
+        );
+
+        _inProgressFormRepo.createInProgressForm(inProgressForm);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,20 +119,17 @@ class _InputPageState extends State<InputPage> {
               key: _formKey,
               child: ListView(
                 children: [
-                  DropdownButtonFormField<String>(
-                    value: selectedAracBilgisi,
+                  TextFormField(
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: 'Araç Bilgileri'),
-                    items: aracToMusteriMap.keys.map((String arac) {
-                      return DropdownMenuItem<String>(
-                        value: arac,
-                        child: Text(arac),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedAracBilgisi = value;
-                        selectedMusteriBilgileri = null; // Reset selected option
-                      });
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return 'Lütfen araç bilgisi girin';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      aracBilgileri = value;
                     },
                   ),
                   TextFormField(
@@ -133,27 +176,12 @@ class _InputPageState extends State<InputPage> {
                       );
                     },
                   ),
-                  DropdownButtonFormField<String>(
-                    value: selectedMusteriBilgileri,
+                  TextFormField(
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: 'Müşteri Bilgileri'),
-                    items: selectedAracBilgisi != null
-                        ? aracToMusteriMap[selectedAracBilgisi!]!.map(
-                          (String musteri) {
-                        return DropdownMenuItem<String>(
-                          value: musteri,
-                          child: Text(musteri),
-                        );
-                      },
-                    ).toList()
-                        : [],
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedMusteriBilgileri = value;
-                      });
-                    },
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Lütfen bir müşteri bilgisi seçin';
+                      if (value?.isEmpty ?? true) {
+                        return 'Lütfen müşteri bilgisi girin';
                       }
                       return null;
                     },
@@ -200,11 +228,26 @@ class _InputPageState extends State<InputPage> {
                       yapilanIslemler = value;
                     },
                   ),
-                  // Add the remaining TextFormField widgets for other fields
-                  // ...
+                  // ... Other TextFormField widgets ...
+
+                  ElevatedButton(
+                    onPressed: () => _getImage(
+                        ImageSource.camera, (image) => katricMontageImage = image),
+                    child: Text('Katriç Montajı'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _getImage(
+                        ImageSource.camera, (image) => turboMontageImage = image),
+                    child: Text('Turbo Montajı'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _getImage(
+                        ImageSource.camera, (image) => balanceResultsImage = image),
+                    child: Text('Balans Değerleri'),
+                  ),
                   ElevatedButton(
                     onPressed: _submitForm,
-                    child: Text('Submit'),
+                    child: Text('Yükle'),
                   ),
                 ],
               ),

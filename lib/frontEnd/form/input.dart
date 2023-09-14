@@ -46,33 +46,21 @@ class _InputPageState extends State<InputPage> {
 
   Future<void> _uploadPhotos(String userId) async {
     final storage = FirebaseStorage.instance;
-    final Reference storageRef = storage.ref().child(userId);
+    final Reference storageRef = storage.ref().child('user_images').child(userId);
 
     if (katricMontageImage != null) {
       final katricMontageImageRef = storageRef.child('katric_montage.jpg');
       await katricMontageImageRef.putFile(katricMontageImage!);
-      final katricMontageImageUrl = await katricMontageImageRef.getDownloadURL();
-      katricMontageImage = null;
-      // Save the URL to your InProgressFormModel
-      // ...
     }
 
     if (turboMontageImage != null) {
       final turboMontageImageRef = storageRef.child('turbo_montage.jpg');
       await turboMontageImageRef.putFile(turboMontageImage!);
-      final turboMontageImageUrl = await turboMontageImageRef.getDownloadURL();
-      turboMontageImage = null;
-      // Save the URL to your InProgressFormModel
-      // ...
     }
 
     if (balanceResultsImage != null) {
       final balanceResultsImageRef = storageRef.child('balance_results.jpg');
       await balanceResultsImageRef.putFile(balanceResultsImage!);
-      final balanceResultsImageUrl = await balanceResultsImageRef.getDownloadURL();
-      balanceResultsImage = null;
-      // Save the URL to your InProgressFormModel
-      // ...
     }
   }
 
@@ -89,15 +77,22 @@ class _InputPageState extends State<InputPage> {
 
         // Create an instance of InProgressFormModel with the entered data
         final inProgressForm = InProgressFormModel(
+          turboNo: turboNo!,
           tarih: tarih!,
           aracBilgileri: aracBilgileri!,
           musteriBilgileri: musteriBilgileri!,
           musteriSikayetleri: musteriSikayetleri!,
           tespitEdilen: tespitEdilen!,
           yapilanIslemler: yapilanIslemler!,
-          katricMontageUrl: null, // Set to actual URL after uploading
-          turboMontageUrl: null, // Set to actual URL after uploading
-          balanceResultsUrl: null, // Set to actual URL after uploading
+          katricMontageImage: katricMontageImage != null
+              ? await _uploadAndGetUrl(userId, 'katric_montage.jpg', katricMontageImage!)
+              : null,
+          turboMontageImage: turboMontageImage != null
+              ? await _uploadAndGetUrl(userId, 'turbo_montage.jpg', turboMontageImage!)
+              : null,
+          balanceResultsImage: balanceResultsImage != null
+              ? await _uploadAndGetUrl(userId, 'balance_results.jpg', balanceResultsImage!)
+              : null,
         );
 
         _inProgressFormRepo.createInProgressForm(inProgressForm);
@@ -105,6 +100,23 @@ class _InputPageState extends State<InputPage> {
     }
   }
 
+  Future<String?> _uploadAndGetUrl(
+      String userId, String imageName, File imageFile) async {
+    final storage = FirebaseStorage.instance;
+    final Reference storageRef = storage.ref().child('user_images').child(userId);
+
+    final imageRef = storageRef.child(imageName);
+    final uploadTask = imageRef.putFile(imageFile);
+    final snapshot = await uploadTask.whenComplete(() {});
+
+    if (snapshot.state == TaskState.success) {
+      final downloadURL = await imageRef.getDownloadURL();
+      return downloadURL;
+    } else {
+      // Handle the error case
+      return null;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,6 +131,19 @@ class _InputPageState extends State<InputPage> {
               key: _formKey,
               child: ListView(
                 children: [
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(labelText: 'Turbo No'),
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return 'Lütfen turbo no girin';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      turboNo = int.tryParse(value!); // Parse the string to an int
+                    },
+                  ),
                   TextFormField(
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(labelText: 'Araç Bilgileri'),

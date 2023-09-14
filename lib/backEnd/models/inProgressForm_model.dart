@@ -8,9 +8,9 @@ class InProgressFormModel {
   final String tespitEdilen;
   final String yapilanIslemler;
 
-  final String? katricMontageUrl;
-  final String? turboMontageUrl;
-  final String? balanceResultsUrl;
+  final String? katricMontageImage;
+  final String? turboMontageImage;
+  final String? balanceResultsImage;
 
 
   Map<String, dynamic> toJson() {
@@ -23,9 +23,9 @@ class InProgressFormModel {
       "tespitEdilen": tespitEdilen,
       "yapilanIslemler": yapilanIslemler,
 
-      "katricMontageUrl": katricMontageUrl,
-      "turboMontageUrl": turboMontageUrl,
-      "balanceResultsUrl": balanceResultsUrl,
+      "katricMontageUrl": katricMontageImage,
+      "turboMontageUrl": turboMontageImage,
+      "balanceResultsUrl": balanceResultsImage,
     };
   }
 
@@ -39,9 +39,9 @@ class InProgressFormModel {
     this.tespitEdilen="null",
     this.yapilanIslemler="null",
 
-    this.balanceResultsUrl,
-    this.katricMontageUrl,
-    this.turboMontageUrl,
+    this.balanceResultsImage,
+    this.katricMontageImage,
+    this.turboMontageImage,
   });
 
 }

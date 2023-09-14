@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -21,13 +23,25 @@ class InProgressFormRepo extends GetxController {
       if (userDoc.exists) {
         final inProgressForms =
             userDoc.data()?['inProgressForm'] as List<dynamic>? ?? [];
-        inProgressForms.add(inProgressForm.toJson());
+        final formJson = inProgressForm.toJson();
+        formJson['katricMontageUrl'] = inProgressForm.katricMontageImage;
+        formJson['turboMontageUrl'] = inProgressForm.turboMontageImage;
+        formJson['balanceResultsUrl'] = inProgressForm.balanceResultsImage;
+
+        inProgressForms.add(formJson);
 
         await userDocRef.update({'inProgressForm': inProgressForms});
         Get.snackbar("Form Ekleme Başarılı", "Oluşturuldu");
       } else {
         await userDocRef.set({
-          'inProgressForm': [inProgressForm.toJson()],
+          'inProgressForm': [
+            {
+              ...inProgressForm.toJson(),
+              'katricMontageUrl': inProgressForm.katricMontageImage,
+              'turboMontageUrl': inProgressForm.turboMontageImage,
+              'balanceResultsUrl': inProgressForm.balanceResultsImage,
+            }
+          ],
           'email': user.email, // Add other user properties if needed
           'fullname': user.displayName,
         });
@@ -38,7 +52,6 @@ class InProgressFormRepo extends GetxController {
       // Display an error message or redirect to the login page
     }
   }
-
 
   Future<List<InProgressFormModel>> getInProgressForms() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -58,6 +71,9 @@ class InProgressFormRepo extends GetxController {
             musteriSikayetleri: formData['musteriSikayetleri'] as String? ?? "",
             tespitEdilen: formData['tespitEdilen'] as String? ?? "",
             yapilanIslemler: formData['yapilanIslemler'] as String? ?? "",
+            katricMontageImage: formData['katricMontageUrl'] as String?,
+            turboMontageImage: formData['turboMontageUrl'] as String?,
+            balanceResultsImage: formData['balanceResultsUrl'] as String?,
           );
         }).toList();
 

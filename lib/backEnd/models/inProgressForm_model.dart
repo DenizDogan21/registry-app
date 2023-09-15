@@ -23,9 +23,9 @@ class InProgressFormModel {
       "tespitEdilen": tespitEdilen,
       "yapilanIslemler": yapilanIslemler,
 
-      "katricMontageUrl": katricMontageImage,
-      "turboMontageUrl": turboMontageImage,
-      "balanceResultsUrl": balanceResultsImage,
+      "katricMontageImage": katricMontageImage,
+      "turboMontageImage": turboMontageImage,
+      "balanceResultsImage": balanceResultsImage,
     };
   }
 

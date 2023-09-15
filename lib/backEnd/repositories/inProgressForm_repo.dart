@@ -24,9 +24,6 @@ class InProgressFormRepo extends GetxController {
         final inProgressForms =
             userDoc.data()?['inProgressForm'] as List<dynamic>? ?? [];
         final formJson = inProgressForm.toJson();
-        formJson['katricMontageUrl'] = inProgressForm.katricMontageImage;
-        formJson['turboMontageUrl'] = inProgressForm.turboMontageImage;
-        formJson['balanceResultsUrl'] = inProgressForm.balanceResultsImage;
 
         inProgressForms.add(formJson);
 
@@ -37,9 +34,6 @@ class InProgressFormRepo extends GetxController {
           'inProgressForm': [
             {
               ...inProgressForm.toJson(),
-              'katricMontageUrl': inProgressForm.katricMontageImage,
-              'turboMontageUrl': inProgressForm.turboMontageImage,
-              'balanceResultsUrl': inProgressForm.balanceResultsImage,
             }
           ],
           'email': user.email, // Add other user properties if needed
@@ -71,9 +65,6 @@ class InProgressFormRepo extends GetxController {
             musteriSikayetleri: formData['musteriSikayetleri'] as String? ?? "",
             tespitEdilen: formData['tespitEdilen'] as String? ?? "",
             yapilanIslemler: formData['yapilanIslemler'] as String? ?? "",
-            katricMontageImage: formData['katricMontageUrl'] as String?,
-            turboMontageImage: formData['turboMontageUrl'] as String?,
-            balanceResultsImage: formData['balanceResultsUrl'] as String?,
           );
         }).toList();
 

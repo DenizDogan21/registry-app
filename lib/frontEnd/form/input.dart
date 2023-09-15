@@ -27,9 +27,6 @@ class _InputPageState extends State<InputPage> {
   String? tespitEdilen;
   String? yapilanIslemler;
 
-  File? katricMontageImage;
-  File? turboMontageImage;
-  File? balanceResultsImage;
 
   @override
   void initState() {
@@ -37,32 +34,6 @@ class _InputPageState extends State<InputPage> {
     tarih = DateTime.now();
   }
 
-  Future<void> _getImage(ImageSource source, Function(File?) setImage) async {
-    final pickedFile = await ImagePicker().pickImage(source: source);
-    if (pickedFile != null) {
-      setImage(File(pickedFile.path));
-    }
-  }
-
-  Future<void> _uploadPhotos(String userId) async {
-    final storage = FirebaseStorage.instance;
-    final Reference storageRef = storage.ref().child('user_images').child(userId);
-
-    if (katricMontageImage != null) {
-      final katricMontageImageRef = storageRef.child('katric_montage.jpg');
-      await katricMontageImageRef.putFile(katricMontageImage!);
-    }
-
-    if (turboMontageImage != null) {
-      final turboMontageImageRef = storageRef.child('turbo_montage.jpg');
-      await turboMontageImageRef.putFile(turboMontageImage!);
-    }
-
-    if (balanceResultsImage != null) {
-      final balanceResultsImageRef = storageRef.child('balance_results.jpg');
-      await balanceResultsImageRef.putFile(balanceResultsImage!);
-    }
-  }
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -72,8 +43,6 @@ class _InputPageState extends State<InputPage> {
       if (user != null) {
         final userId = user.uid;
 
-        // Upload photos first
-        await _uploadPhotos(userId);
 
         // Create an instance of InProgressFormModel with the entered data
         final inProgressForm = InProgressFormModel(
@@ -84,15 +53,6 @@ class _InputPageState extends State<InputPage> {
           musteriSikayetleri: musteriSikayetleri!,
           tespitEdilen: tespitEdilen!,
           yapilanIslemler: yapilanIslemler!,
-          katricMontageImage: katricMontageImage != null
-              ? await _uploadAndGetUrl(userId, 'katric_montage.jpg', katricMontageImage!)
-              : null,
-          turboMontageImage: turboMontageImage != null
-              ? await _uploadAndGetUrl(userId, 'turbo_montage.jpg', turboMontageImage!)
-              : null,
-          balanceResultsImage: balanceResultsImage != null
-              ? await _uploadAndGetUrl(userId, 'balance_results.jpg', balanceResultsImage!)
-              : null,
         );
 
         _inProgressFormRepo.createInProgressForm(inProgressForm);
@@ -100,23 +60,6 @@ class _InputPageState extends State<InputPage> {
     }
   }
 
-  Future<String?> _uploadAndGetUrl(
-      String userId, String imageName, File imageFile) async {
-    final storage = FirebaseStorage.instance;
-    final Reference storageRef = storage.ref().child('user_images').child(userId);
-
-    final imageRef = storageRef.child(imageName);
-    final uploadTask = imageRef.putFile(imageFile);
-    final snapshot = await uploadTask.whenComplete(() {});
-
-    if (snapshot.state == TaskState.success) {
-      final downloadURL = await imageRef.getDownloadURL();
-      return downloadURL;
-    } else {
-      // Handle the error case
-      return null;
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -253,27 +196,11 @@ class _InputPageState extends State<InputPage> {
                       yapilanIslemler = value;
                     },
                   ),
-                  // ... Other TextFormField widgets ...
-
-                  ElevatedButton(
-                    onPressed: () => _getImage(
-                        ImageSource.camera, (image) => katricMontageImage = image),
-                    child: Text('Katriç Montajı'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _getImage(
-                        ImageSource.camera, (image) => turboMontageImage = image),
-                    child: Text('Turbo Montajı'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _getImage(
-                        ImageSource.camera, (image) => balanceResultsImage = image),
-                    child: Text('Balans Değerleri'),
-                  ),
                   ElevatedButton(
                     onPressed: _submitForm,
                     child: Text('Yükle'),
                   ),
+                  // ... Other TextFormField widgets ...
                 ],
               ),
             ),

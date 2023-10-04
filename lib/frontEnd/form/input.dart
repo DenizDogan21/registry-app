@@ -66,7 +66,8 @@ class _InputPageState extends State<InputPage> {
 
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        final userId = user.uid;
+        // You can remove 'userId' if it's not used here
+        // final userId = user.uid;
 
         // Create an instance of InProgressFormModel with the entered data
         final inProgressForm = InProgressFormModel(
@@ -77,14 +78,16 @@ class _InputPageState extends State<InputPage> {
           musteriSikayetleri: musteriSikayetleri!,
           tespitEdilen: tespitEdilen!,
           yapilanIslemler: yapilanIslemler!,
+          turboImageUrl: turboImageUrl,
         );
-
 
         // Create the form
         _inProgressFormRepo.createInProgressForm(inProgressForm);
       }
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -284,6 +287,7 @@ class _InputPageState extends State<InputPage> {
                   }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepPurple,),
                   Text("turbo",style: TextStyle(fontSize: 20),)]),
                   ElevatedButton(onPressed:() async {
+                    _submitForm();
                     if (turboImageUrl.isEmpty) {
                       ScaffoldMessenger.of(context)
                           .showSnackBar(SnackBar(content: Text('Please upload an image')));
@@ -314,6 +318,17 @@ class _InputPageState extends State<InputPage> {
                       //Add a new item
                       _reference.add(dataToSend);
 
+                      // Reset the form
+                      _formKey.currentState!.reset();
+
+                      // Clear the controller variables
+                      _controllerTurboNo.clear();
+                      _controllerTarih.clear();
+                      _controllerAracBilgileri.clear();
+                      _controllerMusteriBilgileri.clear();
+                      _controllerMusteriSikayetleri.clear();
+                      _controllerTespitEdilen.clear();
+                      _controllerYapilanIslemler.clear();
                     }
                   },
                     child: Text('Submit'),

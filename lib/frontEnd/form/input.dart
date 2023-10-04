@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,7 +17,29 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
-  final _formKey = GlobalKey<FormState>();
+
+
+  TextEditingController _controllerTurboNo = TextEditingController();
+  TextEditingController _controllerTarih = TextEditingController();
+  TextEditingController _controllerAracBilgileri = TextEditingController();
+  TextEditingController _controllerMusteriBilgileri = TextEditingController();
+  TextEditingController _controllerMusteriSikayetleri = TextEditingController();
+  TextEditingController _controllerTespitEdilen = TextEditingController();
+  TextEditingController _controllerYapilanIslemler = TextEditingController();
+
+
+
+  GlobalKey<FormState> key = GlobalKey();
+
+  CollectionReference _reference =
+  FirebaseFirestore.instance.collection('Users');
+
+
+
+
+
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _inProgressFormRepo = InProgressFormRepo.instance;
 
   int? turboNo;
@@ -26,6 +49,8 @@ class _InputPageState extends State<InputPage> {
   String? musteriSikayetleri;
   String? tespitEdilen;
   String? yapilanIslemler;
+
+  String turboImageUrl="";
 
 
   @override
@@ -43,7 +68,6 @@ class _InputPageState extends State<InputPage> {
       if (user != null) {
         final userId = user.uid;
 
-
         // Create an instance of InProgressFormModel with the entered data
         final inProgressForm = InProgressFormModel(
           turboNo: turboNo!,
@@ -55,6 +79,8 @@ class _InputPageState extends State<InputPage> {
           yapilanIslemler: yapilanIslemler!,
         );
 
+
+        // Create the form
         _inProgressFormRepo.createInProgressForm(inProgressForm);
       }
     }
@@ -196,10 +222,102 @@ class _InputPageState extends State<InputPage> {
                       yapilanIslemler = value;
                     },
                   ),
-                  ElevatedButton(
-                    onPressed: _submitForm,
-                    child: Text('Yükle'),
-                  ),
+                  /*
+                * Step 1. Pick/Capture an image   (image_picker)
+                * Step 2. Upload the image to Firebase storage
+                * Step 3. Get the URL of the uploaded image
+                * Step 4. Store the image URL inside the corresponding
+                *         document of the database.
+                * Step 5. Display the image on the list
+                *
+                * */
+                  Row(children:[
+                  IconButton(onPressed: () async {
+
+
+
+                    //Install image_picker
+                    //Import the corresponding library
+                    ImagePicker imagePicker = ImagePicker();
+                    XFile? turboFile= await imagePicker.pickImage(source:ImageSource.camera);
+                    print("${turboFile?.path}");
+                    //Install firebase_storage
+                    //Import the library
+
+
+                    if(turboFile==null) return;
+
+
+
+                    //Import dart:core
+                    String uniqueTFileName =("t"+ DateTime.now().millisecondsSinceEpoch.toString()) ;
+
+
+                    //Get a reference to storage root
+                    Reference referenceRoot = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages =
+                    referenceRoot.child('turboImages');
+
+
+                    //Create a reference for the image to be stored
+                    Reference referenceImageToUpload =
+                    referenceDirImages.child(uniqueTFileName);
+
+
+
+
+                    try {
+                      // Store the file
+                      await referenceImageToUpload.putFile(File(turboFile!.path));
+                      // Success: get the download URL
+                      turboImageUrl = await referenceImageToUpload.getDownloadURL();
+                      print("Image URL: $turboImageUrl"); // Add this line for debugging
+                    } catch (error) {
+                      // Some error occurred
+                      print("Error uploading image: $error"); // Add this line for debugging
+                    }
+
+
+
+
+
+                  }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepPurple,),
+                  Text("turbo",style: TextStyle(fontSize: 20),)]),
+                  ElevatedButton(onPressed:() async {
+                    if (turboImageUrl.isEmpty) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text('Please upload an image')));
+
+                      return;
+                    }
+
+                    if (_formKey.currentState!.validate()) {
+                      String turboNo = _controllerTurboNo.text;
+                      String tarih = _controllerTarih.text;
+                      String aracBilgileri = _controllerAracBilgileri.text;
+                      String musteriBilgileri = _controllerMusteriBilgileri.text;
+                      String musteriSikayetleri = _controllerMusteriSikayetleri.text;
+                      String tespitEdilen = _controllerTespitEdilen.text;
+                      String yapilanIslemler = _controllerYapilanIslemler.text;
+
+                      // Create a Map of data
+                      Map<String, String> dataToSend = {
+                        "turboNo": turboNo,
+                        "tarih": tarih,
+                        "aracBilgileri": aracBilgileri,
+                        "musteriBilgileri": musteriBilgileri,
+                        "musteriSikayetleri": musteriSikayetleri,
+                        "tespitEdilen": tespitEdilen,
+                        "yapilanIslemler": yapilanIslemler,
+                        "turboImage": turboImageUrl,
+                      };
+                      //Add a new item
+                      _reference.add(dataToSend);
+
+                    }
+                  },
+                    child: Text('Submit'),
+                  )
                   // ... Other TextFormField widgets ...
                 ],
               ),

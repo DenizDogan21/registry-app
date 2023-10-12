@@ -65,6 +65,7 @@ class InProgressFormRepo extends GetxController {
             musteriSikayetleri: formData['musteriSikayetleri'] as String? ?? "",
             tespitEdilen: formData['tespitEdilen'] as String? ?? "",
             yapilanIslemler: formData['yapilanIslemler'] as String? ?? "",
+            turboImageUrl: formData['turboImage'] as String ?? "",
           );
         }).toList();
 

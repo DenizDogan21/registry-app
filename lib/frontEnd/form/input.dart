@@ -64,6 +64,12 @@ class _InputPageState extends State<InputPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      if (turboImageUrl.isEmpty) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Please upload an image')));
+        return; // Exit the function without uploading to Firestore
+      }
+
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         // You can remove 'userId' if it's not used here
@@ -83,6 +89,21 @@ class _InputPageState extends State<InputPage> {
 
         // Create the form
         _inProgressFormRepo.createInProgressForm(inProgressForm);
+
+        // Reset the form fields and turboImageUrl
+        setState(() {
+          turboImageUrl = ""; // Clear turboImageUrl
+          _formKey.currentState!.reset();
+        });
+
+        // Clear the controller variables
+        _controllerTurboNo.clear();
+        _controllerTarih.clear();
+        _controllerAracBilgileri.clear();
+        _controllerMusteriBilgileri.clear();
+        _controllerMusteriSikayetleri.clear();
+        _controllerTespitEdilen.clear();
+        _controllerYapilanIslemler.clear();
       }
     }
   }
@@ -92,7 +113,7 @@ class _InputPageState extends State<InputPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, ""),
+      appBar: appBar(context, "     İş Emri Ekle"),
       bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [
@@ -288,12 +309,6 @@ class _InputPageState extends State<InputPage> {
                   Text("turbo",style: TextStyle(fontSize: 20),)]),
                   ElevatedButton(onPressed:() async {
                     _submitForm();
-                    if (turboImageUrl.isEmpty) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text('Please upload an image')));
-
-                      return;
-                    }
 
                     if (_formKey.currentState!.validate()) {
                       String turboNo = _controllerTurboNo.text;
@@ -318,17 +333,6 @@ class _InputPageState extends State<InputPage> {
                       //Add a new item
                       _reference.add(dataToSend);
 
-                      // Reset the form
-                      _formKey.currentState!.reset();
-
-                      // Clear the controller variables
-                      _controllerTurboNo.clear();
-                      _controllerTarih.clear();
-                      _controllerAracBilgileri.clear();
-                      _controllerMusteriBilgileri.clear();
-                      _controllerMusteriSikayetleri.clear();
-                      _controllerTespitEdilen.clear();
-                      _controllerYapilanIslemler.clear();
                     }
                   },
                     child: Text('Submit'),

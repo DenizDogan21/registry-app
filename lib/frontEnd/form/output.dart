@@ -3,6 +3,8 @@ import '../widgets/common.dart';
 import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
 
+import 'details.dart';
+
 class OutputPage extends StatefulWidget {
   const OutputPage({Key? key}) : super(key: key);
 
@@ -105,6 +107,13 @@ class _OutputPageState extends State<OutputPage> {
                       Text('Yapılan İşlemler: ${form.yapilanIslemler}'),
                     ],
                   ),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => FormDetailsPage(form: form),
+                      ),
+                    );
+                  },
                   // Display other form data as desired
                 );
               },

@@ -1,7 +1,3 @@
-import 'dart:io';
-
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
 
 class InProgressFormModel {
   final String? id;
@@ -13,6 +9,8 @@ class InProgressFormModel {
   final String tespitEdilen;
   final String yapilanIslemler;
   final String turboImageUrl;
+  final String katricImageUrl;
+  final String balansImageUrl;
 
 
   Map<String, dynamic> toJson() {
@@ -25,6 +23,8 @@ class InProgressFormModel {
       "tespitEdilen": tespitEdilen,
       "yapilanIslemler": yapilanIslemler,
       "turboImage": turboImageUrl,
+      "katricImage": katricImageUrl,
+      "balansImage": balansImageUrl,
     };
   }
 
@@ -41,5 +41,7 @@ class InProgressFormModel {
     this.tespitEdilen = "null",
     this.yapilanIslemler = "null",
     this.turboImageUrl="null",
+    this.katricImageUrl="null",
+    this.balansImageUrl="null",
   });
 }

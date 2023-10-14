@@ -63,14 +63,13 @@ class _OutputPageState extends State<OutputPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(
-        context,
-        "",
-        actions: [
-          OverflowBox(
-            minWidth: 0.0,
-            maxWidth: double.infinity,
-            child: IconButton(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text("Kaydettiğim İş Emirleri  "),
+            IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
                 showSearch(
@@ -79,8 +78,8 @@ class _OutputPageState extends State<OutputPage> {
                 );
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
 
       bottomNavigationBar: bottomNav(context),

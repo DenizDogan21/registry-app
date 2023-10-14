@@ -51,6 +51,8 @@ class _InputPageState extends State<InputPage> {
   String? yapilanIslemler;
 
   String turboImageUrl="";
+  String katricImageUrl="";
+  String balansImageUrl="";
 
 
   @override
@@ -85,14 +87,20 @@ class _InputPageState extends State<InputPage> {
           tespitEdilen: tespitEdilen!,
           yapilanIslemler: yapilanIslemler!,
           turboImageUrl: turboImageUrl,
+          katricImageUrl: katricImageUrl,
+          balansImageUrl: balansImageUrl,
+
         );
 
         // Create the form
         _inProgressFormRepo.createInProgressForm(inProgressForm);
 
-        // Reset the form fields and turboImageUrl
+        // Reset the form fields
         setState(() {
-          turboImageUrl = ""; // Clear turboImageUrl
+          // Clear ImageUrls
+          turboImageUrl = "";
+          katricImageUrl="";
+          balansImageUrl="";
           _formKey.currentState!.reset();
         });
 
@@ -255,40 +263,30 @@ class _InputPageState extends State<InputPage> {
                 * Step 5. Display the image on the list
                 *
                 * */
-                  Row(children:[
+                  Column(children:[ Row( children:[
                   IconButton(onPressed: () async {
-
-
 
                     //Install image_picker
                     //Import the corresponding library
                     ImagePicker imagePicker = ImagePicker();
-                    XFile? turboFile= await imagePicker.pickImage(source:ImageSource.camera);
+                    XFile? turboFile= await imagePicker.pickImage(source:ImageSource.camera,imageQuality: 10);
                     print("${turboFile?.path}");
+
                     //Install firebase_storage
                     //Import the library
-
-
                     if(turboFile==null) return;
-
-
 
                     //Import dart:core
                     String uniqueTFileName =("t"+ DateTime.now().millisecondsSinceEpoch.toString()) ;
-
 
                     //Get a reference to storage root
                     Reference referenceRoot = FirebaseStorage.instance.ref();
                     Reference referenceDirImages =
                     referenceRoot.child('turboImages');
 
-
                     //Create a reference for the image to be stored
                     Reference referenceImageToUpload =
                     referenceDirImages.child(uniqueTFileName);
-
-
-
 
                     try {
                       // Store the file
@@ -301,12 +299,79 @@ class _InputPageState extends State<InputPage> {
                       print("Error uploading image: $error"); // Add this line for debugging
                     }
 
+                  }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepOrange,),Text("Turbo",style: TextStyle(fontSize: 20,color: Colors.deepOrange),)]),
+                    Row( children:[IconButton(onPressed: () async {
 
+                      //Install image_picker
+                      //Import the corresponding library
+                      ImagePicker imagePicker = ImagePicker();
+                      XFile? katricFile= await imagePicker.pickImage(source:ImageSource.camera,imageQuality: 10);
+                      print("${katricFile?.path}");
 
+                      //Install firebase_storage
+                      //Import the library
+                      if(katricFile==null) return;
 
+                      //Import dart:core
+                      String uniqueKFileName =("k"+ DateTime.now().millisecondsSinceEpoch.toString()) ;
 
-                  }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepPurple,),
-                  Text("turbo",style: TextStyle(fontSize: 20),)]),
+                      //Get a reference to storage root
+                      Reference referenceRoot = FirebaseStorage.instance.ref();
+                      Reference referenceDirImages =
+                      referenceRoot.child('katricImages');
+
+                      //Create a reference for the image to be stored
+                      Reference referenceImageToUpload =
+                      referenceDirImages.child(uniqueKFileName);
+
+                      try {
+                        // Store the file
+                        await referenceImageToUpload.putFile(File(katricFile!.path));
+                        // Success: get the download URL
+                        katricImageUrl = await referenceImageToUpload.getDownloadURL();
+                        print("Image URL: $katricImageUrl"); // Add this line for debugging
+                      } catch (error) {
+                        // Some error occurred
+                        print("Error uploading image: $error"); // Add this line for debugging
+                      }
+
+                    }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepOrange,),Text("Katric",style: TextStyle(fontSize: 20,color: Colors.deepOrange),)]),
+                    Row( children:[IconButton(onPressed: () async {
+
+                      //Install image_picker
+                      //Import the corresponding library
+                      ImagePicker imagePicker = ImagePicker();
+                      XFile? balansFile= await imagePicker.pickImage(source:ImageSource.camera,imageQuality: 10);
+                      print("${balansFile?.path}");
+
+                      //Install firebase_storage
+                      //Import the library
+                      if(balansFile==null) return;
+
+                      //Import dart:core
+                      String uniqueBFileName =("b"+ DateTime.now().millisecondsSinceEpoch.toString()) ;
+
+                      //Get a reference to storage root
+                      Reference referenceRoot = FirebaseStorage.instance.ref();
+                      Reference referenceDirImages =
+                      referenceRoot.child('balansImages');
+
+                      //Create a reference for the image to be stored
+                      Reference referenceImageToUpload =
+                      referenceDirImages.child(uniqueBFileName);
+
+                      try {
+                        // Store the file
+                        await referenceImageToUpload.putFile(File(balansFile!.path));
+                        // Success: get the download URL
+                        balansImageUrl = await referenceImageToUpload.getDownloadURL();
+                        print("Image URL: $balansImageUrl"); // Add this line for debugging
+                      } catch (error) {
+                        // Some error occurred
+                        print("Error uploading image: $error"); // Add this line for debugging
+                      }
+
+                    }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepOrange,),Text("Balans",style: TextStyle(fontSize: 20,color: Colors.deepOrange),)]),
                   ElevatedButton(onPressed:() async {
                     _submitForm();
 
@@ -329,6 +394,8 @@ class _InputPageState extends State<InputPage> {
                         "tespitEdilen": tespitEdilen,
                         "yapilanIslemler": yapilanIslemler,
                         "turboImage": turboImageUrl,
+                        "katricImage": katricImageUrl,
+                        "balansImage":balansImageUrl,
                       };
                       //Add a new item
                       _reference.add(dataToSend);
@@ -340,7 +407,9 @@ class _InputPageState extends State<InputPage> {
                   // ... Other TextFormField widgets ...
                 ],
               ),
+              ]
             ),
+          )
           )
         ],
       ),

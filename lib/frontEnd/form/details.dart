@@ -8,14 +8,92 @@ class FormDetailsPage extends StatelessWidget {
 
   FormDetailsPage({required this.form});
 
-  void showImage(BuildContext context) {
+  void showTurboImage(BuildContext context) {
     if (form.turboImageUrl != null && form.turboImageUrl.isNotEmpty && form.turboImageUrl !="null") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Yüklenen Fotoğraf'),
-            content: Image.network(form.turboImageUrl), // $ bu işaretle ilgili bişey var alt satırlarda doğru formdan çekerken bunda işlemde olan formu bulamıyor iyi bak
+            content: Image.network(form.turboImageUrl),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Fotoğraf Bulunamadı !'), // Display error message
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+  void showKatricImage(BuildContext context) {
+    if (form.katricImageUrl != null && form.katricImageUrl.isNotEmpty && form.katricImageUrl !="null") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Yüklenen Fotoğraf'),
+            content: Image.network(form.katricImageUrl),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Fotoğraf Bulunamadı !'), // Display error message
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+  void showBalansImage(BuildContext context) {
+    if (form.balansImageUrl != null && form.balansImageUrl.isNotEmpty && form.balansImageUrl !="null") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Yüklenen Fotoğraf'),
+            content: Image.network(form.balansImageUrl),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -55,33 +133,32 @@ class FormDetailsPage extends StatelessWidget {
     return Scaffold(
       appBar: appBar(context, "     Detaylar"),
       bottomNavigationBar: bottomNav(context),
-      body: Stack(
+      body: SafeArea( child: Stack(
         children: [
           background(context),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
               children: [
                 Text('${form.tarih.toString()}',style: TextStyle(fontSize: 30,color: Colors.deepOrange),),
                 SizedBox(height: 20),
-                Text('Turbo No: ${form.turboNo}',style: TextStyle(fontSize: 25)),
+                Text('TURBO NO: ${form.turboNo}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('Araç Bilgileri: ${form.aracBilgileri}',style: TextStyle(fontSize: 25)),
+                Text('ARAÇ BİLGİLERİ: ${form.aracBilgileri}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('Müşteri Bilgileri: ${form.musteriBilgileri}',style: TextStyle(fontSize: 25)),
+                Text('MÜŞTERİ BİLGİLERİ: ${form.musteriBilgileri}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('Müşteri Şikayetleri: ${form.musteriSikayetleri}',style: TextStyle(fontSize: 25)),
+                Text('MÜŞTERİ ŞİKAYETLERİ: ${form.musteriSikayetleri}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('Tespit Edilen: ${form.tespitEdilen}',style: TextStyle(fontSize: 25)),
+                Text('TESPİT EDİLEN: ${form.tespitEdilen}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('Yapılan İşlemler: ${form.yapilanIslemler}',style: TextStyle(fontSize: 25)),
+                Text('YAPILAN İŞLEMLER: ${form.yapilanIslemler}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
                 // Add more widgets to display other form data as needed
 
                 // Button to show the uploaded photo
                 TextButton(
-                  onPressed: () => showImage(context),
+                  onPressed: () => showTurboImage(context),
                     child: Container(
                       height: 50,
                       width: 150,
@@ -92,17 +169,54 @@ class FormDetailsPage extends StatelessWidget {
                       ),
                       child: Center(
                         child: customText(
-                          "Fotoğrafı Göster",
+                          "Turbo Fotoğrafı Göster",
                           CustomColors.loginButtonTextColor,
                         ),
                       ),
                     ),
                   ),
+                TextButton(
+                  onPressed: () => showKatricImage(context),
+                  child: Container(
+                    height: 50,
+                    width: 150,
+                    margin: EdgeInsetsDirectional.symmetric(horizontal: 90),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20), right: Radius.circular(20)),
+                      color: Color(0xff31274F),
+                    ),
+                    child: Center(
+                      child: customText(
+                        "Katriç Fotoğrafı Göster",
+                        CustomColors.loginButtonTextColor,
+                      ),
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => showBalansImage(context),
+                  child: Container(
+                    height: 50,
+                    width: 150,
+                    margin: EdgeInsetsDirectional.symmetric(horizontal: 90),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20), right: Radius.circular(20)),
+                      color: Color(0xff31274F),
+                    ),
+                    child: Center(
+                      child: customText(
+                        "Balans Fotoğrafı Göster",
+                        CustomColors.loginButtonTextColor,
+                      ),
+                    ),
+                  ),
+                ),
 
               ],
             ),
           ),
         ],
+      ),
       ),
     );
   }

@@ -75,7 +75,7 @@ Widget bottomNav(BuildContext context) {
 }
 
 
-PreferredSizeWidget? appBar(BuildContext context, String pageTitle, {List<Widget>? actions}) {
+PreferredSizeWidget? appBar(BuildContext context, String pageTitle) {
   return PreferredSize(
     preferredSize: Size.fromHeight(kToolbarHeight),
     child: AppBar(
@@ -86,7 +86,7 @@ PreferredSizeWidget? appBar(BuildContext context, String pageTitle, {List<Widget
           Image.asset(
             'assets/images/logo.png',
             fit: BoxFit.contain,
-            height: 32,
+            height: 22,
           ),
           Container(
             padding: const EdgeInsets.all(8),

@@ -66,6 +66,8 @@ class InProgressFormRepo extends GetxController {
             tespitEdilen: formData['tespitEdilen'] as String? ?? "",
             yapilanIslemler: formData['yapilanIslemler'] as String? ?? "",
             turboImageUrl: formData['turboImage'] as String ?? "",
+            katricImageUrl: formData['katricImage'] as String ?? "",
+            balansImageUrl: formData['balansImage'] as String ?? "",
           );
         }).toList();
 

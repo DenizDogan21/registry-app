@@ -51,13 +51,16 @@ class _LoginPageState extends State<LoginPage> {
                     customSizedBox(),
                     passwordTextField(),
                     customSizedBox(),
+                    customSizedBox(),
                     forgotPasswordButton(),
+                    customSizedBox(),
                     signInButton(),
                     customSizedBox(),
                     CustomTextButton(
                       onPressed: () => Navigator.pushNamed(context, "/signUp"),
                       buttonText: "Hesap Oluştur",
                     ),
+/*
                     CustomTextButton(
                       onPressed: () async {
                         final result = await authService.signInAnonymous();
@@ -72,6 +75,8 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       buttonText: "Misafir Girişi",
                     )
+
+*/
                   ],
                 ),
               ),

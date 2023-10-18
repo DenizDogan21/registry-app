@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:turboapp/frontEnd/form/input.dart';
 import 'package:turboapp/service/auth_service.dart';
 import 'package:turboapp/frontEnd/utils/customColors.dart';
 import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
@@ -14,7 +13,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  late String email, fullname, username, password;
+  late String email, fullname, password;
   final formkey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
   final authService = AuthService();
@@ -51,8 +50,6 @@ class _SignUpState extends State<SignUp> {
                     emailTextField(),
                     customSizedBox(),
                     fullNameTextField(),
-                    customSizedBox(),
-                    usernameTextField(),
                     customSizedBox(),
                     passwordTextField(),
                     customSizedBox(),
@@ -106,20 +103,6 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  TextFormField usernameTextField() {
-    return TextFormField(
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Bilgileri Eksiksiz Doldurunuz";
-        } else {}
-      },
-      onSaved: (value) {
-        username = value!;
-      },
-      style: TextStyle(color: Colors.white),
-      decoration: customInputDecoration("Kullanıcı Adı"),
-    );
-  }
 
   TextFormField passwordTextField() {
     return TextFormField(
@@ -209,11 +192,77 @@ class _SignUpState extends State<SignUp> {
   void signUp() async {
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
-      final result =
-      await authService.signUp(email, fullname, password);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => InputPage()),
-              (route) => false);
-    } else {}
+
+      if (email.endsWith("@egeturbo.com")) {
+        try {
+          await authService.signUp(email, fullname, password);
+
+          // Send email verification link
+          User? user = firebaseAuth.currentUser;
+          await user?.sendEmailVerification();
+
+          // Show a message to the user
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Doğrulama Maili Gönderildi'),
+                content: Text(
+                  'Doğrulama maili $email adresine yollandı. Posta kutunuzu kontrol edin ve bağlantıdaki linke tıklayarak mailinizi doğrulayın.',
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+
+          // Redirect to a page that informs the user to check their email
+        } catch (error) {
+          // Handle any errors that occur during signup
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Signup Error'),
+                content: Text('An error occurred during signup. Please try again later.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        // Invalid email address, show an error or alert the user
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Kaydolma Başarısız'),
+              content: Text('Sadece Ege Turbo çalışanları kayıt olabilir.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 }

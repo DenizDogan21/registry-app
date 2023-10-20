@@ -4,24 +4,24 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
-import '../Models/inProgressForm_model.dart';
+import '../Models/workOrderForm_model.dart';
 
-class InProgressFormRepo extends GetxController {
-  static InProgressFormRepo get instance => Get.find();
+class WorkOrderFormRepo extends GetxController {
+  static WorkOrderFormRepo get instance => Get.find();
   final _db = FirebaseFirestore.instance;
 
 
-  createInProgressForm(InProgressFormModel inProgressForm) async {
+  createWorkOrderForm(WorkOrderFormModel workOrderForm) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userId = user.uid;
 
-      // Reference to the new collection "inProgressForms"
-      final inProgressFormsCollection = _db.collection("inProgressForms");
+      // Reference to the new collection "workOrderForms"
+      final workOrderFormsCollection = _db.collection("workOrderForms");
 
-      final formJson = inProgressForm.toJson();
+      final formJson = workOrderForm.toJson();
 
-      await inProgressFormsCollection.add({
+      await workOrderFormsCollection.add({
         'userId': userId, // Associate the form with the user
         ...formJson,
       });
@@ -33,15 +33,15 @@ class InProgressFormRepo extends GetxController {
     }
   }
 
-  Future<List<InProgressFormModel>> getInProgressForms() async {
+  Future<List<WorkOrderFormModel>> getWorkOrderForms() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userId = user.uid;
 
-      // Reference to the "inProgressForms" collection
-      final inProgressFormsCollection = _db.collection("inProgressForms");
+      // Reference to the "workOrderForms" collection
+      final workOrderFormsCollection = _db.collection("workOrderForms");
 
-      final QuerySnapshot formQuery = await inProgressFormsCollection
+      final QuerySnapshot formQuery = await workOrderFormsCollection
           .where('userId', isEqualTo: userId)
           .get();
 
@@ -50,17 +50,16 @@ class InProgressFormRepo extends GetxController {
       if (formDocs.isNotEmpty) {
         final forms = formDocs.map((formDoc) {
           final formData = formDoc.data() as Map<String, dynamic>; // Explicit casting
-          return InProgressFormModel(
+          return WorkOrderFormModel(
             turboNo: (formData['turboNo'] as int?) ?? 0,
             tarih: (formData['tarih'] as Timestamp?)?.toDate() ?? DateTime.now(),
             aracBilgileri: (formData['aracBilgileri'] as String?) ?? "",
             musteriBilgileri: (formData['musteriBilgileri'] as String?) ?? "",
             musteriSikayetleri: (formData['musteriSikayetleri'] as String?) ?? "",
-            tespitEdilen: (formData['tespitEdilen'] as String?) ?? "",
-            yapilanIslemler: (formData['yapilanIslemler'] as String?) ?? "",
-            turboImageUrl: (formData['turboImage'] as String?) ?? "",
-            katricImageUrl: (formData['katricImage'] as String?) ?? "",
-            balansImageUrl: (formData['balansImage'] as String?) ?? "",
+            onTespit: (formData['onTespit'] as String?) ?? "",
+            turboyuGetiren: (formData['turboyuGetiren'] as String?) ?? "",
+            tasimaUcreti: (formData['tasimaUcreti'] as double?) ?? 0,
+            teslimAdresi: (formData['teslimAdresi'] as String?) ?? "",
           );
         }).toList();
 

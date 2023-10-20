@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../form/input.dart';
-import '../form/output.dart';
+import '../formPages/inputIPF.dart';
+import '../formPages/outputIPF.dart';
 import '../utils/customColors.dart';
+import 'package:turboapp/frontEnd/formPages/addForm.dart';
+import 'package:turboapp/frontEnd/formPages/showForms.dart';
 
 
 Widget background(BuildContext context) {
@@ -20,7 +22,7 @@ Widget background(BuildContext context) {
                     Color(0XFFB0BEC5),
                     Color(0XFF78909C),
                     Color(0XFF455A64),
-                    Color(0XFF263238),
+                    Color(0XFF455A64),
                     Color(0XFF263238),
                   ]),
             ),
@@ -45,11 +47,12 @@ Widget bottomNav(BuildContext context) {
 
     items: [
       BottomNavigationBarItem(
-        icon: Icon(Icons.car_crash),
+        icon: Icon(Icons.handyman),
         label: "",
+
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.car_repair),
+        icon: Icon(Icons.remove_red_eye),
         label: "",
       ),
     ],
@@ -59,13 +62,13 @@ Widget bottomNav(BuildContext context) {
         case 0:
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => InputPage()),
+            MaterialPageRoute(builder: (_) => AddFormPage()),
           );
           break;
         case 1:
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => OutputPage()),);
+            MaterialPageRoute(builder: (_) => ShowFormsPage()),);
           break;
         case 2:
           break;

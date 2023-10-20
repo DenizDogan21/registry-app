@@ -9,14 +9,14 @@ import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class InputPage extends StatefulWidget {
-  const InputPage({Key? key}) : super(key: key);
+class InputIPFPage extends StatefulWidget {
+  const InputIPFPage({Key? key}) : super(key: key);
 
   @override
-  State<InputPage> createState() => _InputPageState();
+  State<InputIPFPage> createState() => _InputIPFPageState();
 }
 
-class _InputPageState extends State<InputPage> {
+class _InputIPFPageState extends State<InputIPFPage> {
 
 
   TextEditingController _controllerTurboNo = TextEditingController();
@@ -33,10 +33,6 @@ class _InputPageState extends State<InputPage> {
 
   CollectionReference _reference =
   FirebaseFirestore.instance.collection('Users');
-
-
-
-
 
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -121,7 +117,7 @@ class _InputPageState extends State<InputPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "     İş Emri Ekle"),
+      appBar: appBar(context, "     Formun Adı"),
       bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [
@@ -168,8 +164,8 @@ class _InputPageState extends State<InputPage> {
                       showDatePicker(
                         context: context,
                         initialDate: tarih!,
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime(2100),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2200),
                       ).then((selectedDate) {
                         if (selectedDate != null) {
                           setState(() {
@@ -402,7 +398,7 @@ class _InputPageState extends State<InputPage> {
 
                     }
                   },
-                    child: Text('Submit'),
+                    child: Text('Yükle'),
                   )
                   // ... Other TextFormField widgets ...
                 ],

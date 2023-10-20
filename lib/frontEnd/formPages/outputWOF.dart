@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
+import '../../BackEnd/Models/workOrderForm_model.dart';
+import '../../BackEnd/Repositories/workOrderForm_repo.dart';
 import '../widgets/common.dart';
-import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
-import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
+import 'detailsWOF.dart';
 
-import 'details.dart';
-
-class OutputPage extends StatefulWidget {
-  const OutputPage({Key? key}) : super(key: key);
+class OutputWOFPage extends StatefulWidget {
+  const OutputWOFPage({Key? key}) : super(key: key);
 
   @override
-  State<OutputPage> createState() => _OutputPageState();
+  State<OutputWOFPage> createState() => _OutputWOFPageState();
 }
 
-class _OutputPageState extends State<OutputPage> {
-  final _inProgressFormRepo = InProgressFormRepo.instance;
-  late List<InProgressFormModel> _forms;
-  late List<InProgressFormModel> _filteredForms;
+class _OutputWOFPageState extends State<OutputWOFPage> {
+  final _workOrderFormRepo = WorkOrderFormRepo.instance;
+  late List<WorkOrderFormModel> _formsWOF;
+  late List<WorkOrderFormModel> _filteredFormsWOF;
 
   @override
   void initState() {
     super.initState();
-    _forms = [];
-    _filteredForms = [];
-    _getInProgressForms();
+    _formsWOF = [];
+    _filteredFormsWOF = [];
+    _getWorkOrderForms();
   }
 
-  void _getInProgressForms() async {
+  void _getWorkOrderForms() async {
     try {
-      final forms = await _inProgressFormRepo.getInProgressForms();
+      final formsWOF = await _workOrderFormRepo.getWorkOrderForms();
       setState(() {
-        _forms = forms;
-        _filteredForms = forms;
+        _formsWOF = formsWOF;
+        _filteredFormsWOF = formsWOF;
       });
     } catch (error) {
       print('Error: $error');
@@ -41,19 +40,22 @@ class _OutputPageState extends State<OutputPage> {
     Future.delayed(Duration.zero, () {
       setState(() {
         if (keyword.isNotEmpty) {
-          _filteredForms = _forms.where((form) {
+          _filteredFormsWOF = _formsWOF.where((form) {
             final turboNoString = form.turboNo.toString().toLowerCase();
+            final tasimaUcretiString = form.tasimaUcreti.toString().toLowerCase();
             final keywordLower = keyword.toLowerCase();
             return turboNoString.contains(keywordLower) ||
                 form.aracBilgileri.toLowerCase().contains(keywordLower) ||
                 form.musteriBilgileri.toLowerCase().contains(keywordLower) ||
                 form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
-                form.tespitEdilen.toLowerCase().contains(keywordLower) ||
-                form.yapilanIslemler.toLowerCase().contains(keywordLower);
+                form.onTespit.toLowerCase().contains(keywordLower) ||
+                form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
+                tasimaUcretiString.contains(keywordLower) ||
+                form.teslimAdresi.toLowerCase().contains(keywordLower);
           }).toList();
 
         } else {
-          _filteredForms = _forms;
+          _filteredFormsWOF = _formsWOF;
         }
       });
     });
@@ -86,13 +88,13 @@ class _OutputPageState extends State<OutputPage> {
       body: Stack(
         children: [
           background(context),
-          if (_filteredForms.isEmpty)
+          if (_filteredFormsWOF.isEmpty)
             Center(child: Text('Kayıtlı Form Bulunamadı'))
           else
             ListView.builder(
-              itemCount: _filteredForms.length,
+              itemCount: _filteredFormsWOF.length,
               itemBuilder: (context, index) {
-                final form = _filteredForms[index];
+                final form = _filteredFormsWOF[index];
                 return ListTile(
                   title: Text('Tarih: ${form.tarih.toString()}'),
                   subtitle: Column(
@@ -102,14 +104,16 @@ class _OutputPageState extends State<OutputPage> {
                       Text('Araç Bilgileri: ${form.aracBilgileri}'),
                       Text('Müşteri Bilgileri: ${form.musteriBilgileri}'),
                       Text('Müşteri Şikayetleri: ${form.musteriSikayetleri}'),
-                      Text('Tespit Edilen: ${form.tespitEdilen}'),
-                      Text('Yapılan İşlemler: ${form.yapilanIslemler}'),
+                      Text('Ön Tespit: ${form.onTespit}'),
+                      Text('Turboyu Getiren: ${form.turboyuGetiren}'),
+                      Text('Taşıma Ücreti: ${form.tasimaUcreti}'),
+                      Text('Teslim Adresi: ${form.teslimAdresi}'),
                     ],
                   ),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => FormDetailsPage(form: form),
+                        builder: (context) => DetailsWOFPage(formWOF: form),
                       ),
                     );
                   },

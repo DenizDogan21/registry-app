@@ -3,19 +3,19 @@ import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
 import '../widgets/common.dart';
 import 'package:turboapp/frontEnd/utils/customColors.dart';
 
-class FormDetailsPage extends StatelessWidget {
-  final InProgressFormModel form;
+class DetailsIPFPage extends StatelessWidget {
+  final InProgressFormModel formIPF;
 
-  FormDetailsPage({required this.form});
+  DetailsIPFPage({required this.formIPF});
 
   void showTurboImage(BuildContext context) {
-    if (form.turboImageUrl != null && form.turboImageUrl.isNotEmpty && form.turboImageUrl !="null") {
+    if (formIPF.turboImageUrl != null && formIPF.turboImageUrl.isNotEmpty && formIPF.turboImageUrl !="null") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Yüklenen Fotoğraf'),
-            content: Image.network(form.turboImageUrl),
+            content: Image.network(formIPF.turboImageUrl),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -48,13 +48,13 @@ class FormDetailsPage extends StatelessWidget {
     }
   }
   void showKatricImage(BuildContext context) {
-    if (form.katricImageUrl != null && form.katricImageUrl.isNotEmpty && form.katricImageUrl !="null") {
+    if (formIPF.katricImageUrl != null && formIPF.katricImageUrl.isNotEmpty && formIPF.katricImageUrl !="null") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Yüklenen Fotoğraf'),
-            content: Image.network(form.katricImageUrl),
+            content: Image.network(formIPF.katricImageUrl),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -87,13 +87,13 @@ class FormDetailsPage extends StatelessWidget {
     }
   }
   void showBalansImage(BuildContext context) {
-    if (form.balansImageUrl != null && form.balansImageUrl.isNotEmpty && form.balansImageUrl !="null") {
+    if (formIPF.balansImageUrl != null && formIPF.balansImageUrl.isNotEmpty && formIPF.balansImageUrl !="null") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Yüklenen Fotoğraf'),
-            content: Image.network(form.balansImageUrl),
+            content: Image.network(formIPF.balansImageUrl),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -131,7 +131,7 @@ class FormDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "     Detaylar"),
+      appBar: appBar(context, ""),
       bottomNavigationBar: bottomNav(context),
       body: SafeArea( child: Stack(
         children: [
@@ -140,19 +140,19 @@ class FormDetailsPage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: ListView(
               children: [
-                Text('${form.tarih.toString()}',style: TextStyle(fontSize: 30,color: Colors.deepOrange),),
+                Text('${formIPF.tarih.toString()}',style: TextStyle(fontSize: 30,color: Colors.deepOrange),),
                 SizedBox(height: 20),
-                Text('TURBO NO: ${form.turboNo}',style: TextStyle(fontSize: 25)),
+                Text('TURBO NO: ${formIPF.turboNo}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('ARAÇ BİLGİLERİ: ${form.aracBilgileri}',style: TextStyle(fontSize: 25)),
+                Text('ARAÇ BİLGİLERİ: ${formIPF.aracBilgileri}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('MÜŞTERİ BİLGİLERİ: ${form.musteriBilgileri}',style: TextStyle(fontSize: 25)),
+                Text('MÜŞTERİ BİLGİLERİ: ${formIPF.musteriBilgileri}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('MÜŞTERİ ŞİKAYETLERİ: ${form.musteriSikayetleri}',style: TextStyle(fontSize: 25)),
+                Text('MÜŞTERİ ŞİKAYETLERİ: ${formIPF.musteriSikayetleri}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('TESPİT EDİLEN: ${form.tespitEdilen}',style: TextStyle(fontSize: 25)),
+                Text('TESPİT EDİLEN: ${formIPF.tespitEdilen}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
-                Text('YAPILAN İŞLEMLER: ${form.yapilanIslemler}',style: TextStyle(fontSize: 25)),
+                Text('YAPILAN İŞLEMLER: ${formIPF.yapilanIslemler}',style: TextStyle(fontSize: 25)),
                 SizedBox(height: 20),
                 // Add more widgets to display other form data as needed
 

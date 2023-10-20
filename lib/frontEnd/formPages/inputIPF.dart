@@ -31,8 +31,6 @@ class _InputIPFPageState extends State<InputIPFPage> {
 
   GlobalKey<FormState> key = GlobalKey();
 
-  CollectionReference _reference =
-  FirebaseFirestore.instance.collection('Users');
 
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -393,8 +391,6 @@ class _InputIPFPageState extends State<InputIPFPage> {
                         "katricImage": katricImageUrl,
                         "balansImage":balansImageUrl,
                       };
-                      //Add a new item
-                      _reference.add(dataToSend);
 
                     }
                   },

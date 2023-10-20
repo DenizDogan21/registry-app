@@ -30,8 +30,6 @@ class _InputWOFPageState extends State<InputWOFPage> {
 
   GlobalKey<FormState> key = GlobalKey();
 
-  CollectionReference _reference =
-  FirebaseFirestore.instance.collection('Users');
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _workOrderFormRepo = WorkOrderFormRepo.instance;
@@ -295,8 +293,6 @@ class _InputWOFPageState extends State<InputWOFPage> {
                               "tasimaUcreti": tasimaUcreti,
                               "teslimAdresi": teslimAdresi,
                             };
-                            //Add a new item
-                            _reference.add(dataToSend);
 
                           }
                         },

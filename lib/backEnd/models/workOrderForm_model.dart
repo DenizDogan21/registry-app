@@ -30,7 +30,7 @@ class WorkOrderFormModel {
 
 
 
-  WorkOrderFormModel( {
+  WorkOrderFormModel(  {
     this.id,
     this.turboNo = -1,
     required this.tarih,

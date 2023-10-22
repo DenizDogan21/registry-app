@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:turboapp/BackEnd/Models/workOrderForm_model.dart';
 import '../widgets/common.dart';
+import 'package:turboapp/frontEnd/utils/customColors.dart';
 
 
 class DetailsWOFPage extends StatelessWidget {
@@ -23,24 +24,24 @@ class DetailsWOFPage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: ListView(
               children: [
-                Text('${formWOF.tarih.toString()}',style: TextStyle(fontSize: 30,color: Colors.deepOrange),),
-                SizedBox(height: 20),
-                Text('TURBO NO: ${formWOF.turboNo}',style: TextStyle(fontSize: 25)),
-                SizedBox(height: 20),
-                Text('ARAÇ BİLGİLERİ: ${formWOF.aracBilgileri}',style: TextStyle(fontSize: 25)),
-                SizedBox(height: 20),
-                Text('MÜŞTERİ BİLGİLERİ: ${formWOF.musteriBilgileri}',style: TextStyle(fontSize: 25)),
-                SizedBox(height: 20),
-                Text('MÜŞTERİ ŞİKAYETLERİ: ${formWOF.musteriSikayetleri}',style: TextStyle(fontSize: 25)),
-                SizedBox(height: 20),
-                Text('ÖN TESPİT: ${formWOF.onTespit}',style: TextStyle(fontSize: 25)),
-                SizedBox(height: 20),
-                Text('TURBOYU GETİREN: ${formWOF.turboyuGetiren}',style: TextStyle(fontSize: 25)),
-                SizedBox(height: 20),
-                Text('TAŞIMA ÜCRETİ: ${formWOF.tasimaUcreti}',style: TextStyle(fontSize: 25)),
-                SizedBox(height: 20),
-                Text('TESLİM ADRESİ: ${formWOF.teslimAdresi}',style: TextStyle(fontSize: 25)),
-                SizedBox(height: 20),
+                Text('${formWOF.tarih.toString()}',style: TextStyle(fontSize: 30,color: CustomColors.yellowColor),),
+                SizedBox(height: 30),
+                Text('TURBO NO: ${formWOF.turboNo}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
+                SizedBox(height: 30),
+                Text('ARAÇ BİLGİLERİ: ${formWOF.aracBilgileri}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
+                SizedBox(height: 30),
+                Text('MÜŞTERİ BİLGİLERİ: ${formWOF.musteriBilgileri}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
+                SizedBox(height: 30),
+                Text('MÜŞTERİ ŞİKAYETLERİ: ${formWOF.musteriSikayetleri}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
+                SizedBox(height: 30),
+                Text('ÖN TESPİT: ${formWOF.onTespit}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
+                SizedBox(height: 30),
+                Text('TURBOYU GETİREN: ${formWOF.turboyuGetiren}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
+                SizedBox(height: 30),
+                Text('TAŞIMA ÜCRETİ: ${formWOF.tasimaUcreti}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
+                SizedBox(height: 30),
+                Text('TESLİM ADRESİ: ${formWOF.teslimAdresi}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
+                SizedBox(height: 30),
                 // Add more widgets to display other form data as needed
 
 

@@ -13,8 +13,7 @@ class InProgressFormRepo extends GetxController {
 
   createInProgressForm(InProgressFormModel inProgressForm) async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userId = user.uid;
+      final userId = user?.email;
 
       // Reference to the new collection "inProgressForms"
       final inProgressFormsCollection = _db.collection("inProgressForms");
@@ -22,15 +21,11 @@ class InProgressFormRepo extends GetxController {
       final formJson = inProgressForm.toJson();
 
       await inProgressFormsCollection.add({
-        'userId': userId, // Associate the form with the user
+        'yukleyenKullanici': userId, // Associate the form with the user
         ...formJson,
       });
 
       Get.snackbar("Form Ekleme Başarılı", "Oluşturuldu");
-    } else {
-      // Handle case where the user is not signed in
-      // Display an error message or redirect to the login page
-    }
   }
 
   Future<List<InProgressFormModel>> getInProgressForms() async {

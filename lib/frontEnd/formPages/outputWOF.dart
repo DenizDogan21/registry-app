@@ -71,7 +71,7 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Kaydettiğim İş Emirleri  "),
+            Text("Kayıtlı İş Emirleri  "),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {

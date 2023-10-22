@@ -68,7 +68,7 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Kaydettiğim İş Emirleri  "),
+            Text("Kayıtlı İn Progress Formlar  "),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {

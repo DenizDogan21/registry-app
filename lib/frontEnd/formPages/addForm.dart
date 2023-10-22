@@ -26,7 +26,7 @@ class _State extends State<AddFormPage> {
               context,
               MaterialPageRoute(builder: (context) => const InputWOFPage()),
             );
-          }, child: Text("İş Emri Formu Ekle",style: CustomTextStyle.orangeTextStyle,),
+          }, child: Text("İş Emri Formu Ekle",style: CustomTextStyle.titleTextStyle,),
             style:
             TextButton.styleFrom(
                 backgroundColor: Colors.white,
@@ -40,7 +40,7 @@ class _State extends State<AddFormPage> {
               context,
               MaterialPageRoute(builder: (context) => const InputIPFPage()),
             );
-          }, child: Text("İn Progress Form Ekle",style: CustomTextStyle.orangeTextStyle,),
+          }, child: Text("İn Progress Form Ekle",style: CustomTextStyle.titleTextStyle,),
             style:
             TextButton.styleFrom(
                 backgroundColor: Colors.white,

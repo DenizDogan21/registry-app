@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +7,7 @@ import '../widgets/common.dart';
 import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:turboapp/frontEnd/utils/customColors.dart';
 
 class InputIPFPage extends StatefulWidget {
   const InputIPFPage({Key? key}) : super(key: key);
@@ -68,8 +68,6 @@ class _InputIPFPageState extends State<InputIPFPage> {
 
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // You can remove 'userId' if it's not used here
-        // final userId = user.uid;
 
         // Create an instance of InProgressFormModel with the entered data
         final inProgressForm = InProgressFormModel(
@@ -98,14 +96,6 @@ class _InputIPFPageState extends State<InputIPFPage> {
           _formKey.currentState!.reset();
         });
 
-        // Clear the controller variables
-        _controllerTurboNo.clear();
-        _controllerTarih.clear();
-        _controllerAracBilgileri.clear();
-        _controllerMusteriBilgileri.clear();
-        _controllerMusteriSikayetleri.clear();
-        _controllerTespitEdilen.clear();
-        _controllerYapilanIslemler.clear();
       }
     }
   }
@@ -248,6 +238,7 @@ class _InputIPFPageState extends State<InputIPFPage> {
                       yapilanIslemler = value;
                     },
                   ),
+                  SizedBox(height: 20,),
                   /*
                 * Step 1. Pick/Capture an image   (image_picker)
                 * Step 2. Upload the image to Firebase storage
@@ -293,7 +284,9 @@ class _InputIPFPageState extends State<InputIPFPage> {
                       print("Error uploading image: $error"); // Add this line for debugging
                     }
 
-                  }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepOrange,),Text("Turbo",style: TextStyle(fontSize: 20,color: Colors.deepOrange),)]),
+                  }, icon: Icon(Icons.camera_alt),iconSize: 30,color: CustomColors.loginButtonTextColor,),
+                    Text("Turbo",style: TextStyle(fontSize: 20,color: Color(0xff31274F)),)]),
+
                     Row( children:[IconButton(onPressed: () async {
 
                       //Install image_picker
@@ -329,7 +322,9 @@ class _InputIPFPageState extends State<InputIPFPage> {
                         print("Error uploading image: $error"); // Add this line for debugging
                       }
 
-                    }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepOrange,),Text("Katric",style: TextStyle(fontSize: 20,color: Colors.deepOrange),)]),
+                    }, icon: Icon(Icons.camera_alt),iconSize: 30,color: CustomColors.loginButtonTextColor,),
+                      Text("Katric",style: TextStyle(fontSize: 20,color: Color(0xff31274F),),)]),
+
                     Row( children:[IconButton(onPressed: () async {
 
                       //Install image_picker
@@ -365,9 +360,11 @@ class _InputIPFPageState extends State<InputIPFPage> {
                         print("Error uploading image: $error"); // Add this line for debugging
                       }
 
-                    }, icon: Icon(Icons.camera_alt),iconSize: 30,color: Colors.deepOrange,),Text("Balans",style: TextStyle(fontSize: 20,color: Colors.deepOrange),)]),
-                  ElevatedButton(onPressed:() async {
-                    _submitForm();
+                    }, icon: Icon(Icons.camera_alt),iconSize: 30,color: CustomColors.loginButtonTextColor,),
+                      Text("Balans",style: TextStyle(fontSize: 20,color: Color(0xff31274F)))]),
+
+                  SizedBox(height: 20,),
+                    ElevatedButton(onPressed:() async {
 
                     if (_formKey.currentState!.validate()) {
                       String turboNo = _controllerTurboNo.text;
@@ -393,9 +390,18 @@ class _InputIPFPageState extends State<InputIPFPage> {
                       };
 
                     }
+                    _submitForm();
                   },
                     child: Text('Yükle'),
-                  )
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        primary: Colors.blue,
+                        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                        textStyle: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
+                  ),
+                  SizedBox(height: 10,),
                   // ... Other TextFormField widgets ...
                 ],
               ),

@@ -15,7 +15,7 @@ class WorkOrderFormRepo extends GetxController {
   createWorkOrderForm(WorkOrderFormModel workOrderForm) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userId = user.uid;
+      final userId = user.email;
 
       // Reference to the new collection "workOrderForms"
       final workOrderFormsCollection = _db.collection("workOrderForms");
@@ -23,7 +23,7 @@ class WorkOrderFormRepo extends GetxController {
       final formJson = workOrderForm.toJson();
 
       await workOrderFormsCollection.add({
-        'userId': userId, // Associate the form with the user
+        'yukleyenKullanici': userId, // Associate the form with the user
         ...formJson,
       });
 
@@ -67,6 +67,7 @@ class WorkOrderFormRepo extends GetxController {
 
     return [];
   }
+
 
 
 }

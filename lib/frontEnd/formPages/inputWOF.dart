@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../widgets/common.dart';
@@ -56,10 +55,8 @@ class _InputWOFPageState extends State<InputWOFPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-
 
         // Create an instance of workOrderFormModel with the entered data
         final workOrderForm = WorkOrderFormModel(
@@ -72,23 +69,16 @@ class _InputWOFPageState extends State<InputWOFPage> {
           turboyuGetiren: turboyuGetiren!,
           tasimaUcreti: tasimaUcreti!,
           teslimAdresi: teslimAdresi!,
-
         );
 
         // Create the form
         _workOrderFormRepo.createWorkOrderForm(workOrderForm);
 
+        // Reset the form fields
+        setState(() {
+          _formKey.currentState!.reset();
+        });
 
-        // Clear the controller variables
-        _controllerTurboNo.clear();
-        _controllerTarih.clear();
-        _controllerAracBilgileri.clear();
-        _controllerMusteriBilgileri.clear();
-        _controllerMusteriSikayetleri.clear();
-        _controllerOnTespit.clear();
-        _controllerTurboyuGetiren.clear();
-        _controllerTasimaUcreti.clear();
-        _controllerTeslimAdresi.clear();
       }
     }
   }
@@ -238,8 +228,6 @@ class _InputWOFPageState extends State<InputWOFPage> {
                           }
                         },
                       ),
-
-
                       TextFormField(
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(labelText: 'Taşıma Ücreti'),
@@ -266,9 +254,9 @@ class _InputWOFPageState extends State<InputWOFPage> {
                           teslimAdresi = value;
                         },
                       ),
+                      SizedBox(height: 20),
                       Column(children:[
                         ElevatedButton(onPressed:() async {
-                          _submitForm();
 
                           if (_formKey.currentState!.validate()) {
                             String turboNo = _controllerTurboNo.text;
@@ -295,8 +283,16 @@ class _InputWOFPageState extends State<InputWOFPage> {
                             };
 
                           }
+                          _submitForm();
                         },
                           child: Text('Yükle'),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              primary: Colors.blue,
+                              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                              textStyle: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold)),
                         )
                         // ... Other TextFormField widgets ...
                       ],

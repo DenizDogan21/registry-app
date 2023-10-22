@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../formPages/inputIPF.dart';
-import '../formPages/outputIPF.dart';
 import '../utils/customColors.dart';
 import 'package:turboapp/frontEnd/formPages/addForm.dart';
 import 'package:turboapp/frontEnd/formPages/showForms.dart';
@@ -21,9 +19,9 @@ Widget background(BuildContext context) {
                   colors: [
                     Color(0XFFB0BEC5),
                     Color(0XFF78909C),
-                    Color(0XFF455A64),
-                    Color(0XFF455A64),
-                    Color(0XFF263238),
+                    Color(0XFF78909C),
+                    Color(0XFF78909C),
+                    Color(0XFFB0BEC5),
                   ]),
             ),
             child: SingleChildScrollView(
@@ -40,8 +38,8 @@ Widget background(BuildContext context) {
 Widget bottomNav(BuildContext context) {
   return BottomNavigationBar(
     backgroundColor: Colors.black,
-    selectedItemColor: Colors.deepPurple,
-    unselectedItemColor: Colors.deepPurple,
+    selectedItemColor: CustomColors.loginButtonTextColor,
+    unselectedItemColor: CustomColors.loginButtonTextColor,
     showUnselectedLabels: false,
     showSelectedLabels: false,
 

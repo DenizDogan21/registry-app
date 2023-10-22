@@ -31,7 +31,7 @@ class _ShowFormsPageState extends State<ShowFormsPage> {
                         MaterialPageRoute(builder: (context) => const OutputWOFPage()),
                       );
                     },
-                    child: Text("İş Emri Formlarını Göster",style: CustomTextStyle.orangeTextStyle),
+                    child: Text("İş Emri Formlarını Göster",style: CustomTextStyle.titleTextStyle),
                     style:
                     TextButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -49,7 +49,7 @@ class _ShowFormsPageState extends State<ShowFormsPage> {
                         MaterialPageRoute(builder: (context) => const OutputIPFPage()),
                       );
                     },
-                    child: Text("In Progress Formlarını Göster",style: CustomTextStyle.orangeTextStyle),
+                    child: Text("In Progress Formlarını Göster",style: CustomTextStyle.titleTextStyle),
                     style:
                       TextButton.styleFrom(
                         backgroundColor: Colors.white,

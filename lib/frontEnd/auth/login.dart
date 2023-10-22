@@ -61,23 +61,6 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () => Navigator.pushNamed(context, "/signUp"),
                       buttonText: "Hesap Oluştur",
                     ),
-/*
-                    CustomTextButton(
-                      onPressed: () async {
-                        final result = await authService.signInAnonymous();
-                        if (result != null) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (_) => InputPage()),
-                          );
-                        } else {
-                          print("Hata ile karşılaşıldı");
-                        }
-                      },
-                      buttonText: "Misafir Girişi",
-                    )
-
-*/
                   ],
                 ),
               ),

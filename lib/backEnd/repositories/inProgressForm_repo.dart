@@ -35,15 +35,11 @@ class InProgressFormRepo extends GetxController {
 
   Future<List<InProgressFormModel>> getInProgressForms() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userId = user.uid;
 
       // Reference to the "inProgressForms" collection
       final inProgressFormsCollection = _db.collection("inProgressForms");
 
-      final QuerySnapshot formQuery = await inProgressFormsCollection
-          .where('userId', isEqualTo: userId)
-          .get();
+      final QuerySnapshot formQuery = await inProgressFormsCollection.get();
 
       final List<QueryDocumentSnapshot> formDocs = formQuery.docs;
 
@@ -66,7 +62,6 @@ class InProgressFormRepo extends GetxController {
 
         return forms;
       }
-    }
 
     return [];
   }

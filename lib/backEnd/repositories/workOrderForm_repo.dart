@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-
 import '../Models/workOrderForm_model.dart';
 
 class WorkOrderFormRepo extends GetxController {
   static WorkOrderFormRepo get instance => Get.find();
   final _db = FirebaseFirestore.instance;
+
+
 
 
   createWorkOrderForm(WorkOrderFormModel workOrderForm) async {
@@ -34,16 +35,11 @@ class WorkOrderFormRepo extends GetxController {
   }
 
   Future<List<WorkOrderFormModel>> getWorkOrderForms() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userId = user.uid;
-
+    try {
       // Reference to the "workOrderForms" collection
       final workOrderFormsCollection = _db.collection("workOrderForms");
 
-      final QuerySnapshot formQuery = await workOrderFormsCollection
-          .where('userId', isEqualTo: userId)
-          .get();
+      final QuerySnapshot formQuery = await workOrderFormsCollection.get();
 
       final List<QueryDocumentSnapshot> formDocs = formQuery.docs;
 
@@ -65,6 +61,8 @@ class WorkOrderFormRepo extends GetxController {
 
         return forms;
       }
+    } catch (error) {
+      throw error;
     }
 
     return [];

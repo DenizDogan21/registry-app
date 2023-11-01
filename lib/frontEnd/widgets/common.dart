@@ -17,11 +17,11 @@ Widget background(BuildContext context) {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0XFFB0BEC5),
-                    Color(0XFF78909C),
-                    Color(0XFF78909C),
-                    Color(0XFF78909C),
-                    Color(0XFFB0BEC5),
+                    Color(0XFFE57373),
+                    Color(0XFFEF5350),
+                    Color(0XFFF44336),
+                    Color(0XFFF44336),
+                    Color(0XFF753935),
                   ]),
             ),
             child: SingleChildScrollView(
@@ -91,7 +91,7 @@ PreferredSizeWidget? appBar(BuildContext context, String pageTitle) {
           ),
           Container(
             padding: const EdgeInsets.all(8),
-            child: Text(pageTitle),
+            child: Text(pageTitle, style: TextStyle(color: Colors.redAccent)),
           ),
         ],
       ),

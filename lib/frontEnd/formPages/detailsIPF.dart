@@ -165,12 +165,12 @@ class DetailsIPFPage extends StatelessWidget {
                       margin: EdgeInsetsDirectional.symmetric(horizontal: 90),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.horizontal(left: Radius.circular(20), right: Radius.circular(20)),
-                        color: Color(0xff31274F),
+                        color: Colors.white,
                       ),
                       child: Center(
                         child: customText(
                           "Turbo Fotoğrafı Göster",
-                          CustomColors.loginButtonTextColor,
+                          Colors.redAccent,
                         ),
                       ),
                     ),
@@ -183,12 +183,12 @@ class DetailsIPFPage extends StatelessWidget {
                     margin: EdgeInsetsDirectional.symmetric(horizontal: 90),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.horizontal(left: Radius.circular(20), right: Radius.circular(20)),
-                      color: Color(0xff31274F),
+                      color: Colors.white,
                     ),
                     child: Center(
                       child: customText(
                         "Katriç Fotoğrafı Göster",
-                        CustomColors.loginButtonTextColor,
+                        Colors.redAccent,
                       ),
                     ),
                   ),
@@ -201,12 +201,12 @@ class DetailsIPFPage extends StatelessWidget {
                     margin: EdgeInsetsDirectional.symmetric(horizontal: 90),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.horizontal(left: Radius.circular(20), right: Radius.circular(20)),
-                      color: Color(0xff31274F),
+                      color: Colors.white,
                     ),
                     child: Center(
                       child: customText(
                         "Balans Fotoğrafı Göster",
-                        CustomColors.loginButtonTextColor,
+                        Colors.redAccent,
                       ),
                     ),
                   ),

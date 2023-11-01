@@ -15,7 +15,7 @@ class _ShowFormsPageState extends State<ShowFormsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "KAYITLI FORMLAR"),
+      appBar: appBar(context, "  KAYITLI FORMLAR"),
       bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [
@@ -49,7 +49,7 @@ class _ShowFormsPageState extends State<ShowFormsPage> {
                         MaterialPageRoute(builder: (context) => const OutputIPFPage()),
                       );
                     },
-                    child: Text("In Progress Formlarını Göster",style: CustomTextStyle.titleTextStyle),
+                    child: Text("Süreç Formlarını Göster",style: CustomTextStyle.titleTextStyle),
                     style:
                       TextButton.styleFrom(
                         backgroundColor: Colors.white,

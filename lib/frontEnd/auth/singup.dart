@@ -45,8 +45,7 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    titleText(),
-                    customSizedBox(),
+                    SizedBox(height: 75,),
                     emailTextField(),
                     customSizedBox(),
                     fullNameTextField(),
@@ -66,12 +65,6 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Text titleText() {
-    return Text(
-      "Merhaba, \nHoşgeldin",
-      style: CustomTextStyle.titleTextStyle,
-    );
-  }
 
   TextFormField emailTextField() {
     return TextFormField(

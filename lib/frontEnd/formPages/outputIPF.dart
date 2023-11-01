@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/common.dart';
 import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
+import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
 
 import 'detailsIPF.dart';
 
@@ -68,7 +69,7 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Kayıtlı İn Progress Formlar  "),
+            Text("KAYITLI SÜREÇ FORMLARI  ", style: TextStyle(color: Colors.redAccent)),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
@@ -94,16 +95,16 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
               itemBuilder: (context, index) {
                 final form = _filteredForms[index];
                 return ListTile(
-                  title: Text('Tarih: ${form.tarih.toString()}'),
+                  title: Text('${form.tarih.toString()}', style: CustomTextStyle.outputTitleTextStyle),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Turbo No: ${form.turboNo}'),
-                      Text('Araç Bilgileri: ${form.aracBilgileri}'),
-                      Text('Müşteri Bilgileri: ${form.musteriBilgileri}'),
-                      Text('Müşteri Şikayetleri: ${form.musteriSikayetleri}'),
-                      Text('Tespit Edilen: ${form.tespitEdilen}'),
-                      Text('Yapılan İşlemler: ${form.yapilanIslemler}'),
+                      Text('Turbo No: ${form.turboNo}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Araç Bilgileri: ${form.aracBilgileri}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Müşteri Bilgileri: ${form.musteriBilgileri}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Müşteri Şikayetleri: ${form.musteriSikayetleri}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Tespit Edilen: ${form.tespitEdilen}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Yapılan İşlemler: ${form.yapilanIslemler}', style: CustomTextStyle.outputListTextStyle),
                     ],
                   ),
                   onTap: () {

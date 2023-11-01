@@ -3,6 +3,7 @@ import '../../BackEnd/Models/workOrderForm_model.dart';
 import '../../BackEnd/Repositories/workOrderForm_repo.dart';
 import '../widgets/common.dart';
 import 'detailsWOF.dart';
+import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
 
 class OutputWOFPage extends StatefulWidget {
   const OutputWOFPage({Key? key}) : super(key: key);
@@ -71,7 +72,7 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Kayıtlı İş Emirleri  "),
+            Text("KAYITLI İŞ EMİRLERİ                 ", style: TextStyle(color: Colors.redAccent)),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
@@ -97,18 +98,18 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
               itemBuilder: (context, index) {
                 final form = _filteredFormsWOF[index];
                 return ListTile(
-                  title: Text('Tarih: ${form.tarih.toString()}'),
+                  title: Text('${form.tarih.toString()}', style: CustomTextStyle.outputTitleTextStyle),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Turbo No: ${form.turboNo}'),
-                      Text('Araç Bilgileri: ${form.aracBilgileri}'),
-                      Text('Müşteri Bilgileri: ${form.musteriBilgileri}'),
-                      Text('Müşteri Şikayetleri: ${form.musteriSikayetleri}'),
-                      Text('Ön Tespit: ${form.onTespit}'),
-                      Text('Turboyu Getiren: ${form.turboyuGetiren}'),
-                      Text('Taşıma Ücreti: ${form.tasimaUcreti}'),
-                      Text('Teslim Adresi: ${form.teslimAdresi}'),
+                      Text('Turbo No: ${form.turboNo}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Araç Bilgileri: ${form.aracBilgileri}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Müşteri Bilgileri: ${form.musteriBilgileri}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Müşteri Şikayetleri: ${form.musteriSikayetleri}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Ön Tespit: ${form.onTespit}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Turboyu Getiren: ${form.turboyuGetiren}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Taşıma Ücreti: ${form.tasimaUcreti}', style: CustomTextStyle.outputListTextStyle),
+                      Text('Teslim Adresi: ${form.teslimAdresi}', style: CustomTextStyle.outputListTextStyle),
                     ],
                   ),
                   onTap: () {

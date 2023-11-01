@@ -105,7 +105,7 @@ class _InputIPFPageState extends State<InputIPFPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "     Formun Adı"),
+      appBar: appBar(context, "     SÜREÇ"),
       bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [
@@ -285,7 +285,7 @@ class _InputIPFPageState extends State<InputIPFPage> {
                     }
 
                   }, icon: Icon(Icons.camera_alt),iconSize: 30,color: CustomColors.loginButtonTextColor,),
-                    Text("Turbo",style: TextStyle(fontSize: 20,color: Color(0xff31274F)),)]),
+                    Text("Turbo",style: TextStyle(fontSize: 20,color: Colors.white),)]),
 
                     Row( children:[IconButton(onPressed: () async {
 
@@ -323,7 +323,7 @@ class _InputIPFPageState extends State<InputIPFPage> {
                       }
 
                     }, icon: Icon(Icons.camera_alt),iconSize: 30,color: CustomColors.loginButtonTextColor,),
-                      Text("Katric",style: TextStyle(fontSize: 20,color: Color(0xff31274F),),)]),
+                      Text("Katric",style: TextStyle(fontSize: 20,color: Colors.white,),)]),
 
                     Row( children:[IconButton(onPressed: () async {
 
@@ -361,7 +361,7 @@ class _InputIPFPageState extends State<InputIPFPage> {
                       }
 
                     }, icon: Icon(Icons.camera_alt),iconSize: 30,color: CustomColors.loginButtonTextColor,),
-                      Text("Balans",style: TextStyle(fontSize: 20,color: Color(0xff31274F)))]),
+                      Text("Balans",style: TextStyle(fontSize: 20,color: Colors.white))]),
 
                   SizedBox(height: 20,),
                     ElevatedButton(onPressed:() async {
@@ -392,10 +392,10 @@ class _InputIPFPageState extends State<InputIPFPage> {
                     }
                     _submitForm();
                   },
-                    child: Text('Yükle'),
+                    child: Text('Yükle', style: TextStyle(color: Colors.redAccent),),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                        primary: Colors.blue,
+                        primary: Colors.white,
                         padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                         textStyle: TextStyle(
                             fontSize: 20,

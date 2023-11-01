@@ -1,4 +1,4 @@
-package com.example.turboapp
+package com.egeturbo.turboapp
 
 import io.flutter.embedding.android.FlutterActivity
 

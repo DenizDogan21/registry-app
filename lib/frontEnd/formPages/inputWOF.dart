@@ -88,7 +88,7 @@ class _InputWOFPageState extends State<InputWOFPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "     İş Emri"),
+      appBar: appBar(context, "     İŞ EMRİ"),
       bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [
@@ -285,10 +285,10 @@ class _InputWOFPageState extends State<InputWOFPage> {
                           }
                           _submitForm();
                         },
-                          child: Text('Yükle'),
+                          child: Text('Yükle',style: TextStyle(color: Colors.redAccent),),
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                              primary: Colors.blue,
+                              primary: Colors.white,
                               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                               textStyle: TextStyle(
                                   fontSize: 20,

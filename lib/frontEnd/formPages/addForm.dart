@@ -40,7 +40,7 @@ class _State extends State<AddFormPage> {
               context,
               MaterialPageRoute(builder: (context) => const InputIPFPage()),
             );
-          }, child: Text("İn Progress Form Ekle",style: CustomTextStyle.titleTextStyle,),
+          }, child: Text("Süreç Formu Ekle",style: CustomTextStyle.titleTextStyle,),
             style:
             TextButton.styleFrom(
                 backgroundColor: Colors.white,

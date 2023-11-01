@@ -46,8 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    titleText(),
-                    customSizedBox(),
+                    SizedBox(height: 75,),
                     emailTextField(),
                     customSizedBox(),
                     passwordTextField(),
@@ -71,12 +70,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Text titleText() {
-    return Text(
-      "Merhaba, \nHoşgeldin",
-      style: CustomTextStyle.titleTextStyle,
-    );
-  }
 
   TextFormField emailTextField() {
     return TextFormField(

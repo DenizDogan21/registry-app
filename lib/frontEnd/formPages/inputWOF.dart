@@ -89,7 +89,7 @@ class _InputWOFPageState extends State<InputWOFPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, "     İŞ EMRİ"),
-      bottomNavigationBar: bottomNav(context),
+      bottomNavigationBar: bottomNav(),
       body: Stack(
         children: [
           background(context),

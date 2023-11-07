@@ -106,7 +106,7 @@ class _InputIPFPageState extends State<InputIPFPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, "     SÜREÇ"),
-      bottomNavigationBar: bottomNav(context),
+      bottomNavigationBar: bottomNav(),
       body: Stack(
         children: [
           background(context),

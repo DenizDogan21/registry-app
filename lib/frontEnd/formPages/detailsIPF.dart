@@ -132,7 +132,7 @@ class DetailsIPFPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, ""),
-      bottomNavigationBar: bottomNav(context),
+      bottomNavigationBar: bottomNav(),
       body: SafeArea( child: Stack(
         children: [
           background(context),

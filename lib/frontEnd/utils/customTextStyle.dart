@@ -14,6 +14,12 @@ class CustomTextStyle {
       TextStyle(fontSize: 15, color: Colors.black);
   static const outputTitleTextStyle =
       TextStyle(fontSize: 20, color: Colors.white, height: 2);
+  static const appBarTextStyle = TextStyle(
+    color: Colors.cyanAccent, // Accent color for readability
+    fontSize: 20.0, // Appropriate size for AppBar titles
+    fontWeight: FontWeight.bold, // Bold text for the title
+    letterSpacing: 0.5, // Letter spacing for better readability
+  );
 
 
 

@@ -82,8 +82,8 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
           ],
         ),
       ),
+      bottomNavigationBar: bottomNav(),
 
-      bottomNavigationBar: bottomNav(context),
       body: Stack(
         children: [
           background(context),

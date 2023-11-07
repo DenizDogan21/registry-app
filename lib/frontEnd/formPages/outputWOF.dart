@@ -17,7 +17,6 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
   late List<WorkOrderFormModel> _formsWOF;
   late List<WorkOrderFormModel> _filteredFormsWOF;
 
-
   @override
   void initState() {
     super.initState();
@@ -55,7 +54,6 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
                 tasimaUcretiString.contains(keywordLower) ||
                 form.teslimAdresi.toLowerCase().contains(keywordLower);
           }).toList();
-
         } else {
           _filteredFormsWOF = _formsWOF;
         }
@@ -63,67 +61,63 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text("KAYITLI İŞ EMİRLERİ                 ", style: TextStyle(color: Colors.redAccent)),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: _SearchDelegate(_filterForms),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-
-      bottomNavigationBar: bottomNav(context),
-      body: Stack(
-        children: [
-          background(context),
-          if (_filteredFormsWOF.isEmpty)
-            Center(child: Text('Kayıtlı Form Bulunamadı'))
-          else
-            ListView.builder(
-              itemCount: _filteredFormsWOF.length,
-              itemBuilder: (context, index) {
-                final form = _filteredFormsWOF[index];
-                return ListTile(
-                  title: Text('${form.tarih.toString()}', style: CustomTextStyle.outputTitleTextStyle),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Turbo No: ${form.turboNo}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Araç Bilgileri: ${form.aracBilgileri}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Müşteri Bilgileri: ${form.musteriBilgileri}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Müşteri Şikayetleri: ${form.musteriSikayetleri}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Ön Tespit: ${form.onTespit}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Turboyu Getiren: ${form.turboyuGetiren}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Taşıma Ücreti: ${form.tasimaUcreti}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Teslim Adresi: ${form.teslimAdresi}', style: CustomTextStyle.outputListTextStyle),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => DetailsWOFPage(formWOF: form),
-                      ),
-                    );
-                  },
-                  // Display other form data as desired
-                );
-              },
-            ),
+        backgroundColor: Colors.grey.shade900,
+        title: Text("Registered Work Orders", style: TextStyle(color: Colors.cyanAccent)),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: _SearchDelegate(_filterForms),
+              );
+            },
+          ),
         ],
+      ),
+      bottomNavigationBar: bottomNav(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.1, 0.9],
+            colors: [
+              Colors.grey.shade800,
+              Colors.black87,
+            ],
+          ),
+        ),
+        child: _filteredFormsWOF.isEmpty
+            ? Center(child: Text('No Records Found', style: TextStyle(color: Colors.white)))
+            : ListView.separated(
+          itemCount: _filteredFormsWOF.length,
+          separatorBuilder: (context, index) => Divider(color: Colors.grey.shade600),
+          itemBuilder: (context, index) {
+            final form = _filteredFormsWOF[index];
+            return ListTileTheme(
+              textColor: Colors.white,
+              iconColor: Colors.cyanAccent,
+              child: ListTile(
+                leading: Icon(Icons.build_circle_outlined),
+                title: Text('${form.tarih.toString()}', style: CustomTextStyle.outputTitleTextStyle),
+                subtitle: Text('Turbo No: ${form.turboNo}', style: CustomTextStyle.outputListTextStyle),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DetailsWOFPage(formWOF: form),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

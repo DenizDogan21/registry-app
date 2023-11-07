@@ -1,110 +1,74 @@
 import 'package:flutter/material.dart';
-import '../utils/customColors.dart';
+import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
 import 'package:turboapp/frontEnd/formPages/addForm.dart';
 import 'package:turboapp/frontEnd/formPages/showForms.dart';
+import 'package:get/get.dart';
+
+class BottomNavigationController extends GetxController {
+  var currentIndex = 0.obs;
+
+  void changeIndex(int index) {
+    currentIndex.value = index;
+    switch (index) {
+      case 0:
+        Get.offAll(() => AddFormPage()); // Get.offAll() removes all the previous routes
+        break;
+      case 1:
+        Get.offAll(() => ShowFormsPage());
+        break;
+    // Add more cases for other tabs if you have more than two
+    }
+  }
+}
+
 
 
 Widget background(BuildContext context) {
   return Scaffold(
     body: SafeArea(
-      child: Stack(
-        children: [
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0XFFE57373),
-                    Color(0XFFEF5350),
-                    Color(0XFFF44336),
-                    Color(0XFFF44336),
-                    Color(0XFF753935),
-                  ]),
-            ),
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-            ),
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.1, 0.9],
+            colors: [
+              Colors.grey.shade800,
+              Colors.black87,
+            ],
           ),
-        ],
+        ),
       ),
     ),
-  );
-}
-
-Widget bottomNav(BuildContext context) {
-  return BottomNavigationBar(
-    backgroundColor: Colors.black,
-    selectedItemColor: CustomColors.loginButtonTextColor,
-    unselectedItemColor: CustomColors.loginButtonTextColor,
-    showUnselectedLabels: false,
-    showSelectedLabels: false,
-
-    items: [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.handyman),
-        label: "",
-
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.remove_red_eye),
-        label: "",
-      ),
-    ],
-    onTap: (int index) {
-      // Handle navigation based on the tapped item
-      switch (index) {
-        case 0:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => AddFormPage()),
-          );
-          break;
-        case 1:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => ShowFormsPage()),);
-          break;
-        case 2:
-          break;
-      }
-    },
   );
 }
 
 
 PreferredSizeWidget? appBar(BuildContext context, String pageTitle) {
-  return PreferredSize(
-    preferredSize: Size.fromHeight(kToolbarHeight),
-    child: AppBar(
-      backgroundColor: Colors.black,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Image.asset(
-            'assets/images/logo.png',
-            fit: BoxFit.contain,
-            height: 22,
+  return AppBar(
+    backgroundColor: Colors.grey.shade900,
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        // Assuming you have an asset image for the logo
+        Image.asset(
+          'assets/images/logo.png',
+          fit: BoxFit.contain,
+          height: 22,
+        ),
+        Container(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            pageTitle,
+            style: CustomTextStyle.appBarTextStyle,
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: Text(pageTitle, style: TextStyle(color: Colors.redAccent)),
-          ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }
-
-
-
-
-
-
-
 
 class CustomTextButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -114,7 +78,7 @@ class CustomTextButton extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.buttonText,
-    this.textColor = CustomColors.pinkColor,
+    this.textColor = Colors.cyanAccent,
   });
 
   @override
@@ -127,5 +91,28 @@ class CustomTextButton extends StatelessWidget {
       ),
     );
   }
+}
+
+
+Widget bottomNav() {
+  final BottomNavigationController navigationController = Get.find<BottomNavigationController>();
+
+  return Obx(() => BottomNavigationBar(
+    backgroundColor: Colors.grey.shade900,
+    selectedItemColor: Colors.cyanAccent,
+    unselectedItemColor: Colors.grey.shade600,
+    currentIndex: navigationController.currentIndex.value,
+    onTap: navigationController.changeIndex,
+    items: const [
+      BottomNavigationBarItem(
+        icon: Icon(Icons.handyman),
+        label: "Ekle",
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.remove_red_eye),
+        label: "Göster",
+      ),
+    ],
+  ));
 }
 

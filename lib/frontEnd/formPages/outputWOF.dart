@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../BackEnd/Models/workOrderForm_model.dart';
 import '../../BackEnd/Repositories/workOrderForm_repo.dart';
 import '../widgets/common.dart';
@@ -16,6 +17,7 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
   final _workOrderFormRepo = WorkOrderFormRepo.instance;
   late List<WorkOrderFormModel> _formsWOF;
   late List<WorkOrderFormModel> _filteredFormsWOF;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -23,11 +25,24 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
     _formsWOF = [];
     _filteredFormsWOF = [];
     _getWorkOrderForms();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    _filterForms(_searchController.text);
   }
 
   void _getWorkOrderForms() async {
     try {
       final formsWOF = await _workOrderFormRepo.getWorkOrderForms();
+      formsWOF.sort((a, b) => b.tarihWOF.compareTo(a.tarihWOF));
       setState(() {
         _formsWOF = formsWOF;
         _filteredFormsWOF = formsWOF;
@@ -37,17 +52,17 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
     }
   }
 
+
   void _filterForms(String keyword) {
     Future.delayed(Duration.zero, () {
       setState(() {
         if (keyword.isNotEmpty) {
           _filteredFormsWOF = _formsWOF.where((form) {
-            final turboNoString = form.turboNo.toString().toLowerCase();
             final tasimaUcretiString = form.tasimaUcreti.toString().toLowerCase();
             final keywordLower = keyword.toLowerCase();
-            return turboNoString.contains(keywordLower) ||
+            return form.turboNo.toLowerCase().contains(keywordLower) ||
                 form.aracBilgileri.toLowerCase().contains(keywordLower) ||
-                form.musteriBilgileri.toLowerCase().contains(keywordLower) ||
+                form.musteriAdi.toLowerCase().contains(keywordLower) ||
                 form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
                 form.onTespit.toLowerCase().contains(keywordLower) ||
                 form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
@@ -66,15 +81,21 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey.shade900,
-        title: Text("Registered Work Orders", style: TextStyle(color: Colors.cyanAccent)),
+        title: TextField(
+          controller: _searchController,
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Ara...",
+            hintStyle: TextStyle(color: Colors.white),
+            border: InputBorder.none,
+          ),
+          onChanged: (value) => _filterForms(value),
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.cancel),
             onPressed: () {
-              showSearch(
-                context: context,
-                delegate: _SearchDelegate(_filterForms),
-              );
+              _searchController.clear();
             },
           ),
         ],
@@ -104,7 +125,7 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
               iconColor: Colors.cyanAccent,
               child: ListTile(
                 leading: Icon(Icons.build_circle_outlined),
-                title: Text('${form.tarih.toString()}', style: CustomTextStyle.outputTitleTextStyle),
+                title: Text('${formatDate(form.tarihWOF)}', style: CustomTextStyle.outputTitleTextStyle),
                 subtitle: Text('Turbo No: ${form.turboNo}', style: CustomTextStyle.outputListTextStyle),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
@@ -121,44 +142,8 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
       ),
     );
   }
-}
-
-class _SearchDelegate extends SearchDelegate<String> {
-  final Function(String) onSearch;
-
-  _SearchDelegate(this.onSearch);
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-          onSearch(query);
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, '');
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    onSearch(query);
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
+  String formatDate(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd – HH:mm').format(dateTime);
   }
 }
+

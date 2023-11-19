@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../widgets/common.dart';
 import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
@@ -17,6 +18,7 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
   final _inProgressFormRepo = InProgressFormRepo.instance;
   late List<InProgressFormModel> _forms;
   late List<InProgressFormModel> _filteredForms;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -24,11 +26,25 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
     _forms = [];
     _filteredForms = [];
     _getInProgressForms();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    _filterForms(_searchController.text);
   }
 
   void _getInProgressForms() async {
     try {
       final forms = await _inProgressFormRepo.getInProgressForms();
+      forms.sort((a, b) => b.tarihIPF.compareTo(a.tarihIPF));
       setState(() {
         _forms = forms;
         _filteredForms = forms;
@@ -37,6 +53,7 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
       print('Error: $error');
     }
   }
+
 
   void _filterForms(String keyword) {
     Future.delayed(Duration.zero, () {
@@ -60,106 +77,75 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text("KAYITLI SÜREÇ FORMLARI  ", style: TextStyle(color: Colors.redAccent)),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: _SearchDelegate(_filterForms),
-                );
-              },
-            ),
-          ],
+        backgroundColor: Colors.grey.shade900,
+        title: TextField(
+          controller: _searchController,
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: "Ara...",
+            hintStyle: TextStyle(color: Colors.white),
+            border: InputBorder.none,
+          ),
+          onChanged: (value) => _filterForms(value),
         ),
-      ),
-      bottomNavigationBar: bottomNav(),
-
-      body: Stack(
-        children: [
-          background(context),
-          if (_filteredForms.isEmpty)
-            Center(child: Text('Kayıtlı Form Bulunamadı'))
-          else
-            ListView.builder(
-              itemCount: _filteredForms.length,
-              itemBuilder: (context, index) {
-                final form = _filteredForms[index];
-                return ListTile(
-                  title: Text('${form.tarih.toString()}', style: CustomTextStyle.outputTitleTextStyle),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Turbo No: ${form.turboNo}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Araç Bilgileri: ${form.aracBilgileri}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Müşteri Bilgileri: ${form.musteriBilgileri}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Müşteri Şikayetleri: ${form.musteriSikayetleri}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Tespit Edilen: ${form.tespitEdilen}', style: CustomTextStyle.outputListTextStyle),
-                      Text('Yapılan İşlemler: ${form.yapilanIslemler}', style: CustomTextStyle.outputListTextStyle),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => DetailsIPFPage(formIPF: form),
-                      ),
-                    );
-                  },
-                  // Display other form data as desired
-                );
-              },
-            ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.cancel),
+            onPressed: () {
+              // Clear the search field
+              _searchController.clear();
+            },
+          ),
         ],
       ),
-    );
-  }
-}
-
-class _SearchDelegate extends SearchDelegate<String> {
-  final Function(String) onSearch;
-
-  _SearchDelegate(this.onSearch);
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-          onSearch(query);
-        },
+      bottomNavigationBar: bottomNav(), // Make sure this is the same as in OutputWOFPage
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.1, 0.9],
+            colors: [
+              Colors.grey.shade800,
+              Colors.black87,
+            ],
+          ),
+        ),
+        child: _filteredForms.isEmpty
+            ? Center(child: Text('Kayıt Bulunamadı', style: TextStyle(color: Colors.white)))
+            : ListView.separated(
+          itemCount: _filteredForms.length,
+          separatorBuilder: (context, index) => Divider(color: Colors.grey.shade600),
+          itemBuilder: (context, index) {
+            final form = _filteredForms[index];
+            return ListTileTheme(
+              textColor: Colors.white,
+              iconColor: Colors.cyanAccent,
+              child: ListTile(
+                leading: Icon(Icons.build_circle_outlined),
+                title: Text('${formatDate(form.tarihIPF)}', style: CustomTextStyle.outputTitleTextStyle),
+                subtitle: Text('Turbo No: ${form.turboNo}', style: CustomTextStyle.outputListTextStyle),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DetailsIPFPage(formIPF: form),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
       ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, '');
-      },
     );
   }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    onSearch(query);
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
+  String formatDate(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd – HH:mm').format(dateTime);
   }
 }
+

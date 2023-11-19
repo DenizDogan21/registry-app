@@ -44,7 +44,7 @@ class InProgressFormRepo extends GetxController {
           final formData = formDoc.data() as Map<String, dynamic>; // Explicit casting
           return InProgressFormModel(
             turboNo: (formData['turboNo'] as int?) ?? 0,
-            tarih: (formData['tarih'] as Timestamp?)?.toDate() ?? DateTime.now(),
+            tarihIPF: (formData['tarihIPF'] as Timestamp?)?.toDate() ?? DateTime.now(),
             aracBilgileri: (formData['aracBilgileri'] as String?) ?? "",
             musteriBilgileri: (formData['musteriBilgileri'] as String?) ?? "",
             musteriSikayetleri: (formData['musteriSikayetleri'] as String?) ?? "",

@@ -14,7 +14,6 @@ import 'frontEnd/widgets/common.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // Initialize Firebase
   await Firebase.initializeApp();
 
@@ -32,14 +31,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Your App Name',
+      debugShowCheckedModeBanner: false,
+      title: 'Ege Turbo',
       initialRoute: Routes.login,
       getPages: [
         GetPage(name: Routes.login, page: () => LoginPage()),
-        GetPage(name: Routes.signup, page: () => SignUp()),
+        GetPage(name: Routes.signUp, page: () => SignUp()),
         // ... and so on for each route
       ],
       // ...
     );
   }
 }
+
+

@@ -48,15 +48,17 @@ class WorkOrderFormRepo extends GetxController {
         final forms = formDocs.map((formDoc) {
           final formData = formDoc.data() as Map<String, dynamic>; // Explicit casting
           return WorkOrderFormModel(
-            turboNo: (formData['turboNo'] as int?) ?? 0,
-            tarih: (formData['tarih'] as Timestamp?)?.toDate() ?? DateTime.now(),
+            turboNo: (formData['turboNo'] as String?) ?? "",
+            tarihWOF: (formData['tarihWOF'] as Timestamp?)?.toDate() ?? DateTime.now(),
             aracBilgileri: (formData['aracBilgileri'] as String?) ?? "",
-            musteriBilgileri: (formData['musteriBilgileri'] as String?) ?? "",
+            musteriAdi: (formData['musteriAd'] as String?) ?? "",
+            musteriNumarasi: (formData['musteriNumarasi'] as int) ?? 0,
             musteriSikayetleri: (formData['musteriSikayetleri'] as String?) ?? "",
             onTespit: (formData['onTespit'] as String?) ?? "",
             turboyuGetiren: (formData['turboyuGetiren'] as String?) ?? "",
             tasimaUcreti: (formData['tasimaUcreti'] as double?) ?? 0,
             teslimAdresi: (formData['teslimAdresi'] as String?) ?? "",
+            yanindaGelenler: Map<String, bool>.from(formData['yanindaGelenler'] ?? {}),
           );
         }).toList();
 

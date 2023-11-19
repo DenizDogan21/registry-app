@@ -3,20 +3,20 @@ import 'package:get/get.dart';
 // Define your routes as constants to avoid typos when calling them
 class Routes {
   static const login = '/login';
-  static const signup = '/signup';
+  static const signUp = '/signUp';
   static const addForm = '/addForm';
-  static const detailsIPF = '/detailsPF';
+  static const detailsIPF = '/detailsIPF';
   static const detailsWOF = '/detailsWOF';
-  static const inputIPF = '/inputPF';
+  static const inputIPF = '/inputIPF';
   static const inputWOF = '/inputWOF';
-  static const outputIPF = '/outputPF';
+  static const outputIPF = '/outputIPF';
   static const outputWOF = '/outputWOF';
   static const showForms = '/showForms';
 }
 
 class NavigationController extends GetxController {
   void navigateToLogin() => Get.toNamed(Routes.login);
-  void navigateToSignup() => Get.toNamed(Routes.signup);
+  void navigateToSignup() => Get.toNamed(Routes.signUp);
   void navigateToAddForm() => Get.toNamed(Routes.addForm);
   void navigateToDetailsPF() => Get.toNamed(Routes.detailsIPF);
   void navigateToDetailsWOF() => Get.toNamed(Routes.detailsWOF);

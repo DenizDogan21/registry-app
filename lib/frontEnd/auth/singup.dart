@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:turboapp/service/auth_service.dart';
 import 'package:turboapp/frontEnd/utils/customColors.dart';
-import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 
 class SignUp extends StatefulWidget {
@@ -136,7 +135,7 @@ class _SignUpState extends State<SignUp> {
   Center backToLoginPage() {
     return Center(
       child: TextButton(
-        onPressed: () => Navigator.pushNamed(context, "/loginPage"),
+        onPressed: () => Navigator.pushNamed(context, "/login"),
         child: customText(
           "Giriş Sayfasına Geri Dön",
           CustomColors.pinkColor,

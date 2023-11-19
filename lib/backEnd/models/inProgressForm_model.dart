@@ -2,7 +2,7 @@
 class InProgressFormModel {
   final String? id;
   final int turboNo;
-  final DateTime tarih;
+  final DateTime tarihIPF;
   final String aracBilgileri;
   final String musteriBilgileri;
   final String musteriSikayetleri;
@@ -16,7 +16,7 @@ class InProgressFormModel {
   Map<String, dynamic> toJson() {
     return {
       "turboNo": turboNo,
-      "tarih": tarih,
+      "tarihIPF": tarihIPF,
       "aracBilgileri": aracBilgileri,
       "musteriBilgileri": musteriBilgileri,
       "musteriSikayetleri": musteriSikayetleri,
@@ -34,7 +34,7 @@ class InProgressFormModel {
   InProgressFormModel( {
     this.id,
     this.turboNo = -1,
-    required this.tarih,
+    required this.tarihIPF,
     this.aracBilgileri = "null",
     this.musteriBilgileri = "null",
     this.musteriSikayetleri = "null",

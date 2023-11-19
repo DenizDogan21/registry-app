@@ -1,15 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
 import '../widgets/common.dart';
-import 'package:turboapp/frontEnd/utils/customColors.dart';
+import 'package:turboapp/frontEnd/widgets/helperMethodsDetails.dart';
 
 class DetailsIPFPage extends StatelessWidget {
   final InProgressFormModel formIPF;
 
   DetailsIPFPage({required this.formIPF});
 
+  @override
+  Widget build(BuildContext context) {
+    ThemeData themeData = Theme.of(context);
+    return Scaffold(
+      appBar: appBar(context, "Detaylar"),
+      bottomNavigationBar: bottomNav(),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            background(context),
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  dateSection(themeData, formIPF.tarihIPF.toString()),
+                  detailSection(
+                      'Turbo No:', formIPF.turboNo.toString(), themeData),
+                  detailSection(
+                      'Araç Bilgileri:', formIPF.aracBilgileri, themeData),
+                  detailSection('Müşteri Bilgileri:', formIPF.musteriBilgileri,
+                      themeData),
+                  detailSection(
+                      'Müşteri Şikayetleri:', formIPF.musteriSikayetleri,
+                      themeData),
+                  detailSection(
+                      'Tespit Edilen:', formIPF.tespitEdilen, themeData),
+                  detailSection(
+                      'Yapılan İşlemler:', formIPF.yapilanIslemler, themeData),
+                  // Add more widgets to display other form data as needed
+                  photoButton(
+                      context, 'Turbo Fotoğrafı Göster', showTurboImage),
+                  photoButton(
+                      context, 'Katriç Fotoğrafı Göster', showKatricImage),
+                  photoButton(
+                      context, 'Balans Fotoğrafı Göster', showBalansImage),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget photoButton(BuildContext context, String text, Function showImage) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ElevatedButton.icon(
+        icon: Icon(Icons.image, color: Colors.white),
+        label: Text(text),
+        onPressed: () => showImage(context),
+        style: ElevatedButton.styleFrom(
+          primary: Colors.redAccent,
+          onPrimary: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+        ),
+      ),
+    );
+  }
+
   void showTurboImage(BuildContext context) {
-    if (formIPF.turboImageUrl != null && formIPF.turboImageUrl.isNotEmpty && formIPF.turboImageUrl !="null") {
+    if (formIPF.turboImageUrl != null && formIPF.turboImageUrl.isNotEmpty &&
+        formIPF.turboImageUrl != "null") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -47,8 +111,10 @@ class DetailsIPFPage extends StatelessWidget {
       );
     }
   }
+
   void showKatricImage(BuildContext context) {
-    if (formIPF.katricImageUrl != null && formIPF.katricImageUrl.isNotEmpty && formIPF.katricImageUrl !="null") {
+    if (formIPF.katricImageUrl != null && formIPF.katricImageUrl.isNotEmpty &&
+        formIPF.katricImageUrl != "null") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -86,8 +152,10 @@ class DetailsIPFPage extends StatelessWidget {
       );
     }
   }
+
   void showBalansImage(BuildContext context) {
-    if (formIPF.balansImageUrl != null && formIPF.balansImageUrl.isNotEmpty && formIPF.balansImageUrl !="null") {
+    if (formIPF.balansImageUrl != null && formIPF.balansImageUrl.isNotEmpty &&
+        formIPF.balansImageUrl != "null") {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -126,104 +194,4 @@ class DetailsIPFPage extends StatelessWidget {
     }
   }
 
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(context, ""),
-      bottomNavigationBar: bottomNav(),
-      body: SafeArea( child: Stack(
-        children: [
-          background(context),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              children: [
-                Text('${formIPF.tarih.toString()}',style: TextStyle(fontSize: 30,color: CustomColors.yellowColor),),
-                SizedBox(height: 30),
-                Text('TURBO NO: ${formIPF.turboNo}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
-                SizedBox(height: 30),
-                Text('ARAÇ BİLGİLERİ: ${formIPF.aracBilgileri}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
-                SizedBox(height: 30),
-                Text('MÜŞTERİ BİLGİLERİ: ${formIPF.musteriBilgileri}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
-                SizedBox(height: 30),
-                Text('MÜŞTERİ ŞİKAYETLERİ: ${formIPF.musteriSikayetleri}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
-                SizedBox(height: 30),
-                Text('TESPİT EDİLEN: ${formIPF.tespitEdilen}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
-                SizedBox(height: 30),
-                Text('YAPILAN İŞLEMLER: ${formIPF.yapilanIslemler}',style: TextStyle(fontSize: 25, color: CustomColors.loginButtonTextColor)),
-                SizedBox(height: 30),
-                // Add more widgets to display other form data as needed
-
-                // Button to show the uploaded photo
-                TextButton(
-                  onPressed: () => showTurboImage(context),
-                    child: Container(
-                      height: 50,
-                      width: 150,
-                      margin: EdgeInsetsDirectional.symmetric(horizontal: 90),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.horizontal(left: Radius.circular(20), right: Radius.circular(20)),
-                        color: Colors.white,
-                      ),
-                      child: Center(
-                        child: customText(
-                          "Turbo Fotoğrafı Göster",
-                          Colors.redAccent,
-                        ),
-                      ),
-                    ),
-                  ),
-                TextButton(
-                  onPressed: () => showKatricImage(context),
-                  child: Container(
-                    height: 50,
-                    width: 150,
-                    margin: EdgeInsetsDirectional.symmetric(horizontal: 90),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20), right: Radius.circular(20)),
-                      color: Colors.white,
-                    ),
-                    child: Center(
-                      child: customText(
-                        "Katriç Fotoğrafı Göster",
-                        Colors.redAccent,
-                      ),
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => showBalansImage(context),
-                  child: Container(
-                    height: 50,
-                    width: 150,
-                    margin: EdgeInsetsDirectional.symmetric(horizontal: 90),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(20), right: Radius.circular(20)),
-                      color: Colors.white,
-                    ),
-                    child: Center(
-                      child: customText(
-                        "Balans Fotoğrafı Göster",
-                        Colors.redAccent,
-                      ),
-                    ),
-                  ),
-                ),
-
-              ],
-            ),
-          ),
-        ],
-      ),
-      ),
-    );
-  }
 }
-
-
-Widget customText(String text, Color color) => Text(
-  text,
-  style: TextStyle(color: color),
-);

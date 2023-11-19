@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:turboapp/service/auth_service.dart';
 import 'package:turboapp/frontEnd/utils/customColors.dart';
-import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 
 import '../formPages/inputIPF.dart';
@@ -217,6 +216,4 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
   }
-
-
 }

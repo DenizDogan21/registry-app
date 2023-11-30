@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:turboapp/service/auth_service.dart';
 import 'package:turboapp/frontEnd/utils/customColors.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
@@ -13,9 +14,62 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late String email, password;
+  String email = '', password = '';
+  bool rememberMe = false;
   final formkey = GlobalKey<FormState>();
   final authService = AuthService();
+  final secureStorage = FlutterSecureStorage();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  Widget rememberMeCheckbox() {
+    return Row(
+      children: [
+        Checkbox(
+          value: rememberMe,
+          onChanged: (bool? value) {
+            setState(() {
+              rememberMe = value!;
+            });
+          },
+        ),
+        Text("Beni hatırla", style: TextStyle(color: Colors.white)),
+      ],
+    );
+  }
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    autoFillCredentials();
+  }
+
+  void autoFillCredentials() async {
+    String? savedEmail = await secureStorage.read(key: 'email');
+    String? savedPassword = await secureStorage.read(key: 'password');
+
+    if (savedEmail != null && savedPassword != null) {
+      setState(() {
+        emailController.text = savedEmail;
+        passwordController.text = savedPassword;
+        rememberMe = true;
+      });
+    }
+  }
+
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                     customSizedBox(),
                     customSizedBox(),
                     forgotPasswordButton(),
+                    rememberMeCheckbox(),
                     customSizedBox(),
                     signInButton(),
                     customSizedBox(),
@@ -72,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField emailTextField() {
     return TextFormField(
+      controller: emailController,
       validator: (value) {
         if (value!.isEmpty) {
           return "Bilgileri Eksiksiz Doldurunuz";
@@ -87,6 +143,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField passwordTextField() {
     return TextFormField(
+      controller: passwordController,
       validator: (value) {
         if (value!.isEmpty) {
           return "Bilgileri Eksiksiz Doldurunuz";
@@ -191,13 +248,20 @@ class _LoginPageState extends State<LoginPage> {
   void signIn() async {
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
+
       final result = await authService.signIn(email, password);
+
       if (result == "success") {
+        if (rememberMe) {
+          await secureStorage.write(key: 'email', value: email);
+          await secureStorage.write(key: 'password', value: password);
+        }
+
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => FirstStepPage(formData: {})),
               (route) => false,
         );
-      } else {
+      }else {
         showDialog(
           context: context,
           builder: (context) {

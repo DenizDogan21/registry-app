@@ -9,7 +9,7 @@ class CustomTextStyle {
     );
   }
   static const orangeTextStyle =
-      TextStyle(fontSize: 30, color: Colors.deepOrange, fontWeight: FontWeight.w400);
+      TextStyle(fontSize: 15, color: Colors.deepOrange, fontWeight: FontWeight.w400);
   static const outputListTextStyle =
       TextStyle(fontSize: 15, color: Colors.white);
   static const outputTitleTextStyle =

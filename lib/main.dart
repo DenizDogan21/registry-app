@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:turboapp/BackEnd/Repositories/workOrderForm_repo.dart';
+import 'package:turboapp/frontEnd/auth/forgotPassword.dart';
 import 'package:turboapp/frontEnd/auth/login.dart';
 import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
 import 'package:turboapp/frontEnd/auth/singup.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: Routes.login, page: () => LoginPage()),
         GetPage(name: Routes.signUp, page: () => SignUp()),
+        GetPage(name: Routes.forgotPassword, page: () => ForgotPasswordPage()),
         // ... and so on for each route
       ],
       // ...

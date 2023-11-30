@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 // Define your routes as constants to avoid typos when calling them
 class Routes {
   static const login = '/login';
+  static const forgotPassword = '/forgotPassword';
   static const signUp = '/signUp';
   static const addForm = '/addForm';
   static const detailsIPF = '/detailsIPF';
@@ -16,6 +17,7 @@ class Routes {
 
 class NavigationController extends GetxController {
   void navigateToLogin() => Get.toNamed(Routes.login);
+  void navigateToForgotPassword() => Get.toNamed(Routes.forgotPassword);
   void navigateToSignup() => Get.toNamed(Routes.signUp);
   void navigateToAddForm() => Get.toNamed(Routes.addForm);
   void navigateToDetailsPF() => Get.toNamed(Routes.detailsIPF);

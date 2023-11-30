@@ -23,7 +23,8 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   Widget rememberMeCheckbox() {
-    return Row(
+    return Padding(padding: EdgeInsets.only(left: 115), child:
+    Row(
       children: [
         Checkbox(
           value: rememberMe,
@@ -35,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         Text("Beni hatırla", style: TextStyle(color: Colors.white)),
       ],
+    )
     );
   }
 
@@ -161,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
   Center forgotPasswordButton() {
     return Center(
       child: TextButton(
-        onPressed: () {},
+        onPressed: () => Navigator.pushNamed(context, "/forgotPassword"),
         child: customText(
           "Şifremi Unuttum",
           CustomColors.pinkColor,

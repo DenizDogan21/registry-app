@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../BackEnd/Models/inProgressForm_model.dart';
+import '../../BackEnd/Repositories/inProgressForm_repo.dart';
 import '../widgets/common.dart';
-import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
-import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
-import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
-
 import 'detailsIPF.dart';
+import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
+import 'package:turboapp/frontEnd/formPages/stepsIPF/detailsIPF1.dart';
 
 class OutputIPFPage extends StatefulWidget {
   const OutputIPFPage({Key? key}) : super(key: key);
@@ -16,22 +16,21 @@ class OutputIPFPage extends StatefulWidget {
 
 class _OutputIPFPageState extends State<OutputIPFPage> {
   final _inProgressFormRepo = InProgressFormRepo.instance;
-  late List<InProgressFormModel> _forms;
-  late List<InProgressFormModel> _filteredForms;
+  late List<InProgressFormModel> _formsIPF;
+  late List<InProgressFormModel> _filteredFormsIPF;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _forms = [];
-    _filteredForms = [];
+    _formsIPF = [];
+    _filteredFormsIPF = [];
     _getInProgressForms();
     _searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
@@ -43,11 +42,11 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
 
   void _getInProgressForms() async {
     try {
-      final forms = await _inProgressFormRepo.getInProgressForms();
-      forms.sort((a, b) => b.tarihIPF.compareTo(a.tarihIPF));
+      final formsIPF = await _inProgressFormRepo.getInProgressForms();
+      formsIPF.sort((a, b) => b.tarihIPF.compareTo(a.tarihIPF));
       setState(() {
-        _forms = forms;
-        _filteredForms = forms;
+        _formsIPF = formsIPF;
+        _filteredFormsIPF = formsIPF;
       });
     } catch (error) {
       print('Error: $error');
@@ -59,22 +58,32 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
     Future.delayed(Duration.zero, () {
       setState(() {
         if (keyword.isNotEmpty) {
-          _filteredForms = _forms.where((form) {
-            final turboNoString = form.turboNo.toString().toLowerCase();
+          _filteredFormsIPF = _formsIPF.where((form) {
             final keywordLower = keyword.toLowerCase();
-            return turboNoString.contains(keywordLower) ||
-                form.aracBilgileri.toLowerCase().contains(keywordLower) ||
-                form.musteriBilgileri.toLowerCase().contains(keywordLower) ||
-                form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
-                form.tespitEdilen.toLowerCase().contains(keywordLower) ||
-                form.yapilanIslemler.toLowerCase().contains(keywordLower);
+            return form.turboNo.toLowerCase().contains(keywordLower) ||
+              form.aracBilgileri.toLowerCase().contains(keywordLower) ||
+                  form.aracPlaka.toLowerCase().contains(keywordLower) ||
+                  form.musteriAdi.toLowerCase().contains(keywordLower) ||
+                  form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
+                  form.onTespit.toLowerCase().contains(keywordLower) ||
+                  form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
+                  form.teslimAdresi.toLowerCase().contains(keywordLower) ;
           }).toList();
-
         } else {
-          _filteredForms = _forms;
+          _filteredFormsIPF = _formsIPF;
         }
       });
     });
+  }
+
+
+  bool containsNullValue(InProgressFormModel form) {
+    return
+          form.tespitEdilen == "null" ||
+          form.yapilanIslemler == "null" ||
+          form.turboImageUrl== "null" ||
+          form.balansImageUrl== "null" ||
+          form.katricImageUrl== "null";
   }
 
   @override
@@ -96,13 +105,12 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
           IconButton(
             icon: Icon(Icons.cancel),
             onPressed: () {
-              // Clear the search field
               _searchController.clear();
             },
           ),
         ],
       ),
-      bottomNavigationBar: bottomNav(), // Make sure this is the same as in OutputWOFPage
+      bottomNavigationBar: bottomNav(),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -115,28 +123,31 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
             ],
           ),
         ),
-        child: _filteredForms.isEmpty
+        child: _filteredFormsIPF.isEmpty
             ? Center(child: Text('Kayıt Bulunamadı', style: TextStyle(color: Colors.white)))
             : ListView.separated(
-          itemCount: _filteredForms.length,
+          itemCount: _filteredFormsIPF.length,
           separatorBuilder: (context, index) => Divider(color: Colors.grey.shade600),
           itemBuilder: (context, index) {
-            final form = _filteredForms[index];
+            final form = _filteredFormsIPF[index];
+            bool isFormIncomplete = containsNullValue(form);
+            Color tileColor = isFormIncomplete ? Colors.yellow : Colors.green;
             return ListTileTheme(
               textColor: Colors.white,
-              iconColor: Colors.cyanAccent,
+              iconColor: tileColor,
               child: ListTile(
                 leading: Icon(Icons.build_circle_outlined),
                 title: Text('${formatDate(form.tarihIPF)}', style: CustomTextStyle.outputTitleTextStyle),
-                subtitle: Text('Turbo No: ${form.turboNo}', style: CustomTextStyle.outputListTextStyle),
+                subtitle: Text('Turbo No: ${form.turboNo} \nEge Turbo No: ${form.egeTurboNo}', style: CustomTextStyle.outputListTextStyle),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => DetailsIPFPage(formIPF: form),
+                      builder: (context) => DetailsIPF1(formIPF: form),
                     ),
                   );
                 },
+                tileColor: tileColor,
               ),
             );
           },

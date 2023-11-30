@@ -94,5 +94,17 @@ Widget buildDatePickerFormField({
 }
 
 
+Widget buildStepDot({required bool isSelected}) {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 4),
+    height: 10,
+    width: 10,
+    decoration: BoxDecoration(
+      color: isSelected ? Colors.cyanAccent : Colors.grey,
+      shape: BoxShape.circle,
+    ),
+  );
+}
+
 
 

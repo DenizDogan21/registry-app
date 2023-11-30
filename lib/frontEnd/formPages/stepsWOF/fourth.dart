@@ -16,6 +16,9 @@ class _FourthStepPageState extends State<FourthStepPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? onTespit;
 
+  int currentStep = 3;
+  final int totalSteps = 6;
+
   void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -30,6 +33,7 @@ class _FourthStepPageState extends State<FourthStepPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, "  Ön Tespit"),
+      bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),
         SingleChildScrollView(
@@ -38,6 +42,11 @@ class _FourthStepPageState extends State<FourthStepPage> {
           key: _formKey,
           child: Column(
             children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(totalSteps, (index) =>
+                      buildStepDot(isSelected: index == currentStep))),
+              SizedBox(height: 20),
               buildTextFormField(
                 labelText: 'Ön Tespit',
                 errorText: 'Lütfen ön tespiti girin',

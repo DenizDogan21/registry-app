@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:turboapp/frontEnd/formPages/inputWOF.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 import 'package:turboapp/frontEnd/formPages/inputIPF.dart';
 import 'package:turboapp/frontEnd/widgets/helpMethodsNavBar.dart';
@@ -42,7 +41,7 @@ class _AddFormPageState extends State<AddFormPage> {
           children: [
             buildButton(context, "İş Emri Formu Ekle",FirstStepPage(formData: {})),
             SizedBox(height: 40,),
-            buildButton(context, "Süreç Formu Ekle", const InputIPFPage()),
+        //    buildButton(context, "Süreç Formu Ekle", const InputIPFPage()),
           ],
         ),
       ),

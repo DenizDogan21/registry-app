@@ -50,30 +50,45 @@ final Map<String, String> friendlyNames = {
 };
 
 Widget buildYanindaGelenlerSection(Map<String, bool> yanindaGelenler, ThemeData theme) {
-  var sortedEntries = yanindaGelenler.entries.toList()
-    ..sort((a, b) => (friendlyNames[a.key] ?? a.key).compareTo(friendlyNames[b.key] ?? b.key));
+  // Filter and concatenate the friendly names of the included items into a string
+  String includedItems = yanindaGelenler.entries
+      .where((entry) => entry.value)
+      .map((entry) => friendlyNames[entry.key] ?? entry.key)
+      .join(', ');
 
-  return Card(
-    // ... existing card setup ...
-    child: Column(
-      children: [
-        // ... existing title and divider ...
-        ...sortedEntries.map((entry) {
-          return _yanindaGelenlerItem(friendlyNames[entry.key] ?? entry.key, entry.value, theme);
-        }).toList(),
-      ],
+  return includedItems.isNotEmpty
+      ? Card(
+    margin: const EdgeInsets.symmetric(vertical: 10.0),
+    child: ListTile(
+      title: Text('Yanında Gelenler:', style: theme.textTheme.subtitle1),
+      subtitle: Text(includedItems, style: theme.textTheme.bodyText1),
     ),
-  );
+  )
+      : SizedBox.shrink(); // Return an empty widget if there are no included items
 }
 
-Widget _yanindaGelenlerItem(String name, bool isIncluded, ThemeData theme) {
-  return ListTile(
-    leading: Checkbox(
-      value: isIncluded,
-      onChanged: null, // Making the checkbox non-interactive
-      activeColor: theme.primaryColor,
-    ),
-    title: Text(name, style: theme.textTheme.subtitle1),
+
+void showSaveAlertDialog(BuildContext context, VoidCallback onSave, Widget nextPage) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Değişiklikleri Kaydet'),
+        content: Text('Bu değişiklikleri kaydetmek istiyor musunuz?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Vazgeç'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => nextPage));
+            },
+          ),
+          TextButton(
+            child: Text('Kaydet'),
+            onPressed: onSave,
+          ),
+        ],
+      );
+    },
   );
 }
-

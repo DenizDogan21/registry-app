@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
-import 'package:turboapp/frontEnd/formPages/addForm.dart';
 import 'package:turboapp/frontEnd/formPages/showForms.dart';
 import 'package:get/get.dart';
+import 'package:turboapp/frontEnd/formPages/stepsWOF/first.dart';
 
 class BottomNavigationController extends GetxController {
   var currentIndex = 0.obs;
@@ -11,7 +11,7 @@ class BottomNavigationController extends GetxController {
     currentIndex.value = index;
     switch (index) {
       case 0:
-        Get.offAll(() => AddFormPage()); // Get.offAll() removes all the previous routes
+        Get.offAll(() => FirstStepPage(formData: {})); // Get.offAll() removes all the previous routes
         break;
       case 1:
         Get.offAll(() => ShowFormsPage());

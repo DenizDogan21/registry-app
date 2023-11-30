@@ -1,5 +1,6 @@
+
 import 'package:flutter/material.dart';
-import 'package:turboapp/BackEnd/Models/workOrderForm_model.dart';
+import 'package:turboapp/backEnd/models/workOrderForm_model.dart';
 import '../widgets/common.dart';
 import 'package:turboapp/frontEnd/widgets/helperMethodsDetails.dart';
 
@@ -28,6 +29,10 @@ class DetailsWOFPage extends StatelessWidget {
                       'Turbo No:', formWOF.turboNo, themeData),
                   detailSection(
                       'Araç Bilgileri:', formWOF.aracBilgileri, themeData),
+                  detailSection(
+                      'Araç Km:', formWOF.aracKm.toString(), themeData),
+                  detailSection(
+                      'Araç Plakası:', formWOF.aracPlaka, themeData),
                   detailSection('Müşteri Ad Soyad:', formWOF.musteriAdi,
                       themeData),
                   detailSection('Müşteri Numarası:', formWOF.musteriNumarasi.toString(),
@@ -35,6 +40,8 @@ class DetailsWOFPage extends StatelessWidget {
                   detailSection(
                       'Müşteri Şikayetleri:', formWOF.musteriSikayetleri,
                       themeData),
+                  buildYanindaGelenlerSection(
+                      formWOF.yanindaGelenler, themeData),
                   detailSection('Ön Tespit:', formWOF.onTespit, themeData),
                   detailSection(
                       'Turboyu Getiren:', formWOF.turboyuGetiren, themeData),
@@ -43,10 +50,6 @@ class DetailsWOFPage extends StatelessWidget {
                       themeData),
                   detailSection(
                       'Teslim Adresi:', formWOF.teslimAdresi, themeData),
-                  buildYanindaGelenlerSection(
-                      formWOF.yanindaGelenler, themeData),
-                  // Add more widgets to display other form data as needed
-                  // If you have photo URLs, you can add photoButton widgets here
                 ],
               ),
             ),

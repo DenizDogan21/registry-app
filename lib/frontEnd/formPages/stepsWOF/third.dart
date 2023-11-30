@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/common.dart';
+import '../../widgets/helperMethodsInput.dart';
 import 'fourth.dart'; // Ensure this import points to your fourth page
 
 
@@ -16,7 +17,8 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Map? yanindaGelenler;
 
-
+  int currentStep = 2;
+  final int totalSteps = 6;
 
 
   Map<String, bool> yanindaGelenlerState = {
@@ -132,6 +134,7 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, "  Turboyla Gelenler"),
+      bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),
         SingleChildScrollView(
@@ -140,6 +143,11 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
           key: _formKey,
           child: Column(
             children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(totalSteps, (index) =>
+                      buildStepDot(isSelected: index == currentStep))),
+              SizedBox(height: 20),
               ..._buildCheckboxes(),
               SizedBox(height: 20,),
               ElevatedButton(

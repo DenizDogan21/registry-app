@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../BackEnd/Models/workOrderForm_model.dart';
 import '../../BackEnd/Repositories/workOrderForm_repo.dart';
+import 'package:turboapp/backEnd/models/workOrderForm_model.dart';
 import '../widgets/common.dart';
 import 'detailsWOF.dart';
 import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
@@ -58,16 +58,16 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
       setState(() {
         if (keyword.isNotEmpty) {
           _filteredFormsWOF = _formsWOF.where((form) {
-            final tasimaUcretiString = form.tasimaUcreti.toString().toLowerCase();
             final keywordLower = keyword.toLowerCase();
             return form.turboNo.toLowerCase().contains(keywordLower) ||
                 form.aracBilgileri.toLowerCase().contains(keywordLower) ||
+                form.aracPlaka.toLowerCase().contains(keywordLower) ||
                 form.musteriAdi.toLowerCase().contains(keywordLower) ||
                 form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
                 form.onTespit.toLowerCase().contains(keywordLower) ||
                 form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
-                tasimaUcretiString.contains(keywordLower) ||
-                form.teslimAdresi.toLowerCase().contains(keywordLower);
+                form.teslimAdresi.toLowerCase().contains(keywordLower) ||
+                form.kabulDurumu.toLowerCase().contains(keywordLower);
           }).toList();
         } else {
           _filteredFormsWOF = _formsWOF;
@@ -120,9 +120,10 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
           separatorBuilder: (context, index) => Divider(color: Colors.grey.shade600),
           itemBuilder: (context, index) {
             final form = _filteredFormsWOF[index];
+            Color tileColor = form.kabulDurumu == 'reddedildi' ? Colors.red : Colors.yellow;
             return ListTileTheme(
               textColor: Colors.white,
-              iconColor: Colors.cyanAccent,
+              iconColor: tileColor,
               child: ListTile(
                 leading: Icon(Icons.build_circle_outlined),
                 title: Text('${formatDate(form.tarihWOF)}', style: CustomTextStyle.outputTitleTextStyle),
@@ -135,6 +136,7 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
                     ),
                   );
                 },
+                tileColor: tileColor, // Set tile color based on kabulDurumu
               ),
             );
           },
@@ -146,4 +148,3 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
     return DateFormat('yyyy-MM-dd – HH:mm').format(dateTime);
   }
 }
-

@@ -3,7 +3,7 @@ import 'package:turboapp/service/auth_service.dart';
 import 'package:turboapp/frontEnd/utils/customColors.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 
-import '../formPages/inputIPF.dart';
+import '../formPages/stepsWOF/first.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -194,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
       final result = await authService.signIn(email, password);
       if (result == "success") {
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => InputIPFPage()),
+          MaterialPageRoute(builder: (context) => FirstStepPage(formData: {})),
               (route) => false,
         );
       } else {

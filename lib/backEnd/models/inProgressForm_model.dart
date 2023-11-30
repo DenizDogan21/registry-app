@@ -1,30 +1,52 @@
 
 class InProgressFormModel {
-  final String? id;
-  final int turboNo;
-  final DateTime tarihIPF;
-  final String aracBilgileri;
-  final String musteriBilgileri;
-  final String musteriSikayetleri;
-  final String tespitEdilen;
-  final String yapilanIslemler;
-  final String turboImageUrl;
-  final String katricImageUrl;
-  final String balansImageUrl;
+   String? id;
+   DateTime tarihIPF;
+   String tespitEdilen;
+   String yapilanIslemler;
+   String turboImageUrl;
+   String katricImageUrl;
+   String balansImageUrl;
+   int egeTurboNo;
+
+   String turboyuGetiren;
+   double tasimaUcreti;
+   String teslimAdresi;
+   String turboNo;
+   Map<String, bool> yanindaGelenler;
+   DateTime tarihWOF;
+   String aracBilgileri;
+   int aracKm;
+   String aracPlaka;
+   String musteriAdi;
+   int musteriNumarasi;
+   String musteriSikayetleri;
+   String onTespit;
 
 
   Map<String, dynamic> toJson() {
     return {
-      "turboNo": turboNo,
       "tarihIPF": tarihIPF,
-      "aracBilgileri": aracBilgileri,
-      "musteriBilgileri": musteriBilgileri,
-      "musteriSikayetleri": musteriSikayetleri,
       "tespitEdilen": tespitEdilen,
       "yapilanIslemler": yapilanIslemler,
       "turboImage": turboImageUrl,
       "katricImage": katricImageUrl,
       "balansImage": balansImageUrl,
+      "egeTurboNo": egeTurboNo,
+
+      "turboNo": turboNo,
+      "tarihWOF": tarihWOF,
+      "aracBilgileri": aracBilgileri,
+      "aracKm": aracKm,
+      "aracPlaka": aracPlaka,
+      "musteriAdi": musteriAdi,
+      "musteriNumarasi": musteriNumarasi,
+      "musteriSikayetleri": musteriSikayetleri,
+      "onTespit": onTespit,
+      "turboyuGetiren": turboyuGetiren,
+      "tasimaUcreti": tasimaUcreti,
+      "teslimAdresi": teslimAdresi,
+      "yanindaGelenler": yanindaGelenler,
     };
   }
 
@@ -33,15 +55,53 @@ class InProgressFormModel {
 
   InProgressFormModel( {
     this.id,
-    this.turboNo = -1,
     required this.tarihIPF,
-    this.aracBilgileri = "null",
-    this.musteriBilgileri = "null",
-    this.musteriSikayetleri = "null",
     this.tespitEdilen = "null",
     this.yapilanIslemler = "null",
     this.turboImageUrl="null",
     this.katricImageUrl="null",
     this.balansImageUrl="null",
+    this.egeTurboNo= 0,
+
+    this.turboNo = "null",
+    required this.tarihWOF,
+    this.aracBilgileri = "null",
+    this.aracKm=-1,
+    this.aracPlaka="null",
+    this.musteriAdi = "null",
+    this.musteriNumarasi = -1,
+    this.musteriSikayetleri = "null",
+    this.onTespit = "null",
+    this.turboyuGetiren = "null",
+    this.tasimaUcreti = -1,
+    this.teslimAdresi = "null",
+    required this.yanindaGelenler,
   });
+
+
+   void setImageUrl(String imageType, String url) {
+     if (imageType == 'turbo') {
+       turboImageUrl = url;
+     } else if (imageType == 'katric') {
+       katricImageUrl = url;
+     } else if (imageType == 'balans') {
+       balansImageUrl = url;
+     }
+   }
+
+   String? getImageUrl(String imageType) {
+     if (imageType == 'turbo') {
+       return turboImageUrl;
+     } else if (imageType == 'katric') {
+       return katricImageUrl;
+     } else if (imageType == 'balans') {
+       return balansImageUrl;
+     }
+     return null;
+   }
+
+
+
+
 }
+

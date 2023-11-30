@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../../BackEnd/Models/workOrderForm_model.dart';
-import '../../../BackEnd/Repositories/workOrderForm_repo.dart';
+import 'package:turboapp/frontEnd/formPages/stepsWOF/sixth.dart';
 import '../../widgets/helperMethodsInput.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 
@@ -16,72 +14,36 @@ class FifthStepPage extends StatefulWidget {
 
 class _FifthStepPageState extends State<FifthStepPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _workOrderFormRepo = WorkOrderFormRepo.instance;
 
-  bool _isSubmitted = false;
 
   final List<String> deliveryOptions = ['atölyemiz teslim', 'kurye', 'kargo', 'elden'];
   final List<String> shippingOptions = ['MNG', 'Aras', 'Yurtiçi', 'Sürat', 'Ptt', 'Diğer'];
-
-
-  String? turboNo;
-  DateTime? tarihWOF;
-  String? aracBilgileri;
-  String? musteriAdi;
-  int? musteriNumarasi;
-  String? musteriSikayetleri;
-  String? onTespit;
   double? tasimaUcreti;
   String? teslimAdresi;
   String? turboyuGetiren;
   String? shippingOption; // For the second dropdown
 
+  int currentStep = 4;
+  final int totalSteps = 6;
 
-  void _submitForm() async {
+
+  void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
 
-      // Concatenate turboyuGetiren and shippingOption if turboyuGetiren is 'kargo'
-      String finalTurboyuGetiren = turboyuGetiren ?? "";
       if (turboyuGetiren == 'kargo' && shippingOption != null) {
-        finalTurboyuGetiren = "$turboyuGetiren, $shippingOption";
+        turboyuGetiren = "$turboyuGetiren, $shippingOption";
       }
 
 
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-
-        // Create an instance of workOrderFormModel with the entered data
-        final workOrderForm = WorkOrderFormModel(
-          turboNo: widget.formData['turboNo'] ?? "",
-          tarihWOF: widget.formData['tarihWOF'] ?? DateTime.now(), // Assuming you store DateTime objects in formData
-          aracBilgileri: widget.formData['aracBilgileri'] ?? "",
-          musteriAdi: widget.formData['musteriAdi'] ?? "",
-          musteriNumarasi: widget.formData['musteriNumarasi'] ?? 0, // Assuming it's an int
-          musteriSikayetleri: widget.formData['musteriSikayetleri'] ?? "",
-          onTespit: widget.formData['onTespit'] ?? "",
-          turboyuGetiren: finalTurboyuGetiren,
-          tasimaUcreti: tasimaUcreti ?? 0.0, // Assuming it's a double
-          teslimAdresi: teslimAdresi ?? "",
-          yanindaGelenler: widget.formData['yanindaGelenler'] ?? {},
-        );
-
-        // Create the form
-        _workOrderFormRepo.createWorkOrderForm(workOrderForm);
-
-        // Reset the form fields
-        setState(() {
-          _formKey.currentState!.reset();
-          turboyuGetiren = null;
-          shippingOption = null;
-        });
-
-      }
+      _formKey.currentState!.save();
+      widget.formData['turboyuGetiren'] = turboyuGetiren;
+      widget.formData['tasimaUcreti'] = tasimaUcreti;
+      widget.formData['teslimAdresi'] = teslimAdresi;
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SixthStepPage(formData: widget.formData),
+      ));
     }
   }
-
-
-
 
 
   Widget _buildDeliveryDropdown() {
@@ -162,6 +124,11 @@ class _FifthStepPageState extends State<FifthStepPage> {
           key: _formKey,
           child: Column(
             children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(totalSteps, (index) =>
+                      buildStepDot(isSelected: index == currentStep))),
+              SizedBox(height: 20),
               _buildDeliveryDropdown(),
               SizedBox(height: 20,),
               _buildShippingDropdown(),
@@ -180,9 +147,9 @@ class _FifthStepPageState extends State<FifthStepPage> {
               ),
               SizedBox(height: 30,),
               ElevatedButton(
-                onPressed: _submitForm,
+                onPressed: _saveAndContinue,
                 child: Text(
-                  'Gönder',
+                  'Devam',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
                 ),
                 style: ElevatedButton.styleFrom(

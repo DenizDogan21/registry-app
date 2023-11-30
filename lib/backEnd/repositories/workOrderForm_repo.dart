@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import '../Models/workOrderForm_model.dart';
+import 'package:turboapp/backEnd/models/workOrderForm_model.dart';
 
 class WorkOrderFormRepo extends GetxController {
   static WorkOrderFormRepo get instance => Get.find();
@@ -51,7 +51,9 @@ class WorkOrderFormRepo extends GetxController {
             turboNo: (formData['turboNo'] as String?) ?? "",
             tarihWOF: (formData['tarihWOF'] as Timestamp?)?.toDate() ?? DateTime.now(),
             aracBilgileri: (formData['aracBilgileri'] as String?) ?? "",
-            musteriAdi: (formData['musteriAd'] as String?) ?? "",
+            aracKm: (formData['aracKm'] as int) ?? 0,
+            aracPlaka: (formData['aracPlaka'] as String?) ?? "",
+            musteriAdi: (formData['musteriAdi'] as String?) ?? "",
             musteriNumarasi: (formData['musteriNumarasi'] as int) ?? 0,
             musteriSikayetleri: (formData['musteriSikayetleri'] as String?) ?? "",
             onTespit: (formData['onTespit'] as String?) ?? "",
@@ -59,6 +61,7 @@ class WorkOrderFormRepo extends GetxController {
             tasimaUcreti: (formData['tasimaUcreti'] as double?) ?? 0,
             teslimAdresi: (formData['teslimAdresi'] as String?) ?? "",
             yanindaGelenler: Map<String, bool>.from(formData['yanindaGelenler'] ?? {}),
+            kabulDurumu: (formData['kabulDurumu'] as String?) ?? "",
           );
         }).toList();
 

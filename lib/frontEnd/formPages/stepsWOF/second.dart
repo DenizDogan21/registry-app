@@ -18,6 +18,9 @@ class _SecondStepPageState extends State<SecondStepPage> {
   int? musteriNumarasi;
   String? musteriSikayetleri;
 
+  int currentStep = 1;
+  final int totalSteps = 6;
+
   void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -36,6 +39,7 @@ class _SecondStepPageState extends State<SecondStepPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, "  Müşteri Bilgileri"),
+        bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),
         SingleChildScrollView(
@@ -44,6 +48,11 @@ class _SecondStepPageState extends State<SecondStepPage> {
           key: _formKey,
           child: Column(
             children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(totalSteps, (index) =>
+                      buildStepDot(isSelected: index == currentStep))),
+              SizedBox(height: 20),
               buildTextFormField(
                 labelText: 'Müşteri Ad Soyad',
                 errorText: 'Lütfen müşteri adı girin',

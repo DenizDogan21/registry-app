@@ -17,6 +17,12 @@ class _FirstStepPageState extends State<FirstStepPage> {
   String? turboNo;
   DateTime? tarihWOF;
   String? aracBilgileri;
+  int? aracKm;
+  String? aracPlaka;
+
+  int currentStep = 0;
+  final int totalSteps = 6;
+
 
   void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
@@ -25,6 +31,8 @@ class _FirstStepPageState extends State<FirstStepPage> {
       widget.formData['turboNo'] = turboNo;
       widget.formData['tarihWOF'] = tarihWOF;
       widget.formData['aracBilgileri'] = aracBilgileri;
+      widget.formData['aracKm'] = aracKm;
+      widget.formData['aracPlaka'] = aracPlaka;
       // Navigate to the second step
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => SecondStepPage(formData: widget.formData),
@@ -36,6 +44,7 @@ class _FirstStepPageState extends State<FirstStepPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, "  Araç ve Turbo Kaydı"),
+      bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),
         SingleChildScrollView(
@@ -44,6 +53,11 @@ class _FirstStepPageState extends State<FirstStepPage> {
           key: _formKey,
           child: Column(
             children: [
+            Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(totalSteps, (index) =>
+                buildStepDot(isSelected: index == currentStep))),
+              SizedBox(height: 20),
               buildDatePickerFormField(
                 context: context,
                 labelText: 'İş Emri Tarihi',
@@ -63,6 +77,19 @@ class _FirstStepPageState extends State<FirstStepPage> {
                 labelText: 'Araç Bilgileri',
                 errorText: 'Lütfen araç bilgisi girin',
                 onSave: (value) => aracBilgileri = value,
+              ),
+              SizedBox(height: 20),
+              buildTextFormField(
+                labelText: 'Araç Km',
+                errorText: 'Lütfen araç km si girin',
+                onSave: (value) => aracKm = int.tryParse(value!),
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 20),
+              buildTextFormField(
+                labelText: 'Araç Plakası',
+                errorText: 'Lütfen araç plakası girin',
+                onSave: (value) => aracPlaka = value,
               ),
               SizedBox(height: 20), // Spacing
               ElevatedButton(

@@ -43,16 +43,28 @@ class InProgressFormRepo extends GetxController {
         final forms = formDocs.map((formDoc) {
           final formData = formDoc.data() as Map<String, dynamic>; // Explicit casting
           return InProgressFormModel(
-            turboNo: (formData['turboNo'] as int?) ?? 0,
             tarihIPF: (formData['tarihIPF'] as Timestamp?)?.toDate() ?? DateTime.now(),
-            aracBilgileri: (formData['aracBilgileri'] as String?) ?? "",
-            musteriBilgileri: (formData['musteriBilgileri'] as String?) ?? "",
-            musteriSikayetleri: (formData['musteriSikayetleri'] as String?) ?? "",
             tespitEdilen: (formData['tespitEdilen'] as String?) ?? "",
             yapilanIslemler: (formData['yapilanIslemler'] as String?) ?? "",
             turboImageUrl: (formData['turboImage'] as String?) ?? "",
             katricImageUrl: (formData['katricImage'] as String?) ?? "",
             balansImageUrl: (formData['balansImage'] as String?) ?? "",
+            egeTurboNo: (formData['egeTurboNo'] as int) ?? 0,
+
+            turboNo: (formData['turboNo'] as String?) ?? "",
+            tarihWOF: (formData['tarihWOF'] as Timestamp?)?.toDate() ?? DateTime.now(),
+            aracBilgileri: (formData['aracBilgileri'] as String?) ?? "",
+            aracKm: (formData['aracKm'] as int) ?? 0,
+            aracPlaka: (formData['aracPlaka'] as String?) ?? "",
+            musteriAdi: (formData['musteriAdi'] as String?) ?? "",
+            musteriNumarasi: (formData['musteriNumarasi'] as int) ?? 0,
+            musteriSikayetleri: (formData['musteriSikayetleri'] as String?) ?? "",
+            onTespit: (formData['onTespit'] as String?) ?? "",
+            turboyuGetiren: (formData['turboyuGetiren'] as String?) ?? "",
+            tasimaUcreti: (formData['tasimaUcreti'] as double?) ?? 0,
+            teslimAdresi: (formData['teslimAdresi'] as String?) ?? "",
+            yanindaGelenler: Map<String, bool>.from(formData['yanindaGelenler'] ?? {},),
+            id: formDoc.id,
           );
         }).toList();
 
@@ -62,5 +74,15 @@ class InProgressFormRepo extends GetxController {
     return [];
   }
 
+
+  Future<void> updateInProgressForm(String formId, InProgressFormModel updatedForm) async {
+    try {
+      final formRef = _db.collection("inProgressForms").doc(formId);
+      await formRef.update(updatedForm.toJson());
+      Get.snackbar("Update Successful", "Form updated successfully", backgroundColor: Colors.green);
+    } catch (e) {
+      Get.snackbar("Update Failed", "Failed to update form: $e", backgroundColor: Colors.red);
+    }
+  }
 
 }

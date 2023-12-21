@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 Widget buildTextFormField({
@@ -106,5 +107,14 @@ Widget buildStepDot({required bool isSelected}) {
   );
 }
 
+
+Future<int> getAndUpdateEgeTurboNo() async {
+  final prefs = await SharedPreferences.getInstance();
+  int? currentNo = prefs.getInt('egeTurboNo'); // get the current number
+  print("Current egeTurboNo from prefs: $currentNo"); // Debug log
+  currentNo = (currentNo ?? 0) + 1; // Increment the counter
+  await prefs.setInt('egeTurboNo', currentNo); // Save it back
+  return currentNo;
+}
 
 

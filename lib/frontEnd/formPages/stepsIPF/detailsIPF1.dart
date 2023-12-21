@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
+import 'package:turboapp/backEnd/models/inProgressForm_model.dart';
+import 'package:turboapp/backEnd/repositories/accountingForm_repo.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 import 'package:turboapp/frontEnd/widgets/helperMethodsDetails.dart';
 import 'package:turboapp/frontEnd/utils/customTextField.dart';
 
-import '../../../BackEnd/Repositories/inProgressForm_repo.dart';
+import '../../../backEnd/repositories/inProgressForm_repo.dart';
 import 'detailsIPF2.dart';
 import 'package:get/get.dart';
 
@@ -100,6 +101,28 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
 
     // Save the updated model to Firebase
     await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+    var accountingForm = await AccountingFormRepo.instance.getFormByEgeTurboNo(widget.formIPF.egeTurboNo);
+    if (accountingForm != null) {
+      accountingForm.tarihWOF = widget.formIPF.tarihWOF;
+      accountingForm.aracBilgileri = widget.formIPF.aracBilgileri;
+      accountingForm.aracKm = widget.formIPF.aracKm;
+      accountingForm.aracPlaka = widget.formIPF.aracPlaka;
+      accountingForm.musteriAdi = widget.formIPF.musteriAdi;
+      accountingForm.musteriNumarasi = widget.formIPF.musteriNumarasi;
+      accountingForm.musteriSikayetleri = widget.formIPF.musteriSikayetleri;
+      accountingForm.onTespit = widget.formIPF.onTespit;
+      accountingForm.turboyuGetiren = widget.formIPF.turboyuGetiren;
+      accountingForm.tasimaUcreti = widget.formIPF.tasimaUcreti;
+      accountingForm.teslimAdresi = widget.formIPF.teslimAdresi;
+      accountingForm.turboNo = widget.formIPF.turboNo;
+      accountingForm.yanindaGelenler = widget.formIPF.yanindaGelenler;
+      accountingForm.tarihIPF = widget.formIPF.tarihIPF;
+
+
+      // Save the updated accounting model to Firebase
+      await AccountingFormRepo.instance.updateAccountingForm(accountingForm.id!, accountingForm);
+    }
+
 
     // Navigate to the next page or go back
     // Logic to save changes to Firebase

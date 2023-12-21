@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
-import '../Models/inProgressForm_model.dart';
+import 'package:turboapp/backEnd/models/inProgressForm_model.dart';
 
 class InProgressFormRepo extends GetxController {
   static InProgressFormRepo get instance => Get.find();
@@ -84,5 +84,16 @@ class InProgressFormRepo extends GetxController {
       Get.snackbar("Update Failed", "Failed to update form: $e", backgroundColor: Colors.red);
     }
   }
+
+  Future<void> deleteInProgressForm(String formId) async {
+    try {
+      final formRef = _db.collection("inProgressForms").doc(formId);
+      await formRef.delete();
+      Get.snackbar("Delete Successful", "Form deleted successfully", backgroundColor: Colors.green);
+    } catch (e) {
+      Get.snackbar("Delete Failed", "Failed to delete form: $e", backgroundColor: Colors.red);
+    }
+  }
+
 
 }

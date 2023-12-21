@@ -1,62 +1,311 @@
-
 import 'package:flutter/material.dart';
-import 'package:turboapp/backEnd/models/workOrderForm_model.dart';
-import '../widgets/common.dart';
+import 'package:turboapp/backEnd/repositories/accountingForm_repo.dart';
+import 'package:turboapp/frontEnd/formPages/outputWOF.dart';
+import 'package:turboapp/frontEnd/widgets/common.dart';
 import 'package:turboapp/frontEnd/widgets/helperMethodsDetails.dart';
+import 'package:turboapp/frontEnd/utils/customTextField.dart';
+import 'package:get/get.dart';
 
-class DetailsWOFPage extends StatelessWidget {
+import '../../backEnd/models/accountingForm_model.dart';
+import '../../backEnd/models/inProgressForm_model.dart';
+import '../../backEnd/repositories/inProgressForm_repo.dart';
+import '../../backEnd/repositories/workOrderForm_repo.dart';
+import '../../backEnd/models/workOrderForm_model.dart';
+import '../widgets/helperMethodsInput.dart';
+
+class DetailsWOFPage extends StatefulWidget {
   final WorkOrderFormModel formWOF;
-
   DetailsWOFPage({required this.formWOF});
 
   @override
+  _DetailsWOFState createState() => _DetailsWOFState();
+}
+
+class _DetailsWOFState extends State<DetailsWOFPage> {
+
+  final _inProgressFormRepo = InProgressFormRepo.instance;
+  final _accountingFormRepo = AccountingFormRepo.instance;
+
+  TextEditingController _controllerTarihWOF = TextEditingController();
+  TextEditingController _controllerTurboNo = TextEditingController();
+  TextEditingController _controllerYanindaGelenler = TextEditingController();
+  TextEditingController _controllerAracBilgileri = TextEditingController();
+  TextEditingController _controllerAracKm = TextEditingController();
+  TextEditingController _controllerAracPlaka = TextEditingController();
+  TextEditingController _controllerMusteriAdi = TextEditingController();
+  TextEditingController _controllerMusteriNumarasi= TextEditingController();
+  TextEditingController _controllerMusteriSikayetleri = TextEditingController();
+  TextEditingController _controllerOnTespit = TextEditingController();
+  TextEditingController _controllerTurboyuGetiren = TextEditingController();
+  TextEditingController _controllerTasimaUcreti = TextEditingController();
+  TextEditingController _controllerTeslimAdresi = TextEditingController();
+  TextEditingController _controllerKabulDurumu = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers with initial values from widget.formIPF
+    _controllerTarihWOF.text = widget.formWOF.tarihWOF.toString();
+    _controllerTurboNo.text = widget.formWOF.turboNo;
+    _controllerYanindaGelenler.text = getFriendlyTrueKeys(widget.formWOF.yanindaGelenler).join(', ');
+    _controllerAracBilgileri.text = widget.formWOF.aracBilgileri;
+    _controllerAracKm.text = widget.formWOF.aracKm.toString();
+    _controllerAracPlaka.text = widget.formWOF.aracPlaka;
+    _controllerMusteriAdi.text = widget.formWOF.musteriAdi;
+    _controllerMusteriNumarasi.text = widget.formWOF.musteriNumarasi.toString();
+    _controllerMusteriSikayetleri.text = widget.formWOF.musteriSikayetleri;
+    _controllerOnTespit.text = widget.formWOF.onTespit;
+    _controllerTurboyuGetiren.text = widget.formWOF.turboyuGetiren;
+    _controllerTasimaUcreti.text = widget.formWOF.tasimaUcreti.toString();
+    _controllerTeslimAdresi.text = widget.formWOF.teslimAdresi;
+    _controllerKabulDurumu.text = widget.formWOF.kabulDurumu;
+  }
+
+
+  Map<String, bool> parseYanindaGelenlerForSave(String text) {
+    Map<String, bool> result = {};
+    var friendlyNamesList = text.split(', ');
+
+    friendlyNames.forEach((key, friendlyName) {
+      if (friendlyNamesList.contains(friendlyName)) {
+        result[key] = true;
+      } else {
+        result[key] = false;
+      }
+    });
+
+    return result;
+  }
+
+  List<String> getFriendlyTrueKeys(Map<String, bool> map) {
+    return map.entries
+        .where((entry) => entry.value)
+        .map((entry) => friendlyNames[entry.key] ?? entry.key)
+        .toList();
+  }
+
+
+
+  Future<void> _saveChanges() async {
+    if (widget.formWOF.id == null) {
+      Get.snackbar("Error", "Form numarası bulunamadı", backgroundColor: Colors.red);
+      return;
+    }
+    widget.formWOF.tarihWOF = DateTime.parse(_controllerTarihWOF.text);
+    widget.formWOF.turboNo = _controllerTurboNo.text;
+    widget.formWOF.yanindaGelenler = parseYanindaGelenlerForSave(_controllerYanindaGelenler.text);
+    widget.formWOF.aracBilgileri = _controllerAracBilgileri.text;
+    widget.formWOF.aracKm = int.parse(_controllerAracKm.text);
+    widget.formWOF.aracPlaka = _controllerAracPlaka.text;
+    widget.formWOF.musteriAdi = _controllerMusteriAdi.text;
+    widget.formWOF.musteriNumarasi = int.parse(_controllerMusteriNumarasi.text);
+    widget.formWOF.musteriSikayetleri = _controllerMusteriSikayetleri.text;
+    widget.formWOF.onTespit = _controllerOnTespit.text;
+    widget.formWOF.turboyuGetiren = _controllerTurboyuGetiren.text;
+    widget.formWOF.tasimaUcreti = double.parse(_controllerTasimaUcreti.text);
+    widget.formWOF.teslimAdresi = _controllerTeslimAdresi.text;
+
+    // Check if the kabulDurumu has changed to "kabul edildi"
+    if (_controllerKabulDurumu.text == "kabul edildi") {
+      // Move the form from workOrderForms to inProgressForms
+      final inProgressForm = InProgressFormModel(
+        tarihIPF: DateTime.now(),
+        turboNo: widget.formWOF.turboNo,
+        egeTurboNo: await getAndUpdateEgeTurboNo(),
+        tarihWOF: widget.formWOF.tarihWOF,
+        aracBilgileri: widget.formWOF.aracBilgileri,
+        aracKm: widget.formWOF.aracKm,
+        aracPlaka: widget.formWOF.aracPlaka,
+        musteriAdi: widget.formWOF.musteriAdi,
+        musteriNumarasi: widget.formWOF.musteriNumarasi,
+        musteriSikayetleri: widget.formWOF.musteriSikayetleri,
+        onTespit: widget.formWOF.onTespit,
+        turboyuGetiren: widget.formWOF.turboyuGetiren,
+        tasimaUcreti: widget.formWOF.tasimaUcreti,
+        teslimAdresi: widget.formWOF.teslimAdresi,
+        yanindaGelenler: widget.formWOF.yanindaGelenler,
+      );
+      final accountingForm = AccountingFormModel(
+        tarihIPF: inProgressForm.tarihIPF,
+        turboNo: widget.formWOF.turboNo,
+        egeTurboNo: inProgressForm.egeTurboNo,
+        tarihWOF: widget.formWOF.tarihWOF, // Assuming you store DateTime objects in formData
+        aracBilgileri: widget.formWOF.aracBilgileri,
+        aracKm: widget.formWOF.aracKm,
+        aracPlaka: widget.formWOF.aracPlaka,
+        musteriAdi: widget.formWOF.musteriAdi,
+        musteriNumarasi: widget.formWOF.musteriNumarasi, // Assuming it's an int
+        musteriSikayetleri: widget.formWOF.musteriSikayetleri,
+        onTespit: widget.formWOF.onTespit,
+        turboyuGetiren: widget.formWOF.turboyuGetiren,
+        tasimaUcreti: widget.formWOF.tasimaUcreti, // Assuming it's a double
+        teslimAdresi: widget.formWOF.teslimAdresi,
+        yanindaGelenler: widget.formWOF.yanindaGelenler,
+        kabulDurumu: _controllerKabulDurumu.text,
+      );
+      // Save inProgressForm to your database or backend
+      _accountingFormRepo.createAccountingForm(accountingForm);
+      _inProgressFormRepo.createInProgressForm(inProgressForm);
+      await WorkOrderFormRepo.instance.deleteWorkOrderForm(widget.formWOF.id!);
+    } else {
+      // Update the kabulDurumu in the workOrderForm
+      widget.formWOF.kabulDurumu = _controllerKabulDurumu.text;
+      // Update the form in workOrderForms
+      await WorkOrderFormRepo.instance.updateWorkOrderForm(widget.formWOF.id!, widget.formWOF);
+    }
+
+    // Navigate to the next page or go back
+    // Logic to save changes to Firebase
+    Navigator.of(context).pop(); // Close the dialog
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => OutputWOFPage()));
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    ThemeData themeData = Theme.of(context);
     return Scaffold(
       appBar: appBar(context, "Detaylar"),
       bottomNavigationBar: bottomNav(),
       body: SafeArea(
-        child: Stack(
-          children: [
-            background(context),
-            SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  dateSection(themeData, formWOF.tarihWOF.toString()),
-                  detailSection(
-                      'Turbo No:', formWOF.turboNo, themeData),
-                  detailSection(
-                      'Araç Bilgileri:', formWOF.aracBilgileri, themeData),
-                  detailSection(
-                      'Araç Km:', formWOF.aracKm.toString(), themeData),
-                  detailSection(
-                      'Araç Plakası:', formWOF.aracPlaka, themeData),
-                  detailSection('Müşteri Ad Soyad:', formWOF.musteriAdi,
-                      themeData),
-                  detailSection('Müşteri Numarası:', formWOF.musteriNumarasi.toString(),
-                      themeData),
-                  detailSection(
-                      'Müşteri Şikayetleri:', formWOF.musteriSikayetleri,
-                      themeData),
-                  buildYanindaGelenlerSection(
-                      formWOF.yanindaGelenler, themeData),
-                  detailSection('Ön Tespit:', formWOF.onTespit, themeData),
-                  detailSection(
-                      'Turboyu Getiren:', formWOF.turboyuGetiren, themeData),
-                  detailSection(
-                      'Taşıma Ücreti:', formWOF.tasimaUcreti.toString(),
-                      themeData),
-                  detailSection(
-                      'Teslim Adresi:', formWOF.teslimAdresi, themeData),
-                ],
-              ),
-            ),
-          ],
-        ),
+          child: Stack(
+              children: [
+                background(context),
+                SingleChildScrollView( child:
+                Column(
+                  children: [
+                    CustomTextField(
+                      controller: _controllerTarihWOF,
+                      label: 'Tarih WOF',
+                      keyboardType: TextInputType.datetime,
+                    ),
+                    CustomTextField(
+                      controller: _controllerTurboNo,
+                      label: 'Turbo No',
+                    ),CustomTextField(
+                        controller: _controllerYanindaGelenler,
+                        label: 'Turboyla Gelenler'
+                      // ... other properties ...
+                    ),CustomTextField(
+                      controller: _controllerAracBilgileri,
+                      label: 'Araç Bilgileri',
+                      // ... other properties ...
+                    ),CustomTextField(
+                        controller: _controllerAracKm,
+                        label: 'Araç Km si'
+                      // ... other properties ...
+                    ),CustomTextField(
+                        controller: _controllerAracPlaka,
+                        label: 'Araç Plakası'
+                      // ... other properties ...
+                    ),CustomTextField(
+                      controller: _controllerMusteriAdi,
+                      label: 'Müşteri Adı',
+                      // ... other properties ...
+                    ),CustomTextField(
+                        controller: _controllerMusteriNumarasi,
+                        label: 'Müşteri Numarası'
+                      // ... other properties ...
+                    ),CustomTextField(
+                      controller: _controllerMusteriSikayetleri,
+                      label: 'Müşteri Şikayetleri',
+                      // ... other properties ...
+                    ),CustomTextField(
+                      controller: _controllerOnTespit,
+                      label: 'Ön Tespit',
+                      // ... other properties ...
+                    ),CustomTextField(
+                      controller: _controllerTurboyuGetiren,
+                      label: 'Turboyu Getiren',
+                    ),CustomTextField(
+                      controller: _controllerTasimaUcreti,
+                      label: 'Taşıma Ücreti',
+                      // ... other properties ...
+                    ),
+                    CustomTextField(
+                      controller: _controllerTeslimAdresi,
+                      label: 'Teslim Adresi',
+                      // ... other properties ...
+                    ),
+                    CustomTextField(
+                      controller: _controllerKabulDurumu,
+                      label: 'Kabul Durumu',
+                      // ... other properties ...
+                    ),
+                    ElevatedButton(
+                      onPressed: () => showSaveAlertDialog(context, _saveChanges, OutputWOFPage()),
+                      child: Text(
+                        'Kaydet',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.cyanAccent, // Button color
+                        onPrimary: Colors.black, // Text color when button is pressed
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 5,
+                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      ),
+                    ),
+                    SizedBox(height: 30,),
+                    ElevatedButton(
+                      onPressed: () => _confirmDeleteForm(),
+                      child: Text(
+                        'Formu Sil',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red, // Button color
+                        onPrimary: Colors.white, // Text color when button is pressed
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 5,
+                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      ),
+                    ),
+
+                  ],
+                ),
+                ),
+              ])
       ),
     );
   }
-}
+  Future<void> _confirmDeleteForm() async {
+    final confirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Form Silinecek"),
+          content: Text("Formu silmek istediğinize emin misiniz?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Cancel the delete operation
+              },
+              child: Text("Vazgeç"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Confirm the delete operation
+              },
+              child: Text("Sil"),
+            ),
+          ],
+        );
+      },
+    );
 
+    if (confirmed == true) {
+      // Call the deleteWorkOrderForm method to delete the form
+      try {
+        await WorkOrderFormRepo.instance.deleteWorkOrderForm(widget.formWOF.id!);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => OutputWOFPage())); // Close the page after successful deletion
+      } catch (e) {
+        Get.snackbar("Form Silinemedi", "Failed to delete form: $e", backgroundColor: Colors.red);
+      }
+    }
+  }
+
+}

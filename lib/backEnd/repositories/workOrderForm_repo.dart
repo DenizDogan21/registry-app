@@ -62,6 +62,7 @@ class WorkOrderFormRepo extends GetxController {
             teslimAdresi: (formData['teslimAdresi'] as String?) ?? "",
             yanindaGelenler: Map<String, bool>.from(formData['yanindaGelenler'] ?? {}),
             kabulDurumu: (formData['kabulDurumu'] as String?) ?? "",
+            id: formDoc.id,
           );
         }).toList();
 
@@ -74,6 +75,25 @@ class WorkOrderFormRepo extends GetxController {
     return [];
   }
 
+  Future<void> updateWorkOrderForm(String formId, WorkOrderFormModel updatedForm) async {
+    try {
+      final formRef = _db.collection("workOrderForms").doc(formId);
+      await formRef.update(updatedForm.toJson());
+      Get.snackbar("Update Successful", "Form updated successfully", backgroundColor: Colors.green);
+    } catch (e) {
+      Get.snackbar("Update Failed", "Failed to update form: $e", backgroundColor: Colors.red);
+    }
+  }
+
+  Future<void> deleteWorkOrderForm(String formId) async {
+    try {
+      final formRef = _db.collection("workOrderForms").doc(formId);
+      await formRef.delete();
+      Get.snackbar("Delete Successful", "Form deleted successfully", backgroundColor: Colors.green);
+    } catch (e) {
+      Get.snackbar("Delete Failed", "Failed to delete form: $e", backgroundColor: Colors.red);
+    }
+  }
 
 
 }

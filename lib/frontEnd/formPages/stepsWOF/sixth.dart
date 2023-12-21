@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../../BackEnd/Models/inProgressForm_model.dart';
-import '../../../BackEnd/Repositories/workOrderForm_repo.dart';
+import 'package:turboapp/backEnd/models/accountingForm_model.dart';
+import 'package:turboapp/backEnd/repositories/accountingForm_repo.dart';
+import '../../../backEnd/models/inProgressForm_model.dart';
+import '../../../backEnd/repositories/workOrderForm_repo.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
-import 'package:turboapp/BackEnd/Repositories/inProgressForm_repo.dart';
+import 'package:turboapp/backEnd/repositories/inProgressForm_repo.dart';
 
 import 'package:turboapp/backEnd/models/workOrderForm_model.dart';
 
@@ -24,6 +26,7 @@ class _SixthStepPageState extends State<SixthStepPage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _workOrderFormRepo = WorkOrderFormRepo.instance;
   final _inProgressFormRepo = InProgressFormRepo.instance;
+  final _accountingFormRepo = AccountingFormRepo.instance;
 
 
   final List<String> deliveryOptions = ['atölyemiz teslim', 'kurye', 'kargo', 'elden'];
@@ -48,19 +51,6 @@ class _SixthStepPageState extends State<SixthStepPage> {
 
   int currentStep = 5;
   final int totalSteps = 6;
-
-
-
-
-
-  Future<int> getAndUpdateEgeTurboNo() async {
-    final prefs = await SharedPreferences.getInstance();
-    int? currentNo = prefs.getInt('egeTurboNo'); // get the current number
-    print("Current egeTurboNo from prefs: $currentNo"); // Debug log
-    currentNo = (currentNo ?? 0) + 1; // Increment the counter
-    await prefs.setInt('egeTurboNo', currentNo); // Save it back
-    return currentNo;
-  }
 
 
 
@@ -120,7 +110,27 @@ class _SixthStepPageState extends State<SixthStepPage> {
             yanindaGelenler: workOrderForm.yanindaGelenler,
           );
 
+          final accountingForm = AccountingFormModel(
+            tarihIPF: inProgressForm.tarihIPF,
+            turboNo: workOrderForm.turboNo,
+            egeTurboNo: inProgressForm.egeTurboNo,
+            tarihWOF: workOrderForm.tarihWOF, // Assuming you store DateTime objects in formData
+            aracBilgileri: workOrderForm.aracBilgileri,
+            aracKm: workOrderForm.aracKm,
+            aracPlaka: workOrderForm.aracPlaka,
+            musteriAdi: workOrderForm.musteriAdi,
+            musteriNumarasi: workOrderForm.musteriNumarasi, // Assuming it's an int
+            musteriSikayetleri: workOrderForm.musteriSikayetleri,
+            onTespit: workOrderForm.onTespit,
+            turboyuGetiren: workOrderForm.turboyuGetiren,
+            tasimaUcreti: workOrderForm.tasimaUcreti, // Assuming it's a double
+            teslimAdresi: workOrderForm.teslimAdresi,
+            yanindaGelenler: workOrderForm.yanindaGelenler,
+            kabulDurumu: workOrderForm.kabulDurumu,
+          );
+
           // Save inProgressForm to your database or backend
+          _accountingFormRepo.createAccountingForm(accountingForm);
           _inProgressFormRepo.createInProgressForm(inProgressForm);
         } else {
           // Create the form

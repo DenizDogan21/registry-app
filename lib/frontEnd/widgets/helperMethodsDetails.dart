@@ -20,16 +20,6 @@ Widget dateSection(ThemeData theme, String date) {
   );
 }
 
-Widget detailSection(String title, String content, ThemeData theme) {
-  return Card(
-    margin: const EdgeInsets.symmetric(vertical: 10.0),
-    child: ListTile(
-      title: Text(title, style: theme.textTheme.subtitle1),
-      subtitle: Text(content, style: theme.textTheme.bodyText1),
-    ),
-  );
-}
-
 //WOF
 final Map<String, String> friendlyNames = {
   'yagGirisContasi': 'yağ giriş contası',
@@ -92,3 +82,16 @@ void showSaveAlertDialog(BuildContext context, VoidCallback onSave, Widget nextP
     },
   );
 }
+
+
+
+Widget detailSection(String title, String content, ThemeData theme) {
+  return Card(
+    margin: const EdgeInsets.symmetric(vertical: 10.0),
+    child: ListTile(
+      title: Text(title, style: theme.textTheme.subtitle1),
+      subtitle: Text(content, style: theme.textTheme.bodyText1),
+    ),
+  );
+}
+

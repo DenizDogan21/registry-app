@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:turboapp/frontEnd/accountingPages/accountingAddShow.dart';
 import 'package:turboapp/service/auth_service.dart';
 import 'package:turboapp/frontEnd/utils/customColors.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
@@ -254,15 +255,26 @@ class _LoginPageState extends State<LoginPage> {
       final result = await authService.signIn(email, password);
 
       if (result == "success") {
+        // Fetch the user role
+        final userRole = await authService.getUserRole(email);
+
         if (rememberMe) {
           await secureStorage.write(key: 'email', value: email);
           await secureStorage.write(key: 'password', value: password);
         }
 
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => FirstStepPage(formData: {})),
-              (route) => false,
-        );
+        if (userRole == "muhasebe") {
+          // Navigate to the specific UI for "muhasebe" role
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => AccountingAddShowPage(), // Replace with your actual page for the "muhasebe" role
+          ));
+        } else {
+          // Navigate to the standard UI
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => FirstStepPage(formData: {})),
+                (route) => false,
+          );
+        }
       }else {
         showDialog(
           context: context,

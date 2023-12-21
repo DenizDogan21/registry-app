@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
+import 'package:turboapp/backEnd/models/inProgressForm_model.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 import 'package:turboapp/frontEnd/widgets/helperMethodsDetails.dart';
 
-import '../../../BackEnd/Repositories/inProgressForm_repo.dart';
+import '../../../backEnd/repositories/accountingForm_repo.dart';
+import '../../../backEnd/repositories/inProgressForm_repo.dart';
 import '../../utils/customTextField.dart';
 import 'detailsIPF3.dart';
 
@@ -34,9 +35,17 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
 
     // Save the updated model to Firebase
     await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+    var accountingForm = await AccountingFormRepo.instance.getFormByEgeTurboNo(widget.formIPF.egeTurboNo);
+    if (accountingForm != null) {
+      accountingForm.tespitEdilen = widget.formIPF.tespitEdilen;
+      accountingForm.yapilanIslemler = widget.formIPF.yapilanIslemler;
+
+      // Save the updated accounting model to Firebase
+      await AccountingFormRepo.instance.updateAccountingForm(accountingForm.id!, accountingForm);
+    }
 
     Navigator.of(context).pop(); // Close the dialog
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsIPF3(formIPF: widget.formIPF)));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsIPF3Page(formIPF: widget.formIPF)));
   }
 
   @override
@@ -62,7 +71,7 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
                       // ... other properties ...
                     ),
                     ElevatedButton(
-                      onPressed: () => showSaveAlertDialog(context, _saveChanges, DetailsIPF3(formIPF: widget.formIPF)),
+                      onPressed: () => showSaveAlertDialog(context, _saveChanges, DetailsIPF3Page(formIPF: widget.formIPF)),
                       child: Text(
                         'Devam',
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling

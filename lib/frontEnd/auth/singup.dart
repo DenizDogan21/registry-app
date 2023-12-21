@@ -4,6 +4,8 @@ import 'package:turboapp/service/auth_service.dart';
 import 'package:turboapp/frontEnd/utils/customColors.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 
+import '../utils/customInputDecoration.dart';
+
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
 
@@ -12,7 +14,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  late String email, fullname, password;
+  late String email, fullname, role= "Teknik", password;
   final formkey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
   final authService = AuthService();
@@ -48,6 +50,8 @@ class _SignUpState extends State<SignUp> {
                     emailTextField(),
                     customSizedBox(),
                     fullNameTextField(),
+                    customSizedBox(),
+                    roleDropdownField(),
                     customSizedBox(),
                     passwordTextField(),
                     customSizedBox(),
@@ -92,6 +96,33 @@ class _SignUpState extends State<SignUp> {
       },
       style: TextStyle(color: Colors.white),
       decoration: customInputDecoration("Ad Soyad"),
+    );
+  }
+
+  DropdownButtonFormField<String> roleDropdownField() {
+    return DropdownButtonFormField<String>(
+      value: role, // Make sure 'role' is initialized properly
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Bilgileri Eksiksiz Doldurunuz";
+        }
+        return null;
+      },
+      onChanged: (String? newValue) {
+        setState(() {
+          role = newValue!;
+        });
+      },
+      style: TextStyle(color: Colors.white),
+      decoration: customDropdownDecoration("Görev"),
+      dropdownColor: Colors.grey[800],
+      items: <String>['Muhasebe', 'Teknik']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value, style: TextStyle(color: Colors.white)),
+        );
+      }).toList(),
     );
   }
 
@@ -164,22 +195,6 @@ class _SignUpState extends State<SignUp> {
     style: TextStyle(color: color),
   );
 
-  InputDecoration customInputDecoration(String hintText) {
-    return InputDecoration(
-      hintText: hintText,
-      hintStyle: TextStyle(color: Colors.grey),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey,
-        ),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey,
-        ),
-      ),
-    );
-  }
 
   void signUp() async {
     if (formkey.currentState!.validate()) {
@@ -187,7 +202,7 @@ class _SignUpState extends State<SignUp> {
 
       if (email.endsWith("@egeturbo.com")) {
         try {
-          await authService.signUp(email, fullname, password);
+          await authService.signUp(email, fullname,role, password);
 
           // Send email verification link
           User? user = firebaseAuth.currentUser;

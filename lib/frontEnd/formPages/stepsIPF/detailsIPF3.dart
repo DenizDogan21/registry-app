@@ -2,24 +2,25 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:turboapp/BackEnd/Models/inProgressForm_model.dart';
+import 'package:turboapp/backEnd/models/inProgressForm_model.dart';
 import 'package:turboapp/frontEnd/formPages/outputIPF.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
 import 'package:turboapp/frontEnd/widgets/helperMethodsDetails.dart';
 
-import '../../../BackEnd/Repositories/inProgressForm_repo.dart';
+import '../../../backEnd/repositories/inProgressForm_repo.dart';
 
 
-class DetailsIPF3 extends StatefulWidget {
+class DetailsIPF3Page extends StatefulWidget {
   final InProgressFormModel formIPF;
-  DetailsIPF3({required this.formIPF});
+  DetailsIPF3Page({required this.formIPF});
 
   @override
-  _DetailsIPF3State createState() => _DetailsIPF3State();
+  _DetailsIPF3PageState createState() => _DetailsIPF3PageState();
 }
 
-class _DetailsIPF3State extends State<DetailsIPF3> {
+class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
   TextEditingController _controllerTurboImageUrl = TextEditingController();
   TextEditingController _controllerKatricImageUrl = TextEditingController();
   TextEditingController _controllerBalansImageUrl = TextEditingController();
@@ -98,10 +99,65 @@ class _DetailsIPF3State extends State<DetailsIPF3> {
                         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       ),
                     ),
+                    SizedBox(height: 30,),
+                    ElevatedButton(
+                      onPressed: () => _confirmDeleteForm(),
+                      child: Text(
+                        'Formu Sil',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red, // Button color
+                        onPrimary: Colors.white, // Text color when button is pressed
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 5,
+                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      ),
+                    ),
                   ],
-                ),)])
+                ),),
+              ]
+          ),
       ),
     );
+  }
+
+  Future<void> _confirmDeleteForm() async {
+    final confirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Form Silinecek"),
+          content: Text("Formu silmek istediğinize emin misiniz?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Cancel the delete operation
+              },
+              child: Text("Vazgeç"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Confirm the delete operation
+              },
+              child: Text("Sil"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      // Call the deleteWorkOrderForm method to delete the form
+      try {
+        await InProgressFormRepo.instance.deleteInProgressForm(widget.formIPF.id!);
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => OutputIPFPage())); // Close the page after successful deletion
+      } catch (e) {
+        Get.snackbar("Form Silinemedi", "Failed to delete form: $e", backgroundColor: Colors.red);
+      }
+    }
   }
 
 
@@ -109,38 +165,27 @@ class _DetailsIPF3State extends State<DetailsIPF3> {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 10);
 
-    if (image != null && image != "null" ) {
-      File imageFile = File(image.path);
-      String fileName = '$imageType-${DateTime.now().millisecondsSinceEpoch}.jpg';
-
-      try {
-        // Check and delete old image from Firebase Storage if it exists
-        String? oldImageUrl = widget.formIPF.getImageUrl(imageType);
-        if (oldImageUrl != null && oldImageUrl != "null") {
-          String oldFileName = Uri.parse(oldImageUrl).pathSegments.last;
-          Reference oldRef = FirebaseStorage.instance.ref().child('images/$oldFileName');
-          await oldRef.delete();
-        }
-
-        // Upload new image to Firebase Storage
-        Reference ref = FirebaseStorage.instance.ref().child('images/$fileName');
-        await ref.putFile(imageFile);
-
-        // Get the download URL of the new image
-        String downloadURL = await ref.getDownloadURL();
-
-        // Update the corresponding image URL in the model and Firestore database
-        setState(() {
-          widget.formIPF.setImageUrl(imageType, downloadURL);
-        });
-        await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
-      } catch (e) {
-        print('Error handling image: $e');
-      }
+    if (image == null || image.path == "null") {
+      print('No image selected.');
+      return;
     }
+
+    File imageFile = File(image.path);
+    String fileName = '$imageType-${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      // Upload new image to Firebase Storage
+      Reference ref = FirebaseStorage.instance.ref().child('images/$fileName');
+      await ref.putFile(imageFile);
+
+      // Get the download URL of the new image
+      String downloadURL = await ref.getDownloadURL();
+
+      // Update the corresponding image URL in the model and Firestore database
+      setState(() {
+        widget.formIPF.setImageUrl(imageType, downloadURL);
+      });
+      await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
   }
-
-
 
 
   Widget photoButton(BuildContext context, String text, Function showImage) {

@@ -1,20 +1,20 @@
 
 class WorkOrderFormModel {
-  final String? id;
-  final String turboNo;
-  final DateTime tarihWOF;
-  final String aracBilgileri;
-  final int aracKm;
-  final String aracPlaka;
-  final String musteriAdi;
-  final int musteriNumarasi;
-  final String musteriSikayetleri;
-  final String onTespit;
-  final String turboyuGetiren;
-  final double tasimaUcreti;
-  final String teslimAdresi;
-  final Map<String, bool> yanindaGelenler;
-  final String kabulDurumu;
+   String? id;
+   String turboNo;
+   DateTime tarihWOF;
+   String aracBilgileri;
+   int aracKm;
+   String aracPlaka;
+   String musteriAdi;
+   int musteriNumarasi;
+   String musteriSikayetleri;
+   String onTespit;
+   String turboyuGetiren;
+   double tasimaUcreti;
+   String teslimAdresi;
+   Map<String, bool> yanindaGelenler;
+   String kabulDurumu;
 
 
 

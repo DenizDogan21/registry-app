@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../backEnd/models/inProgressForm_model.dart';
-import '../../backEnd/repositories/inProgressForm_repo.dart';
-import '../widgets/common.dart';
+import 'package:turboapp/frontEnd/accountingPages/accountingDetailsPages/accountingView.dart';
+import '../../backEnd/repositories/accountingForm_repo.dart';
+import '../../backEnd/models/accountingForm_model.dart';
+import 'package:turboapp/frontEnd/widgets/helperMethodsAccounting.dart';
 import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
-import 'package:turboapp/frontEnd/formPages/stepsIPF/detailsIPF1.dart';
 
-class OutputIPFPage extends StatefulWidget {
-  const OutputIPFPage({Key? key}) : super(key: key);
+class AccountingAddShowPage extends StatefulWidget {
+  const AccountingAddShowPage({Key? key}) : super(key: key);
 
   @override
-  State<OutputIPFPage> createState() => _OutputIPFPageState();
+  State<AccountingAddShowPage> createState() => _AccountingAddShowPageState();
 }
 
-class _OutputIPFPageState extends State<OutputIPFPage> {
-  final _inProgressFormRepo = InProgressFormRepo.instance;
-  late List<InProgressFormModel> _formsIPF;
-  late List<InProgressFormModel> _filteredFormsIPF;
+class _AccountingAddShowPageState extends State<AccountingAddShowPage> {
+  final _accountingFormRepo = AccountingFormRepo.instance;
+  late List<AccountingFormModel> _formsAF;
+  late List<AccountingFormModel> _filteredFormsAF;
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _formsIPF = [];
-    _filteredFormsIPF = [];
-    _getInProgressForms();
+    _formsAF = [];
+    _filteredFormsAF = [];
+    _getAccountingForms();
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -39,13 +39,13 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
     _filterForms(_searchController.text);
   }
 
-  void _getInProgressForms() async {
+  void _getAccountingForms() async {
     try {
-      final formsIPF = await _inProgressFormRepo.getInProgressForms();
-      formsIPF.sort((a, b) => b.tarihIPF.compareTo(a.tarihIPF));
+      final formsAF = await _accountingFormRepo.getAccountingForms();
+      formsAF.sort((a, b) => b.tarihWOF.compareTo(a.tarihWOF));
       setState(() {
-        _formsIPF = formsIPF;
-        _filteredFormsIPF = formsIPF;
+        _formsAF = formsAF;
+        _filteredFormsAF = formsAF;
       });
     } catch (error) {
       print('Error: $error');
@@ -57,32 +57,31 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
     Future.delayed(Duration.zero, () {
       setState(() {
         if (keyword.isNotEmpty) {
-          _filteredFormsIPF = _formsIPF.where((form) {
+          _filteredFormsAF = _formsAF.where((form) {
             final keywordLower = keyword.toLowerCase();
             return form.turboNo.toLowerCase().contains(keywordLower) ||
-              form.aracBilgileri.toLowerCase().contains(keywordLower) ||
-                  form.aracPlaka.toLowerCase().contains(keywordLower) ||
-                  form.musteriAdi.toLowerCase().contains(keywordLower) ||
-                  form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
-                  form.onTespit.toLowerCase().contains(keywordLower) ||
-                  form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
-                  form.teslimAdresi.toLowerCase().contains(keywordLower) ;
+                form.aracBilgileri.toLowerCase().contains(keywordLower) ||
+                form.aracPlaka.toLowerCase().contains(keywordLower) ||
+                form.musteriAdi.toLowerCase().contains(keywordLower) ||
+                form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
+                form.onTespit.toLowerCase().contains(keywordLower) ||
+                form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
+                form.teslimAdresi.toLowerCase().contains(keywordLower) ||
+                form.kabulDurumu.toLowerCase().contains(keywordLower);
           }).toList();
         } else {
-          _filteredFormsIPF = _formsIPF;
+          _filteredFormsAF = _formsAF;
         }
       });
     });
   }
 
-
-  bool _containsNullValue(InProgressFormModel form) {
+  bool _containsNullValue(AccountingFormModel form) {
     return
-          form.tespitEdilen == "null" ||
-          form.yapilanIslemler == "null" ||
-          form.turboImageUrl== "null" ||
-          form.balansImageUrl== "null" ||
-          form.katricImageUrl== "null";
+      form.tamirUcreti == -1 ||
+          form.odemeSekli == "null" ||
+          form.taksitSayisi == -1 ||
+          form.muhasebeNotlari == "null";
   }
 
   @override
@@ -109,26 +108,17 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
           ),
         ],
       ),
-      bottomNavigationBar: bottomNav(),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: [0.1, 0.9],
-            colors: [
-              Colors.grey.shade800,
-              Colors.black87,
-            ],
-          ),
-        ),
-        child: _filteredFormsIPF.isEmpty
-            ? Center(child: Text('Kayıt Bulunamadı', style: TextStyle(color: Colors.white)))
+      bottomNavigationBar: bottomNavAcc(),
+      body: Stack( children: [
+        background(context),
+        Container(
+        child: _filteredFormsAF.isEmpty
+            ? Center(child: Text('No Records Found', style: TextStyle(color: Colors.white)))
             : ListView.separated(
-          itemCount: _filteredFormsIPF.length,
+          itemCount: _filteredFormsAF.length,
           separatorBuilder: (context, index) => Divider(color: Colors.grey.shade600),
           itemBuilder: (context, index) {
-            final form = _filteredFormsIPF[index];
+            final form = _filteredFormsAF[index];
             bool isFormIncomplete = _containsNullValue(form);
             Color tileColor = isFormIncomplete ? Colors.yellow : Colors.green;
             return ListTileTheme(
@@ -142,7 +132,7 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => DetailsIPF1(formIPF: form),
+                      builder: (context) => AccountingViewPage(formAF: form),
                     ),
                   );
                 },
@@ -151,11 +141,10 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
             );
           },
         ),
-      ),
+      ),]),
     );
   }
   String formatDate(DateTime dateTime) {
     return DateFormat('yyyy-MM-dd – HH:mm').format(dateTime);
   }
 }
-

@@ -67,6 +67,7 @@ class AuthService {
   Future<String?> signUp(
       String email,
       String fullname,
+      String role,
       String password,
       ) async {
     String? res;
@@ -76,11 +77,10 @@ class AuthService {
         password: password,
       );
       try {
-        await firebaseFirestore.collection("Users").add({
+        await firebaseFirestore.collection("users").add({
           "email": email,
           "fullname": fullname,
-          "registryForm": [],
-          "inProgressForm": [],
+          "role": role,
         });
       } catch (e) {
         print("$e");
@@ -101,5 +101,23 @@ class AuthService {
       }
     }
     return res;
+  }
+
+  Future<String?> getUserRole(String email) async {
+    try {
+      var userDocument = await firebaseFirestore
+          .collection("users")
+          .where("email", isEqualTo: email)
+          .limit(1)
+          .get();
+      if (userDocument.docs.isNotEmpty) {
+        return userDocument.docs.first.data()["role"];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching user role: $e");
+      return null;
+    }
   }
 }

@@ -1,8 +1,8 @@
-# Ege Turbo Atölye
+# turboapp
 
 ## Overview
 
-Welcome to [Your Project Name]! This Flutter project is designed as a SAP-like system, allowing users to save and retrieve forms on Firebase. The application offers two distinct user interfaces tailored for accounting office and technical workers.
+Welcome to turboapp! This Flutter project is designed as a SAP-like system, allowing users to save and retrieve forms on Firebase. The application offers two distinct user interfaces tailored for accounting office and technical workers.
 
 Key Features:
 - Form submission and retrieval

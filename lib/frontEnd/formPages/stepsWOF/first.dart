@@ -43,7 +43,7 @@ class _FirstStepPageState extends State<FirstStepPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "  Araç ve Turbo Kaydı"),
+      appBar: appBar(context, "Araç ve Turbo Kaydı"),
       bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),

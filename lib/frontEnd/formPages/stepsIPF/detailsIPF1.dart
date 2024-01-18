@@ -32,6 +32,7 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
   TextEditingController _controllerTurboyuGetiren = TextEditingController();
   TextEditingController _controllerTasimaUcreti = TextEditingController();
   TextEditingController _controllerTeslimAdresi = TextEditingController();
+  bool _hasChanges = false;
 
   @override
   void initState() {
@@ -51,6 +52,45 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
     _controllerTurboyuGetiren.text = widget.formIPF.turboyuGetiren;
     _controllerTasimaUcreti.text = widget.formIPF.tasimaUcreti.toString();
     _controllerTeslimAdresi.text = widget.formIPF.teslimAdresi;
+
+    // Listen to changes in text fields to determine if there are any modifications
+    _controllerTarihWOF.addListener(_onTextChanged);
+    _controllerTarihIPF.addListener(_onTextChanged);
+    _controllerTurboNo.addListener(_onTextChanged);
+    _controllerYanindaGelenler.addListener(_onTextChanged);
+    _controllerAracBilgileri.addListener(_onTextChanged);
+    _controllerAracKm.addListener(_onTextChanged);
+    _controllerAracPlaka.addListener(_onTextChanged);
+    _controllerMusteriAdi.addListener(_onTextChanged);
+    _controllerMusteriNumarasi.addListener(_onTextChanged);
+    _controllerMusteriSikayetleri.addListener(_onTextChanged);
+    _controllerOnTespit.addListener(_onTextChanged);
+    _controllerTurboyuGetiren.addListener(_onTextChanged);
+    _controllerTasimaUcreti.addListener(_onTextChanged);
+    _controllerTeslimAdresi.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    // Check if the current values are different from the initial values
+    bool hasChanges = _controllerTarihWOF.text != widget.formIPF.tarihWOF.toString() ||
+        _controllerTarihIPF.text != widget.formIPF.tarihIPF.toString() ||
+        _controllerTurboNo.text != widget.formIPF.turboNo ||
+        _controllerYanindaGelenler.text != getFriendlyTrueKeys(widget.formIPF.yanindaGelenler).join(', ') ||
+        _controllerAracBilgileri.text != widget.formIPF.aracBilgileri ||
+        _controllerAracKm.text != widget.formIPF.aracKm.toString() ||
+        _controllerAracPlaka.text != widget.formIPF.aracPlaka ||
+        _controllerMusteriAdi.text != widget.formIPF.musteriAdi ||
+        _controllerMusteriNumarasi.text != widget.formIPF.musteriNumarasi.toString() ||
+        _controllerMusteriSikayetleri.text != widget.formIPF.musteriSikayetleri ||
+        _controllerOnTespit.text != widget.formIPF.onTespit ||
+        _controllerTurboyuGetiren.text != widget.formIPF.turboyuGetiren ||
+        _controllerTasimaUcreti.text != widget.formIPF.tasimaUcreti.toString() ||
+        _controllerTeslimAdresi.text != widget.formIPF.teslimAdresi;
+
+    // Update the _hasChanges variable
+    setState(() {
+      _hasChanges = hasChanges;
+    });
   }
 
 
@@ -79,6 +119,7 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
 
 
   Future<void> _saveChanges() async {
+    if (_hasChanges) {
     if (widget.formIPF.id == null) {
       Get.snackbar("Error", "Form numarası bulunamadı", backgroundColor: Colors.red);
       return;
@@ -128,12 +169,16 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
     // Logic to save changes to Firebase
     Navigator.of(context).pop(); // Close the dialog
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsIPF2(formIPF: widget.formIPF)));
+    } else {
+      // If no changes, navigate directly to the next page
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsIPF2(formIPF: widget.formIPF)));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "Detaylar"),
+      appBar: appBar(context, "Süreç Formu |"),
       bottomNavigationBar: bottomNav(),
       body: SafeArea(
         child: Stack(
@@ -144,12 +189,12 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
           children: [
             CustomTextField(
               controller: _controllerTarihWOF,
-              label: 'Tarih WOF',
+              label: 'İş Emri Tarihi',
               keyboardType: TextInputType.datetime,
             ),
             CustomTextField(
               controller: _controllerTarihIPF,
-              label: 'Tarih IPF',
+              label: 'Süreç Tarihi',
               keyboardType: TextInputType.datetime,
             ),
             CustomTextField(
@@ -201,14 +246,21 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
               // ... other properties ...
             ),
             ElevatedButton(
-              onPressed: () => showSaveAlertDialog(context, _saveChanges, DetailsIPF2(formIPF: widget.formIPF)),
+              onPressed: () {
+                if (_hasChanges) {
+                  showSaveAlertDialog(context, _saveChanges, DetailsIPF2(formIPF: widget.formIPF));
+                } else {
+                  // If no changes, navigate directly to the next page
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsIPF2(formIPF: widget.formIPF)));
+                }
+              },
               child: Text(
                 'Devam',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
               ),
               style: ElevatedButton.styleFrom(
-                primary: Colors.cyanAccent, // Button color
-                onPrimary: Colors.black, // Text color when button is pressed
+                primary: Colors.cyanAccent,
+                onPrimary: Colors.black,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

@@ -32,7 +32,7 @@ class _FourthStepPageState extends State<FourthStepPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "  Ön Tespit"),
+      appBar: appBar(context, "Ön Tespit"),
       bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),

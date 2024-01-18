@@ -2,13 +2,16 @@ import 'package:android_path_provider/android_path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:turboapp/backEnd/repositories/accountingForm_repo.dart';
 import 'package:turboapp/frontEnd/widgets/helperMethodsAccounting.dart';
 import 'package:excel/excel.dart';
 import 'dart:io';
 import 'package:turboapp/frontEnd/utils/customTextStyle.dart';
+import 'package:turboapp/frontEnd/formPages/detailsWOF.dart';
 
 import '../../backEnd/models/accountingForm_model.dart';
+import '../widgets/helperMethodsDetails.dart';
 
 
 class AccountingDownloadPage extends StatefulWidget {
@@ -17,8 +20,6 @@ class AccountingDownloadPage extends StatefulWidget {
   @override
   State<AccountingDownloadPage> createState() => _AccountingDownloadPageState();
 }
-
-
 
 class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
   String? downloadedFilePath;
@@ -42,10 +43,19 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
 
     sheetObject.appendRow(headers);
 
+    String parseTurbonunYanindaGelenler(Map<String, bool> turbonunYanindaGelenler) {
+      List<String> trueValues = turbonunYanindaGelenler.entries
+          .where((entry) => entry.value)
+          .map((entry) => friendlyNames[entry.key] ?? entry.key)
+          .toList();
+
+      return trueValues.join(', ');
+    }
+
     for (var form in forms) {
       List<dynamic> row = [
         form.egeTurboNo,
-        form.tarihWOF,
+        DateFormat('yyyy-MM-dd-HH:mm').format(form.tarihWOF), // Format date here
         form.turboNo,
         form.aracBilgileri,
         form.aracKm,
@@ -53,12 +63,12 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
         form.musteriAdi,
         form.musteriNumarasi,
         form.musteriSikayetleri,
-        form.yanindaGelenler,
+        parseTurbonunYanindaGelenler(form.yanindaGelenler),
         form.onTespit,
         form.turboyuGetiren,
         form.tasimaUcreti,
         form.teslimAdresi,
-        form.tarihIPF,
+        DateFormat('yyyy-MM-dd-HH:mm').format(form.tarihIPF),
         form.tespitEdilen,
         form.yapilanIslemler,
         form.tamirUcreti,
@@ -78,7 +88,7 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
     try {
       downloadsDirectoryPath = await AndroidPathProvider.downloadsPath;
     } on PlatformException {
-      print('Could not get the downloads directory');
+      print('Dosya yolu bulunamadı');
       return '';
     }
 
@@ -134,7 +144,7 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
     // Filter forms based on selectedRange
     var filteredForms = forms.where((form) =>
     form.tarihWOF.isAfter(selectedRange!.start) &&
-        form.tarihWOF.isBefore(selectedRange!.end)).toList();
+        form.tarihWOF.isBefore(selectedRange!.end.add(Duration(days: 1)))).toList();
 
     if (filteredForms.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -153,7 +163,7 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "            Muhasebe"),
+      appBar: appBar(context, "Dosya İndir"),
       bottomNavigationBar: bottomNavAcc(),
       body: SafeArea(
         child: Stack(children: [

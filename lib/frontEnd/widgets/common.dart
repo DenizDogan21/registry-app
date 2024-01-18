@@ -35,8 +35,8 @@ Widget background(BuildContext context) {
             end: Alignment.bottomRight,
             stops: [0.1, 0.9],
             colors: [
+              Colors.grey.shade600,
               Colors.grey.shade800,
-              Colors.black87,
             ],
           ),
         ),
@@ -50,7 +50,7 @@ PreferredSizeWidget? appBar(BuildContext context, String pageTitle) {
   return AppBar(
     backgroundColor: Colors.grey.shade900,
     title: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Assuming you have an asset image for the logo
         Image.asset(

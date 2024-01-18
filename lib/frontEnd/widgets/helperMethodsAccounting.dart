@@ -41,7 +41,7 @@ PreferredSizeWidget? appBar(BuildContext context, String pageTitle) {
   return AppBar(
     backgroundColor: Colors.grey.shade700,
     title: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Assuming you have an asset image for the logo
         Image.asset(

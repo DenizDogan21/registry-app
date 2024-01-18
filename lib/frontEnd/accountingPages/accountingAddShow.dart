@@ -60,6 +60,7 @@ class _AccountingAddShowPageState extends State<AccountingAddShowPage> {
           _filteredFormsAF = _formsAF.where((form) {
             final keywordLower = keyword.toLowerCase();
             return form.turboNo.toLowerCase().contains(keywordLower) ||
+                form.egeTurboNo.toString().toLowerCase().contains(keywordLower) ||
                 form.aracBilgileri.toLowerCase().contains(keywordLower) ||
                 form.aracPlaka.toLowerCase().contains(keywordLower) ||
                 form.musteriAdi.toLowerCase().contains(keywordLower) ||
@@ -67,7 +68,10 @@ class _AccountingAddShowPageState extends State<AccountingAddShowPage> {
                 form.onTespit.toLowerCase().contains(keywordLower) ||
                 form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
                 form.teslimAdresi.toLowerCase().contains(keywordLower) ||
-                form.kabulDurumu.toLowerCase().contains(keywordLower);
+                form.yapilanIslemler.toLowerCase().contains(keywordLower)||
+            form.tamirUcreti.toString().toLowerCase().contains(keywordLower) ||
+                form.muhasebeNotlari.toLowerCase().contains(keywordLower) ||
+                form.odemeSekli.toLowerCase().contains(keywordLower) ;
           }).toList();
         } else {
           _filteredFormsAF = _formsAF;

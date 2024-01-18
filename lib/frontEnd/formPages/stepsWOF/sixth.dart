@@ -107,7 +107,7 @@ class _SixthStepPageState extends State<SixthStepPage> {
             turboyuGetiren: workOrderForm.turboyuGetiren,
             tasimaUcreti: workOrderForm.tasimaUcreti, // Assuming it's a double
             teslimAdresi: workOrderForm.teslimAdresi,
-            yanindaGelenler: workOrderForm.yanindaGelenler,
+            yanindaGelenler: workOrderForm.yanindaGelenler, flowPhotos: [],
           );
 
           final accountingForm = AccountingFormModel(
@@ -153,7 +153,7 @@ class _SixthStepPageState extends State<SixthStepPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "  Kabul Durumu"),
+      appBar: appBar(context, "Kabul Durumu"),
       bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),

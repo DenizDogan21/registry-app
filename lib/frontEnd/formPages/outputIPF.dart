@@ -60,13 +60,15 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
           _filteredFormsIPF = _formsIPF.where((form) {
             final keywordLower = keyword.toLowerCase();
             return form.turboNo.toLowerCase().contains(keywordLower) ||
-              form.aracBilgileri.toLowerCase().contains(keywordLower) ||
-                  form.aracPlaka.toLowerCase().contains(keywordLower) ||
-                  form.musteriAdi.toLowerCase().contains(keywordLower) ||
-                  form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
-                  form.onTespit.toLowerCase().contains(keywordLower) ||
-                  form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
-                  form.teslimAdresi.toLowerCase().contains(keywordLower) ;
+                form.egeTurboNo.toString().toLowerCase().contains(keywordLower) ||
+                form.aracBilgileri.toLowerCase().contains(keywordLower) ||
+                form.aracPlaka.toLowerCase().contains(keywordLower) ||
+                form.musteriAdi.toLowerCase().contains(keywordLower) ||
+                form.musteriSikayetleri.toLowerCase().contains(keywordLower) ||
+                form.onTespit.toLowerCase().contains(keywordLower) ||
+                form.turboyuGetiren.toLowerCase().contains(keywordLower) ||
+                form.teslimAdresi.toLowerCase().contains(keywordLower) ||
+                form.yapilanIslemler.toLowerCase().contains(keywordLower) ;
           }).toList();
         } else {
           _filteredFormsIPF = _formsIPF;

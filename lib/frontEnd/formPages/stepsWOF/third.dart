@@ -133,7 +133,7 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "  Turboyla Gelenler"),
+      appBar: appBar(context, "Turboyla Gelenler"),
       bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),

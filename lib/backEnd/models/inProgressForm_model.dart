@@ -7,6 +7,7 @@ class InProgressFormModel {
    String turboImageUrl;
    String katricImageUrl;
    String balansImageUrl;
+   List<FlowPhoto> flowPhotos;
    int egeTurboNo;
 
    String turboyuGetiren;
@@ -24,6 +25,7 @@ class InProgressFormModel {
    String onTespit;
 
 
+
   Map<String, dynamic> toJson() {
     return {
       "tarihIPF": tarihIPF,
@@ -32,6 +34,7 @@ class InProgressFormModel {
       "turboImage": turboImageUrl,
       "katricImage": katricImageUrl,
       "balansImage": balansImageUrl,
+      "flowPhotos": flowPhotos.map((photo) => photo.toJson()).toList(),
       "egeTurboNo": egeTurboNo,
 
       "turboNo": turboNo,
@@ -61,6 +64,7 @@ class InProgressFormModel {
     this.turboImageUrl="null",
     this.katricImageUrl="null",
     this.balansImageUrl="null",
+    required this.flowPhotos,
     this.egeTurboNo= 0,
 
     this.turboNo = "null",
@@ -105,3 +109,19 @@ class InProgressFormModel {
 
 }
 
+class FlowPhoto {
+  String flowImageUrl;
+  String flowNotes;
+
+  FlowPhoto({
+    required this.flowImageUrl,
+    required this.flowNotes,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "flowImageUrl": flowImageUrl,
+      "flowNotes": flowNotes,
+    };
+  }
+}

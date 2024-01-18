@@ -44,82 +44,271 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => OutputIPFPage()));
   }
 
+
+
+
+  void showFlowPhoto(BuildContext context, int index) {
+    final imageUrl = widget.formIPF.flowPhotos[index].flowImageUrl;
+    String notes = widget.formIPF.flowPhotos[index].flowNotes;
+
+    TextEditingController notesController = TextEditingController(text: notes);
+
+    if (imageUrl != null && imageUrl.isNotEmpty && imageUrl != "null") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Yüklenen Flow Fotoğrafı'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Image.network(imageUrl),
+                  TextField(
+                    controller: notesController,
+                    decoration: InputDecoration(labelText: 'Notlar'),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Kapat'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Show confirmation dialog before deleting
+                  _confirmDeleteFlowPhoto(index);
+                },
+                child: Text('Sil'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Update notes in the model
+                  setState(() {
+                    widget.formIPF.flowPhotos[index].flowNotes = notesController.text;
+                  });
+                  // Update the Firestore database
+                  InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+                  Navigator.of(context).pop();
+                },
+                child: Text('Kaydet'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Hata'),
+            content: Text('Fotoğraf Bulunamadı !'), // Display error message
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Kapat'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+
+
+  void _confirmDeleteFlowPhoto(int index) async {
+    final confirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Flow Fotoğrafı Silinecek"),
+          content: Text("Flow fotoğrafını silmek istediğinize emin misiniz?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Cancel the delete operation
+              },
+              child: Text("Vazgeç"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Confirm the delete operation
+              },
+              child: Text("Sil"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      // Remove the flow photo from the model
+      setState(() {
+        widget.formIPF.flowPhotos.removeAt(index);
+      });
+      // Update the Firestore database
+      await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+      // Show a snack bar or any other feedback to the user
+      Get.snackbar("Silme Başarılı", "Flow fotoğrafı silindi", backgroundColor: Colors.green);
+    }
+  }
+
+
+  Widget updateFlowPhotoButton(BuildContext context) {
+    return ElevatedButton.icon(
+      icon: Icon(Icons.camera_alt),
+      label: Text('Flow Fotoğrafı Ekle'),
+      onPressed: () => pickAndUpdateFlowPhoto(context),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.cyanAccent,
+        onPrimary: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 5,
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.01,
+          vertical: 15,
+        ),
+      ),
+    );
+  }
+
+  void pickAndUpdateFlowPhoto(BuildContext context) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 10);
+
+    if (image == null || image.path == "null") {
+      print('No image selected.');
+      return;
+    }
+
+    File imageFile = File(image.path);
+    String fileName = 'flowPhoto-${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+    // Upload new image to Firebase Storage
+    Reference ref = FirebaseStorage.instance.ref().child('images/$fileName');
+    await ref.putFile(imageFile);
+
+    // Get the download URL of the new image
+    String downloadURL = await ref.getDownloadURL();
+
+    // Update the corresponding flow photo in the model and Firestore database
+    setState(() {
+      widget.formIPF.flowPhotos.add(
+        FlowPhoto(flowImageUrl: downloadURL, flowNotes: ''),
+      );
+    });
+    await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+  }
+
+  List<Widget> generateFlowPhotoButtons(BuildContext context) {
+    List<Widget> buttons = [];
+
+    for (int i = 1; i <= widget.formIPF.flowPhotos.length; i++) {
+      buttons.add(
+        ElevatedButton(
+          onPressed: () => showFlowPhoto(context, i - 1),
+          child: Text('$i. Flow Fotoğrafı '),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.orange, // Customize button color
+            onPrimary: Colors.black, // Customize text color
+          ),
+        ),
+      );
+    }
+
+    buttons.add(updateFlowPhotoButton(context));
+
+    return buttons;
+  }
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "Detaylar"),
+      appBar: appBar(context, "Süreç Formu |||"),
       bottomNavigationBar: bottomNav(),
       body: SafeArea(
-          child: Stack(
-              children: [
-                background(context),
-                SingleChildScrollView( child:
-                Column(
-                  children: [ Row( children: [
-                    photoButton(
-                        context, 'Turbo Fotoğrafı Göster', showTurboImage),
-                    SizedBox(width: 41,),
-                    ElevatedButton.icon(
-                      icon: Icon(Icons.camera_alt),
-                      label: Text('Güncelle/Çek'),
-                      onPressed: () => pickAndUpdateImage('turbo'),
-                    ),]),
-                    Row( children: [
+        child: Stack(
+            children: [
+              background(context),
+              SingleChildScrollView( child:
+              Column(
+                children: [ Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       photoButton(
-                          context, 'Katriç Fotoğrafı Göster', showKatricImage),
-                      SizedBox(width: 40,),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.camera_alt),
-                        label: Text('Güncelle/Çek'),
-                        onPressed: () => pickAndUpdateImage('katric'),
-                      ),]),
-                    Row( children: [
-                      photoButton(
-                          context, 'Balans Fotoğrafı Göster', showBalansImage),
-                      SizedBox(width: 35,),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.camera_alt),
-                        label: Text('Güncelle/Çek'),
-                        onPressed: () => pickAndUpdateImage('balans'),
-                      ),]),
-                    SizedBox(height: 20,),
-                    ElevatedButton(
-                      onPressed: () => showSaveAlertDialog(context, _saveChanges, OutputIPFPage()),
-                      child: Text(
-                        'Bitir',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.cyanAccent, // Button color
-                        onPrimary: Colors.black, // Text color when button is pressed
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 5,
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      ),
+                          context, 'Turbo Fotoğrafı Göster', showTurboImage),
+                      SizedBox(width: 30,),
+                      updatePhotoButton(context, "turbo")]),
+                  Row( mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        photoButton(
+                            context, 'Katriç Fotoğrafı Göster', showKatricImage),
+                        SizedBox(width: 30,),
+                        updatePhotoButton(context, "katric"),]),
+                  Row( mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        photoButton(
+                            context, 'Balans Fotoğrafı Göster ', showBalansImage),
+                        SizedBox(width: 25,),
+                        updatePhotoButton(context, "balans")]),
+                  // Dynamically generate buttons based on the number of flow photos
+                  ...generateFlowPhotoButtons(context),
+
+
+                  SizedBox(height: 20,),
+                  ElevatedButton(
+                    onPressed: () => showSaveAlertDialog(context, _saveChanges, OutputIPFPage()),
+                    child: Text(
+                      'Bitir',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
                     ),
-                    SizedBox(height: 30,),
-                    ElevatedButton(
-                      onPressed: () => _confirmDeleteForm(),
-                      child: Text(
-                        'Formu Sil',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.cyanAccent, // Button color
+                      onPrimary: Colors.black, // Text color when button is pressed
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.red, // Button color
-                        onPrimary: Colors.white, // Text color when button is pressed
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 5,
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      ),
+                      elevation: 5,
+                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                     ),
-                  ],
-                ),),
-              ]
-          ),
+                  ),
+                  SizedBox(height: 30,),
+                  ElevatedButton(
+                    onPressed: () => _confirmDeleteForm(),
+                    child: Text(
+                      'Formu Sil',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.red, // Button color
+                      onPrimary: Colors.white, // Text color when button is pressed
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 5,
+                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    ),
+                  ),
+                ],
+              ),),
+            ],
+        ),
       ),
     );
   }
@@ -160,8 +349,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     }
   }
 
-
-  Future<void> pickAndUpdateImage(String imageType) async {
+  void pickAndUpdateImage(String imageType) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 10);
 
@@ -173,18 +361,46 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     File imageFile = File(image.path);
     String fileName = '$imageType-${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-      // Upload new image to Firebase Storage
-      Reference ref = FirebaseStorage.instance.ref().child('images/$fileName');
-      await ref.putFile(imageFile);
+    // Upload new image to Firebase Storage
+    Reference ref = FirebaseStorage.instance.ref().child('images/$fileName');
+    await ref.putFile(imageFile);
 
-      // Get the download URL of the new image
-      String downloadURL = await ref.getDownloadURL();
+    // Get the download URL of the new image
+    String downloadURL = await ref.getDownloadURL();
 
-      // Update the corresponding image URL in the model and Firestore database
-      setState(() {
-        widget.formIPF.setImageUrl(imageType, downloadURL);
-      });
-      await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+    // Delete the old image from Firebase Storage
+    String oldImageUrl = widget.formIPF.getImageUrl(imageType) ?? "";
+    if (oldImageUrl.isNotEmpty && oldImageUrl != "null") {
+      Reference oldImageRef = FirebaseStorage.instance.refFromURL(oldImageUrl);
+      await oldImageRef.delete();
+    }
+
+    // Update the corresponding image URL in the model and Firestore database
+    setState(() {
+      widget.formIPF.setImageUrl(imageType, downloadURL);
+    });
+    await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+  }
+
+
+  Widget updatePhotoButton(BuildContext context, String text) {
+    return ElevatedButton.icon(
+      icon: Icon(Icons.camera_alt),
+      label: Text('Güncelle/Çek'),
+      onPressed: () => pickAndUpdateImage(text),
+      style: ElevatedButton.styleFrom(
+        primary: Colors.cyanAccent,
+        onPrimary: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 5,
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * 0.01, // Adjust as needed
+          vertical: 15,
+        ),
+      ),
+    );
   }
 
 
@@ -194,12 +410,16 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
       child: ElevatedButton.icon(
         icon: Icon(Icons.image, color: Colors.white),
         label: Text(text),
-        onPressed: () => showImage(context),
+        onPressed: () => showImage(context),  // <-- Error is here
         style: ElevatedButton.styleFrom(
           primary: Colors.redAccent,
           onPrimary: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width * 0.01,
+            vertical: 15,
           ),
         ),
       ),

@@ -19,6 +19,7 @@ class DetailsIPF2 extends StatefulWidget {
 class _DetailsIPF2State extends State<DetailsIPF2> {
   TextEditingController _controllerTespitEdilen = TextEditingController();
   TextEditingController _controllerYapilanIslemler = TextEditingController();
+  bool _hasChanges = false;
 
   @override
   void initState() {
@@ -26,32 +27,50 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
     // Initialize controllers with initial values from widget.formIPF
     _controllerTespitEdilen.text = widget.formIPF.tespitEdilen;
     _controllerYapilanIslemler.text = widget.formIPF.yapilanIslemler;
-    // ... other initializations ...
+
+    // Listen to changes in text fields to determine if there are any modifications
+    _controllerTespitEdilen.addListener(_onTextChanged);
+    _controllerYapilanIslemler.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    // Check if the current values are different from the initial values
+    bool hasChanges = _controllerTespitEdilen.text != widget.formIPF.tespitEdilen ||
+        _controllerYapilanIslemler.text != widget.formIPF.yapilanIslemler;
+
+    // Update the _hasChanges variable
+    setState(() {
+      _hasChanges = hasChanges;
+    });
   }
 
   Future<void> _saveChanges() async {
-    widget.formIPF.tespitEdilen = _controllerTespitEdilen.text;
-    widget.formIPF.yapilanIslemler = _controllerYapilanIslemler.text;
+    // Check if there are any changes before saving
+    if (_hasChanges) {
+      widget.formIPF.tespitEdilen = _controllerTespitEdilen.text;
+      widget.formIPF.yapilanIslemler = _controllerYapilanIslemler.text;
 
-    // Save the updated model to Firebase
-    await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
-    var accountingForm = await AccountingFormRepo.instance.getFormByEgeTurboNo(widget.formIPF.egeTurboNo);
-    if (accountingForm != null) {
-      accountingForm.tespitEdilen = widget.formIPF.tespitEdilen;
-      accountingForm.yapilanIslemler = widget.formIPF.yapilanIslemler;
+      // Save the updated model to Firebase
+      await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+      var accountingForm = await AccountingFormRepo.instance.getFormByEgeTurboNo(widget.formIPF.egeTurboNo);
+      if (accountingForm != null) {
+        accountingForm.tespitEdilen = widget.formIPF.tespitEdilen;
+        accountingForm.yapilanIslemler = widget.formIPF.yapilanIslemler;
 
-      // Save the updated accounting model to Firebase
-      await AccountingFormRepo.instance.updateAccountingForm(accountingForm.id!, accountingForm);
+        // Save the updated accounting model to Firebase
+        await AccountingFormRepo.instance.updateAccountingForm(accountingForm.id!, accountingForm);
+      }
     }
 
     Navigator.of(context).pop(); // Close the dialog
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsIPF3Page(formIPF: widget.formIPF)));
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "Detaylar"),
+      appBar: appBar(context, "Süreç Formu ||"),
       bottomNavigationBar: bottomNav(),
       body: SafeArea(
           child: Stack(
@@ -71,14 +90,21 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
                       // ... other properties ...
                     ),
                     ElevatedButton(
-                      onPressed: () => showSaveAlertDialog(context, _saveChanges, DetailsIPF3Page(formIPF: widget.formIPF)),
+                      onPressed: () {
+                        if (_hasChanges) {
+                          showSaveAlertDialog(context, _saveChanges, DetailsIPF3Page(formIPF: widget.formIPF));
+                        } else {
+                          // If no changes, navigate directly to the next page
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsIPF3Page(formIPF: widget.formIPF)));
+                        }
+                      },
                       child: Text(
                         'Devam',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.cyanAccent, // Button color
-                        onPrimary: Colors.black, // Text color when button is pressed
+                        primary: Colors.cyanAccent,
+                        onPrimary: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),

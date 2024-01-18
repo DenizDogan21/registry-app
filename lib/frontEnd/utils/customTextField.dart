@@ -24,9 +24,11 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
-          fillColor: Colors.amber[50], // Set the fill color to white
+          labelStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,),
+          fillColor: Colors.amber[100], // Set the fill color to white
           filled: true, // Enable the fill color
           border: OutlineInputBorder(),
+
           // Add more decoration properties if needed
         ),
         keyboardType: keyboardType,

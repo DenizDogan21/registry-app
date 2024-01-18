@@ -19,7 +19,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "    Şifre Sıfırlama"),
+      appBar: appBar(context, "Şifre Sıfırlama"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

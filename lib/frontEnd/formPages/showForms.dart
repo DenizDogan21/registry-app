@@ -24,7 +24,7 @@ class _ShowFormsPageState extends State<ShowFormsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "   FORM GÖSTER"),
+      appBar: appBar(context, "FORM GÖSTER"),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

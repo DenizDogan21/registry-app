@@ -16,9 +16,9 @@ class NavigationController extends GetxController {
   void navigateToLogin() => Get.toNamed(Routes.login);
   void navigateToForgotPassword() => Get.toNamed(Routes.forgotPassword);
   void navigateToSignup() => Get.toNamed(Routes.signUp);
-  void navigateToDetailsPF() => Get.toNamed(Routes.detailsIPF);
+  void navigateToDetailsIPF() => Get.toNamed(Routes.detailsIPF);
   void navigateToDetailsWOF() => Get.toNamed(Routes.detailsWOF);
-  void navigateToOutputPF() => Get.toNamed(Routes.outputIPF);
+  void navigateToOutputIPF() => Get.toNamed(Routes.outputIPF);
   void navigateToOutputWOF() => Get.toNamed(Routes.outputWOF);
   void navigateToShowForms() => Get.toNamed(Routes.showForms);
 

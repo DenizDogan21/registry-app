@@ -123,7 +123,7 @@ class _DetailsWOFState extends State<DetailsWOFPage> {
         turboyuGetiren: widget.formWOF.turboyuGetiren,
         tasimaUcreti: widget.formWOF.tasimaUcreti,
         teslimAdresi: widget.formWOF.teslimAdresi,
-        yanindaGelenler: widget.formWOF.yanindaGelenler,
+        yanindaGelenler: widget.formWOF.yanindaGelenler, flowPhotos: [],
       );
       final accountingForm = AccountingFormModel(
         tarihIPF: inProgressForm.tarihIPF,
@@ -164,7 +164,7 @@ class _DetailsWOFState extends State<DetailsWOFPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "Detaylar"),
+      appBar: appBar(context, "İş Emri Detay"),
       bottomNavigationBar: bottomNav(),
       body: SafeArea(
           child: Stack(
@@ -175,7 +175,7 @@ class _DetailsWOFState extends State<DetailsWOFPage> {
                   children: [
                     CustomTextField(
                       controller: _controllerTarihWOF,
-                      label: 'Tarih WOF',
+                      label: 'İş Emri Tarihi',
                       keyboardType: TextInputType.datetime,
                     ),
                     CustomTextField(

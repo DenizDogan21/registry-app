@@ -114,7 +114,7 @@ class _FifthStepPageState extends State<FifthStepPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "  Teslim ve Taşıma"),
+      appBar: appBar(context, "Teslim ve Taşıma"),
       bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),

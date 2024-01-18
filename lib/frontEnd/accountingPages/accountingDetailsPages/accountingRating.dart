@@ -59,7 +59,7 @@ class _AccountingRatingPageState extends State<AccountingRatingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "Detaylar"),
+      appBar: appBar(context, "Muhasebe"),
       bottomNavigationBar: bottomNavAcc(),
       body: SafeArea(
           child: Stack(

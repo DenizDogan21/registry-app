@@ -38,7 +38,7 @@ class _SecondStepPageState extends State<SecondStepPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, "  Müşteri Bilgileri"),
+      appBar: appBar(context, "Müşteri Bilgileri"),
         bottomNavigationBar: bottomNav(),
       body: Stack(children: [
         background(context),

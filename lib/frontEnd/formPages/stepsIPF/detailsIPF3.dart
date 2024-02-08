@@ -245,69 +245,69 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
       bottomNavigationBar: bottomNav(),
       body: SafeArea(
         child: Stack(
-            children: [
-              background(context),
-              SingleChildScrollView( child:
-              Column(
-                children: [ Row(mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            background(context),
+            SingleChildScrollView( child:
+            Column(
+              children: [ Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    photoButton(
+                        context, 'Turbo Fotoğrafı Göster', showTurboImage),
+                    SizedBox(width: 30,),
+                    updatePhotoButton(context, "turbo")]),
+                Row( mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       photoButton(
-                          context, 'Turbo Fotoğrafı Göster', showTurboImage),
+                          context, 'Katriç Fotoğrafı Göster', showKatricImage),
                       SizedBox(width: 30,),
-                      updatePhotoButton(context, "turbo")]),
-                  Row( mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        photoButton(
-                            context, 'Katriç Fotoğrafı Göster', showKatricImage),
-                        SizedBox(width: 30,),
-                        updatePhotoButton(context, "katric"),]),
-                  Row( mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        photoButton(
-                            context, 'Balans Fotoğrafı Göster ', showBalansImage),
-                        SizedBox(width: 25,),
-                        updatePhotoButton(context, "balans")]),
-                  // Dynamically generate buttons based on the number of flow photos
-                  ...generateFlowPhotoButtons(context),
+                      updatePhotoButton(context, "katric"),]),
+                Row( mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      photoButton(
+                          context, 'Balans Fotoğrafı Göster ', showBalansImage),
+                      SizedBox(width: 25,),
+                      updatePhotoButton(context, "balans")]),
+                // Dynamically generate buttons based on the number of flow photos
+                ...generateFlowPhotoButtons(context),
 
 
-                  SizedBox(height: 20,),
-                  ElevatedButton(
-                    onPressed: () => showSaveAlertDialog(context, _saveChanges, OutputIPFPage()),
-                    child: Text(
-                      'Bitir',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.cyanAccent, // Button color
-                      onPrimary: Colors.black, // Text color when button is pressed
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 5,
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    ),
+                SizedBox(height: 20,),
+                ElevatedButton(
+                  onPressed: () => showSaveAlertDialog(context, _saveChanges, OutputIPFPage()),
+                  child: Text(
+                    'Bitir',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
                   ),
-                  SizedBox(height: 30,),
-                  ElevatedButton(
-                    onPressed: () => _confirmDeleteForm(),
-                    child: Text(
-                      'Formu Sil',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.cyanAccent, // Button color
+                    onPrimary: Colors.black, // Text color when button is pressed
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red, // Button color
-                      onPrimary: Colors.white, // Text color when button is pressed
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 5,
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    ),
+                    elevation: 5,
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                   ),
-                ],
-              ),),
-            ],
+                ),
+                SizedBox(height: 30,),
+                ElevatedButton(
+                  onPressed: () => _confirmDeleteForm(),
+                  child: Text(
+                    'Formu Sil',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red, // Button color
+                    onPrimary: Colors.white, // Text color when button is pressed
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 5,
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  ),
+                ),
+              ],
+            ),),
+          ],
         ),
       ),
     );
@@ -368,11 +368,15 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     // Get the download URL of the new image
     String downloadURL = await ref.getDownloadURL();
 
-    // Delete the old image from Firebase Storage
+    // Delete the old image from Firebase Storage if it exists
     String oldImageUrl = widget.formIPF.getImageUrl(imageType) ?? "";
     if (oldImageUrl.isNotEmpty && oldImageUrl != "null") {
-      Reference oldImageRef = FirebaseStorage.instance.refFromURL(oldImageUrl);
-      await oldImageRef.delete();
+      try {
+        Reference oldImageRef = FirebaseStorage.instance.refFromURL(oldImageUrl);
+        await oldImageRef.delete();
+      } catch (e) {
+        print("Error deleting old image: $e");
+      }
     }
 
     // Update the corresponding image URL in the model and Firestore database
@@ -381,7 +385,6 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     });
     await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
   }
-
 
   Widget updatePhotoButton(BuildContext context, String text) {
     return ElevatedButton.icon(
@@ -402,7 +405,6 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
       ),
     );
   }
-
 
   Widget photoButton(BuildContext context, String text, Function showImage) {
     return Padding(

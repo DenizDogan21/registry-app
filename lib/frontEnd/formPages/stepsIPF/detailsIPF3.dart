@@ -24,6 +24,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
   TextEditingController _controllerTurboImageUrl = TextEditingController();
   TextEditingController _controllerKatricImageUrl = TextEditingController();
   TextEditingController _controllerBalansImageUrl = TextEditingController();
+ // TextEditingController _controllerFlowPhotos = TextEditingController();
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     _controllerTurboImageUrl.text = widget.formIPF.turboImageUrl;
     _controllerKatricImageUrl.text = widget.formIPF.katricImageUrl;
     _controllerBalansImageUrl.text = widget.formIPF.balansImageUrl;
+   // _controllerFlowPhotos.text = widget.formIPF.flowPhotos.toString();
     // ... other initializations ...
   }
 
@@ -43,8 +45,6 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     Navigator.of(context).pop(); // Close the dialog
     Navigator.of(context).push(MaterialPageRoute(builder: (context) => OutputIPFPage()));
   }
-
-
 
 
   void showFlowPhoto(BuildContext context, int index) {
@@ -123,7 +123,6 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
   }
 
 
-
   void _confirmDeleteFlowPhoto(int index) async {
     final confirmed = await showDialog(
       context: context,
@@ -182,6 +181,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     );
   }
 
+
   void pickAndUpdateFlowPhoto(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 10);
@@ -192,7 +192,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     }
 
     File imageFile = File(image.path);
-    String fileName = 'flowPhoto-${DateTime.now().millisecondsSinceEpoch}.jpg';
+    String fileName = 'flow-${DateTime.now().millisecondsSinceEpoch}.jpg';
 
     // Upload new image to Firebase Storage
     Reference ref = FirebaseStorage.instance.ref().child('images/$fileName');
@@ -209,6 +209,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     });
     await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
   }
+
 
   List<Widget> generateFlowPhotoButtons(BuildContext context) {
     List<Widget> buttons = [];
@@ -230,11 +231,6 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
 
     return buttons;
   }
-
-
-
-
-
 
 
 

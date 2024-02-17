@@ -24,7 +24,6 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
   TextEditingController _controllerTurboImageUrl = TextEditingController();
   TextEditingController _controllerKatricImageUrl = TextEditingController();
   TextEditingController _controllerBalansImageUrl = TextEditingController();
- // TextEditingController _controllerFlowPhotos = TextEditingController();
 
   @override
   void initState() {
@@ -33,8 +32,22 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     _controllerTurboImageUrl.text = widget.formIPF.turboImageUrl;
     _controllerKatricImageUrl.text = widget.formIPF.katricImageUrl;
     _controllerBalansImageUrl.text = widget.formIPF.balansImageUrl;
-   // _controllerFlowPhotos.text = widget.formIPF.flowPhotos.toString();
-    // ... other initializations ...
+    loadFlowPhotos();
+  }
+
+  Future<void> loadFlowPhotos() async {
+    try {
+      // Fetch flow photos from the database
+      List<FlowPhoto> flowPhotos = await InProgressFormRepo.instance.getFlowPhotos(widget.formIPF.id!);
+
+      // Update the formIPF with the fetched flow photos
+      setState(() {
+        widget.formIPF.flowPhotos = flowPhotos;
+      });
+    } catch (e) {
+      print('Error loading flow photos: $e');
+      // Handle error
+    }
   }
 
   Future<void> _saveChanges() async {

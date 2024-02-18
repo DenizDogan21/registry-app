@@ -151,8 +151,31 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
               child: Text("Vazgeç"),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(context).pop(true); // Confirm the delete operation
+
+                // Delete the flow photo from Firebase Storage
+                String imageUrl = widget.formIPF.flowPhotos[index].flowImageUrl;
+                if (imageUrl != null && imageUrl.isNotEmpty && imageUrl != "null") {
+                  try {
+                    Reference imageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+                    await imageRef.delete();
+                  } catch (e) {
+                    print("Error deleting image from Firebase Storage: $e");
+                    // Handle error if needed
+                  }
+                }
+
+                // Remove the flow photo from the model
+                setState(() {
+                  widget.formIPF.flowPhotos.removeAt(index);
+                });
+
+                // Update the Firestore database
+                await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
+
+                // Show a snack bar or any other feedback to the user
+                Get.snackbar("Silme Başarılı", "Flow fotoğrafı silindi", backgroundColor: Colors.green);
               },
               child: Text("Sil"),
             ),
@@ -161,15 +184,9 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
       },
     );
 
+    // Handle confirmed deletion
     if (confirmed == true) {
-      // Remove the flow photo from the model
-      setState(() {
-        widget.formIPF.flowPhotos.removeAt(index);
-      });
-      // Update the Firestore database
-      await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
-      // Show a snack bar or any other feedback to the user
-      Get.snackbar("Silme Başarılı", "Flow fotoğrafı silindi", backgroundColor: Colors.green);
+      // Perform the deletion
     }
   }
 

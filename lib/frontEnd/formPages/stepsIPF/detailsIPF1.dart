@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:turboapp/backEnd/models/inProgressForm_model.dart';
 import 'package:turboapp/backEnd/repositories/accountingForm_repo.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
@@ -38,8 +39,8 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
   void initState() {
     super.initState();
     // Initialize controllers with initial values from widget.formIPF
-    _controllerTarihWOF.text = widget.formIPF.tarihWOF.toString();
-    _controllerTarihIPF.text = widget.formIPF.tarihIPF.toString();
+    _controllerTarihWOF.text = DateFormat('yyyy-MM-dd HH:mm').format(widget.formIPF.tarihWOF);
+    _controllerTarihIPF.text = DateFormat('yyyy-MM-dd HH:mm').format(widget.formIPF.tarihIPF);
     _controllerTurboNo.text = widget.formIPF.turboNo;
     _controllerYanindaGelenler.text = getFriendlyTrueKeys(widget.formIPF.yanindaGelenler).join(', ');
     _controllerAracBilgileri.text = widget.formIPF.aracBilgileri;

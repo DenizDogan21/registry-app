@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:turboapp/backEnd/repositories/accountingForm_repo.dart';
 import 'package:turboapp/frontEnd/formPages/outputWOF.dart';
 import 'package:turboapp/frontEnd/widgets/common.dart';
@@ -45,7 +46,7 @@ class _DetailsWOFState extends State<DetailsWOFPage> {
   void initState() {
     super.initState();
     // Initialize controllers with initial values from widget.formIPF
-    _controllerTarihWOF.text = widget.formWOF.tarihWOF.toString();
+    _controllerTarihWOF.text = DateFormat('yyyy-MM-dd HH:mm').format(widget.formWOF.tarihWOF);
     _controllerTurboNo.text = widget.formWOF.turboNo;
     _controllerYanindaGelenler.text = getFriendlyTrueKeys(widget.formWOF.yanindaGelenler).join(', ');
     _controllerAracBilgileri.text = widget.formWOF.aracBilgileri;

@@ -243,6 +243,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
 
   List<Widget> generateFlowPhotoButtons(BuildContext context) {
     List<Widget> buttons = [];
+    buttons.add(updateFlowPhotoButton(context));
 
     for (int i = 1; i <= widget.formIPF.flowPhotos.length; i++) {
       buttons.add(
@@ -257,7 +258,6 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
       );
     }
 
-    buttons.add(updateFlowPhotoButton(context));
 
     return buttons;
   }
@@ -293,6 +293,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
                           context, 'Balans Fotoğrafı Göster ', showBalansImage),
                       SizedBox(width: 25,),
                       updatePhotoButton(context, "balans")]),
+                SizedBox(height: 20,),
                 // Dynamically generate buttons based on the number of flow photos
                 ...generateFlowPhotoButtons(context),
 

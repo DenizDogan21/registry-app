@@ -9,7 +9,6 @@ import 'package:turboapp/backEnd/repositories/inProgressForm_repo.dart';
 
 import 'package:turboapp/backEnd/models/workOrderForm_model.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widgets/helperMethodsInput.dart';
 
@@ -152,13 +151,15 @@ class _SixthStepPageState extends State<SixthStepPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Kabul Durumu"),
-      bottomNavigationBar: bottomNav(),
+      bottomNavigationBar: bottomNav(context),
       body: Stack(children: [
         background(context),
         SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(isTablet ? 100 : 16),
           child: Form(
             key: _formKey,
             child: Column(
@@ -191,7 +192,11 @@ class _SixthStepPageState extends State<SixthStepPage> {
                   onPressed: _submitForm,
                   child: Text(
                     'Gönder',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                    style: TextStyle(
+                      fontSize: isTablet ? 30 : 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.cyanAccent, // Button color
@@ -200,7 +205,7 @@ class _SixthStepPageState extends State<SixthStepPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     elevation: 5,
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15,),
                   ),
                 ),
               ],

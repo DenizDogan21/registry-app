@@ -46,7 +46,7 @@ class _FifthStepPageState extends State<FifthStepPage> {
   }
 
 
-  Widget _buildDeliveryDropdown() {
+  Widget _buildDeliveryDropdown(bool isTablet) {
     return DropdownButtonFormField<String>(
       value: turboyuGetiren,
       onChanged: (newValue) {
@@ -71,7 +71,10 @@ class _FifthStepPageState extends State<FifthStepPage> {
         ),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: isTablet ? 20 : 10, // Adjust vertical padding based on tablet or not
+        ),
       ),
       validator: (value) {
         if (value?.isEmpty ?? true) return 'Lütfen bir değer seçin';
@@ -80,7 +83,7 @@ class _FifthStepPageState extends State<FifthStepPage> {
     );
   }
 
-  Widget _buildShippingDropdown() {
+  Widget _buildShippingDropdown(bool isTablet) {
     return Visibility(
       visible: turboyuGetiren == 'kargo',
       child: DropdownButtonFormField<String>(
@@ -104,22 +107,28 @@ class _FifthStepPageState extends State<FifthStepPage> {
           ),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: isTablet ? 20 : 10, // Adjust vertical padding based on tablet or not
+          ),
         ),
       ),
     );
   }
 
 
+
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Teslim ve Taşıma"),
-      bottomNavigationBar: bottomNav(),
+      bottomNavigationBar: bottomNav(context),
       body: Stack(children: [
         background(context),
         SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(isTablet ? 100 : 16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -129,28 +138,30 @@ class _FifthStepPageState extends State<FifthStepPage> {
                   children: List.generate(totalSteps, (index) =>
                       buildStepDot(isSelected: index == currentStep))),
               SizedBox(height: 20),
-              _buildDeliveryDropdown(),
+              _buildDeliveryDropdown(isTablet),
               SizedBox(height: 20,),
-              _buildShippingDropdown(),
+              _buildShippingDropdown(isTablet),
               SizedBox(height: 20,),
               buildTextFormField(
                 labelText: 'Taşıma Ücreti',
                 errorText: 'Lütfen taşıma ücreti girin',
                 onSave: (value) => tasimaUcreti = double.tryParse(value!),
                 keyboardType: TextInputType.number,
+                isTablet: isTablet,
               ),
               SizedBox(height: 20,),
               buildTextFormField(
                 labelText: 'Teslim Adresi',
                 errorText: 'Lütfen teslim adresi girin',
                 onSave: (value) => teslimAdresi = value,
+                isTablet: isTablet,
               ),
               SizedBox(height: 30,),
               ElevatedButton(
                 onPressed: _saveAndContinue,
                 child: Text(
                   'Devam',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                  style: TextStyle(fontSize: isTablet ? 30 : 16, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.cyanAccent, // Button color
@@ -159,7 +170,7 @@ class _FifthStepPageState extends State<FifthStepPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   elevation: 5,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
                 ),
               ),
             ],

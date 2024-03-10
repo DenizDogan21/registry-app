@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                     customSizedBox(),
                     CustomTextButton(
                       onPressed: () => Navigator.pushNamed(context, "/signUp"),
-                      buttonText: "Hesap Oluştur",
+                      buttonText: "Hesap Oluştur", context: context,
                     ),
                   ],
                 ),

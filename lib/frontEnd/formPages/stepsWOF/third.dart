@@ -20,7 +20,6 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
   int currentStep = 2;
   final int totalSteps = 6;
 
-
   Map<String, bool> yanindaGelenlerState = {
     'yagGirisContasi': false,
     'yagDonusContasi': false,
@@ -53,10 +52,9 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
     'suGirisBorulari': 'su giriş boruları',
     'sicaklikSensoru': 'sıcaklık sensörü',
     'egzozTahliyeBorusu': 'egzoz tahliye borusu',
-
   };
 
-  List<Widget> _buildCheckboxes() {
+  List<Widget> _buildCheckboxes(bool isTablet) {
     var sortedKeys = yanindaGelenlerState.keys.toList()..sort();
 
     List<Widget> rows = [];
@@ -64,14 +62,14 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
       var widgetsInRow = <Widget>[];
 
       widgetsInRow.add(Expanded(
-        child: _buildCheckboxTile(sortedKeys[i]),
+        child: _buildCheckboxTile(sortedKeys[i], isTablet),
       ));
 
       // Add extra space between checkboxes in the same row
       if (i + 1 < sortedKeys.length) {
         widgetsInRow.add(SizedBox(width: 20)); // Adjust the width for desired spacing
         widgetsInRow.add(Expanded(
-          child: _buildCheckboxTile(sortedKeys[i + 1]),
+          child: _buildCheckboxTile(sortedKeys[i + 1], isTablet),
         ));
       }
 
@@ -86,15 +84,15 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
     return rows;
   }
 
-  Widget _buildCheckboxTile(String key) {
+  Widget _buildCheckboxTile(String key, bool isTablet) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 4), // Adjust vertical spacing
+      margin: EdgeInsets.symmetric(vertical: 8), // Adjust vertical spacing
       child: Row(
         children: <Widget>[
           Expanded(
             child: Text(
               displayNames[key] ?? key,
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: TextStyle(color: Colors.white, fontSize: isTablet ? 25 : 16),
             ),
           ),
           Checkbox(
@@ -117,8 +115,6 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
     );
   }
 
-
-
   void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -132,44 +128,53 @@ class _ThirdStepPageState extends State<ThirdStepPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
+
     return Scaffold(
       appBar: appBar(context, "Turboyla Gelenler"),
-      bottomNavigationBar: bottomNav(),
-      body: Stack(children: [
-        background(context),
-        SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(totalSteps, (index) =>
-                      buildStepDot(isSelected: index == currentStep))),
-              SizedBox(height: 20),
-              ..._buildCheckboxes(),
-              SizedBox(height: 20,),
-              ElevatedButton(
-                onPressed: _saveAndContinue,
-                child: Text(
-                  'Devam',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.cyanAccent, // Button color
-                  onPrimary: Colors.black, // Text color when button is pressed
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+      bottomNavigationBar: bottomNav(context),
+      body: Stack(
+        children: [
+          background(context),
+          SingleChildScrollView(
+            padding: EdgeInsets.all(isTablet ? 100 : 16),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      totalSteps,
+                          (index) => buildStepDot(isSelected: index == currentStep),
+                    ),
                   ),
-                  elevation: 5,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                ),
+                  SizedBox(height: 20),
+                  ..._buildCheckboxes(isTablet),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _saveAndContinue,
+                    child: Text(
+                      'Devam',
+                      style: TextStyle(fontSize: isTablet ? 20 : 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.cyanAccent, // Button color
+                      onPrimary: Colors.black, // Text color when button is pressed
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 5,
+                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),]),
+        ],
+      ),
     );
   }
 }

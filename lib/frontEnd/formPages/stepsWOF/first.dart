@@ -23,7 +23,6 @@ class _FirstStepPageState extends State<FirstStepPage> {
   int currentStep = 0;
   final int totalSteps = 6;
 
-
   void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -42,76 +41,90 @@ class _FirstStepPageState extends State<FirstStepPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
+
     return Scaffold(
       appBar: appBar(context, "Araç ve Turbo Kaydı"),
-      bottomNavigationBar: bottomNav(),
-      body: Stack(children: [
-        background(context),
-        SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-            Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(totalSteps, (index) =>
-                buildStepDot(isSelected: index == currentStep))),
-              SizedBox(height: 20),
-              buildDatePickerFormField(
-                context: context,
-                labelText: 'İş Emri Tarihi',
-                errorText: 'Tarih girin',
-                onSave: (DateTime value) {
-                  tarihWOF = value;
-                },
-              ),
-              SizedBox(height: 20),
-              buildTextFormField(
-                labelText: 'Turbo No',
-                errorText: 'Lütfen turbo no girin',
-                onSave: (value) => turboNo = value,
-              ),
-              SizedBox(height: 20),
-              buildTextFormField(
-                labelText: 'Araç Bilgileri',
-                errorText: 'Lütfen araç bilgisi girin',
-                onSave: (value) => aracBilgileri = value,
-              ),
-              SizedBox(height: 20),
-              buildTextFormField(
-                labelText: 'Araç Km',
-                errorText: 'Lütfen araç km si girin',
-                onSave: (value) => aracKm = int.tryParse(value!),
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 20),
-              buildTextFormField(
-                labelText: 'Araç Plakası',
-                errorText: 'Lütfen araç plakası girin',
-                onSave: (value) => aracPlaka = value,
-              ),
-              SizedBox(height: 20), // Spacing
-              ElevatedButton(
-                onPressed: _saveAndContinue,
-                child: Text(
-                  'Devam',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.cyanAccent, // Button color
-                  onPrimary: Colors.black, // Text color when button is pressed
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+      bottomNavigationBar: bottomNav(context),
+      body: Stack(
+        children: [
+          background(context),
+          SingleChildScrollView(
+            padding: EdgeInsets.all(isTablet ? 100 : 16),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      totalSteps,
+                          (index) => buildStepDot(isSelected: index == currentStep),
+                    ),
                   ),
-                  elevation: 5,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                ),
+                  SizedBox(height: 20),
+                  buildDatePickerFormField(
+                    context: context,
+                    labelText: 'İş Emri Tarihi',
+                    errorText: 'Tarih girin',
+                    onSave: (DateTime value) {
+                      tarihWOF = value;
+                    },
+                    isTablet: isTablet,
+                  ),
+                  SizedBox(height: 20),
+                  buildTextFormField(
+                    labelText: 'Turbo No',
+                    errorText: 'Lütfen turbo no girin',
+                    onSave: (value) => turboNo = value,
+                    isTablet: isTablet, // Pass the isTablet value
+                  ),
+                  SizedBox(height: 20),
+                  buildTextFormField(
+                    labelText: 'Araç Bilgileri',
+                    errorText: 'Lütfen araç bilgisi girin',
+                    onSave: (value) => aracBilgileri = value,
+                    isTablet: isTablet, // Pass the isTablet value
+                  ),
+                  SizedBox(height: 20),
+                  buildTextFormField(
+                    labelText: 'Araç Km',
+                    errorText: 'Lütfen araç km si girin',
+                    onSave: (value) => aracKm = int.tryParse(value!),
+                    keyboardType: TextInputType.number,
+                    isTablet: isTablet, // Pass the isTablet value
+                  ),
+                  SizedBox(height: 20),
+                  buildTextFormField(
+                    labelText: 'Araç Plakası',
+                    errorText: 'Lütfen araç plakası girin',
+                    onSave: (value) => aracPlaka = value,
+                    isTablet: isTablet, // Pass the isTablet value
+                  ),
+                  SizedBox(height: 20), // Spacing
+                  ElevatedButton(
+                    onPressed: _saveAndContinue,
+                    child: Text(
+                      'Devam',
+                      style: TextStyle(fontSize: isTablet ? 30 : 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.cyanAccent, // Button color
+                      onPrimary: Colors.black, // Text color when button is pressed
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 5,
+                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),])
+        ],
+      ),
     );
   }
 }

@@ -69,26 +69,32 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Süreç Formu ||"),
-      bottomNavigationBar: bottomNav(),
+      bottomNavigationBar: bottomNav(context),
       body: SafeArea(
           child: Stack(
               children: [
                 background(context),
-                SingleChildScrollView( child:
+                SingleChildScrollView(padding: EdgeInsets.all(isTablet ? 64 : 16),
+                 child:
                 Column(
                   children: [
                     CustomTextField(
                       controller: _controllerTespitEdilen,
                       label: 'Tespit Edilen',
+                      fieldSize: isTablet ? 30: 20,
                       // ... other properties ...
                     ),
                     CustomTextField(
                       controller: _controllerYapilanIslemler,
                       label: 'Yapılan İşlemler',
+                      fieldSize: isTablet ? 30: 20,
                       // ... other properties ...
                     ),
+                    isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
                     ElevatedButton(
                       onPressed: () {
                         if (_hasChanges) {
@@ -100,7 +106,7 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
                       },
                       child: Text(
                         'Devam',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                        style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
                       ),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.cyanAccent,
@@ -109,7 +115,7 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         elevation: 5,
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        padding: EdgeInsets.symmetric(horizontal:isTablet ?  60:30, vertical: isTablet ?  30:15,),
                       ),
                     ),
                   ],

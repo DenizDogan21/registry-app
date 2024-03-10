@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 Widget buildButton(BuildContext context, String text, Widget page) {
   double screenWidth = MediaQuery.of(context).size.width; // Get the screen width
+  final screenSize = MediaQuery.of(context).size;
+  final isTablet = screenSize.width > 600;
 
   return Container(
     width: screenWidth, // Set the width of the button to match the screen width
-    height: 80.0, // Set a fixed height for the button
+    height: isTablet ? 160: 80, // Set a fixed height for the button
     margin: EdgeInsets.symmetric(vertical: 10), // Add some vertical spacing between buttons
     child: ElevatedButton(
       onPressed: () {
@@ -25,7 +27,7 @@ Widget buildButton(BuildContext context, String text, Widget page) {
       ),
       child: Text(
         text,
-        style: CustomTextStyle.appBarTextStyle,
+        style: isTablet ? CustomTextStyle.appBarTabletTextStyle: CustomTextStyle.appBarTextStyle
       ),
     ),
   );

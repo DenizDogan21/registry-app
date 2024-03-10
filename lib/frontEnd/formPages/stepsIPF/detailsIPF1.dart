@@ -178,74 +178,92 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Süreç Formu |"),
-      bottomNavigationBar: bottomNav(),
+      bottomNavigationBar: bottomNav(context),
       body: SafeArea(
         child: Stack(
         children: [
           background(context),
-          SingleChildScrollView( child:
+          SingleChildScrollView(padding: EdgeInsets.all(isTablet ? 64 : 16),
+            child:
           Column(
           children: [
             CustomTextField(
               controller: _controllerTarihWOF,
               label: 'İş Emri Tarihi',
               keyboardType: TextInputType.datetime,
+              fieldSize: isTablet ? 30: 20,
             ),
             CustomTextField(
               controller: _controllerTarihIPF,
               label: 'Süreç Tarihi',
               keyboardType: TextInputType.datetime,
+              fieldSize: isTablet ? 30: 20,
             ),
             CustomTextField(
               controller: _controllerTurboNo,
               label: 'Turbo No',
+              fieldSize: isTablet ? 30: 20,
             ),CustomTextField(
               controller: _controllerYanindaGelenler,
-              label: 'Turboyla Gelenler'
+              label: 'Turboyla Gelenler',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),CustomTextField(
               controller: _controllerAracBilgileri,
               label: 'Araç Bilgileri',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),CustomTextField(
                 controller: _controllerAracKm,
-                label: 'Araç Km si'
+                label: 'Araç Km si',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),CustomTextField(
                 controller: _controllerAracPlaka,
-                label: 'Araç Plakası'
+                label: 'Araç Plakası',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),CustomTextField(
               controller: _controllerMusteriAdi,
               label: 'Müşteri Adı',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),CustomTextField(
               controller: _controllerMusteriNumarasi,
-              label: 'Müşteri Numarası'
+              label: 'Müşteri Numarası',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),CustomTextField(
               controller: _controllerMusteriSikayetleri,
               label: 'Müşteri Şikayetleri',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),CustomTextField(
               controller: _controllerOnTespit,
               label: 'Ön Tespit',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),CustomTextField(
               controller: _controllerTurboyuGetiren,
               label: 'Turboyu Getiren',
+              fieldSize: isTablet ? 30: 20,
             ),CustomTextField(
               controller: _controllerTasimaUcreti,
               label: 'Taşıma Ücreti',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),
             CustomTextField(
               controller: _controllerTeslimAdresi,
               label: 'Teslim Adresi',
+              fieldSize: isTablet ? 30: 20,
               // ... other properties ...
             ),
+            isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
             ElevatedButton(
               onPressed: () {
                 if (_hasChanges) {
@@ -257,7 +275,7 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
               },
               child: Text(
                 'Devam',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
               ),
               style: ElevatedButton.styleFrom(
                 primary: Colors.cyanAccent,
@@ -266,7 +284,7 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 elevation: 5,
-                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal:isTablet ?  60:30, vertical: isTablet ?  30:15,),
               ),
             ),
           ],

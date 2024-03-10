@@ -89,29 +89,38 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey.shade900,
-        title: TextField(
-          controller: _searchController,
-          style: TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: "Ara...",
-            hintStyle: TextStyle(color: Colors.white),
-            border: InputBorder.none,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(isTablet ? 80 : 40), // Adjust height for tablets
+        child: AppBar(
+          backgroundColor: Colors.grey.shade900,
+          title: Padding(
+            padding: isTablet ? EdgeInsets.only(top: 20): EdgeInsets.only(top: 10),
+            child: TextField(
+              controller: _searchController,
+              style: TextStyle(color: Colors.white, fontSize: isTablet ? 50 : 25), // Increase font size for tablets
+              decoration: InputDecoration(
+                hintText: "Ara...",
+                hintStyle: TextStyle(color: Colors.white),
+                border: InputBorder.none,
+              ),
+              onChanged: (value) => _filterForms(value),
+            ),
           ),
-          onChanged: (value) => _filterForms(value),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.cancel,size: isTablet ? 40 : 20,),
+                onPressed: () {
+                  _searchController.clear();
+                },
+                padding: isTablet ? EdgeInsets.only(top: 20,right: 20): EdgeInsets.only(top: 10,right: 10)
+            ),
+          ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.cancel),
-            onPressed: () {
-              _searchController.clear();
-            },
-          ),
-        ],
       ),
-      bottomNavigationBar: bottomNav(),
+      bottomNavigationBar: bottomNav(context),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -125,7 +134,7 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
           ),
         ),
         child: _filteredFormsIPF.isEmpty
-            ? Center(child: Text('Kayıt Bulunamadı', style: TextStyle(color: Colors.white)))
+            ? Center(child: Text('Kayıt Bulunamadı', style: TextStyle(color: Colors.white, fontSize: isTablet ? 30 : 16),))
             : ListView.separated(
           itemCount: _filteredFormsIPF.length,
           separatorBuilder: (context, index) => Divider(color: Colors.grey.shade600),
@@ -138,8 +147,12 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
               iconColor: tileColor,
               child: ListTile(
                 leading: Icon(Icons.build_circle_outlined),
-                title: Text('${formatDate(form.tarihIPF)}', style: CustomTextStyle.outputTitleTextStyle),
-                subtitle: Text('Turbo No: ${form.turboNo} \nEge Turbo No: ${form.egeTurboNo}', style: CustomTextStyle.outputListTextStyle),
+                title: Text('${formatDate(form.tarihIPF)}', style: CustomTextStyle.outputTitleTextStyle.copyWith(
+                  fontSize: isTablet ? 30 : 15,
+                ),),
+                subtitle: Text('Turbo No: ${form.turboNo} \nEge Turbo No: ${form.egeTurboNo}',style: CustomTextStyle.outputListTextStyle.copyWith(
+                  fontSize: isTablet ? 20 : 10,
+                ),),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
                   Navigator.of(context).push(

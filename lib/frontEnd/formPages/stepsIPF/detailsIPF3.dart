@@ -191,10 +191,10 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
   }
 
 
-  Widget updateFlowPhotoButton(BuildContext context) {
+  Widget updateFlowPhotoButton(BuildContext context,double updateFlowPhotoButtonSize) {
     return ElevatedButton.icon(
       icon: Icon(Icons.camera_alt),
-      label: Text('Flow Fotoğrafı Ekle'),
+      label: Text('Flow Fotoğrafı Ekle',style: TextStyle(fontSize: updateFlowPhotoButtonSize*0.75),),
       onPressed: () => pickAndUpdateFlowPhoto(context),
       style: ElevatedButton.styleFrom(
         primary: Colors.cyanAccent,
@@ -204,8 +204,8 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
         ),
         elevation: 5,
         padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.01,
-          vertical: 15,
+          horizontal: updateFlowPhotoButtonSize,
+          vertical: updateFlowPhotoButtonSize,
         ),
       ),
     );
@@ -242,68 +242,78 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
 
 
   List<Widget> generateFlowPhotoButtons(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     List<Widget> buttons = [];
-    buttons.add(updateFlowPhotoButton(context));
+    buttons.add(updateFlowPhotoButton(context, isTablet ? 32:16));
 
     for (int i = 1; i <= widget.formIPF.flowPhotos.length; i++) {
       buttons.add(
-        ElevatedButton(
-          onPressed: () => showFlowPhoto(context, i - 1),
-          child: Text('$i. Flow Fotoğrafı '),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.orange, // Customize button color
-            onPrimary: Colors.black, // Customize text color
+        Padding(
+          padding: EdgeInsets.all(isTablet ? 20: 10), // Adjust the padding as needed
+          child: ElevatedButton(
+            onPressed: () => showFlowPhoto(context, i - 1),
+            child: Text('$i. Flow Fotoğrafı ', style: TextStyle(fontSize: isTablet ? 32:16),),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.orange, // Customize button color
+              onPrimary: Colors.black, // Customize text color
+              padding: EdgeInsets.symmetric(horizontal: isTablet ? 30: 15, vertical: isTablet ? 10: 5),
+            ),
           ),
         ),
       );
     }
-
 
     return buttons;
   }
 
 
 
+
+
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Süreç Formu |||"),
-      bottomNavigationBar: bottomNav(),
+      bottomNavigationBar: bottomNav(context),
       body: SafeArea(
         child: Stack(
           children: [
             background(context),
-            SingleChildScrollView( child:
+            SingleChildScrollView(padding: EdgeInsets.all(isTablet ? 64 : 16),
+              child:
             Column(
               children: [ Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     photoButton(
-                        context, 'Turbo Fotoğrafı Göster', showTurboImage),
-                    SizedBox(width: 30,),
-                    updatePhotoButton(context, "turbo")]),
+                        context, 'Turbo Fotoğrafı Göster', showTurboImage, isTablet ? 32:16),
+                    isTablet ? SizedBox(width: 60,): SizedBox(width: 30,),
+                    updatePhotoButton(context, "turbo",isTablet ? 32:16)]),
                 Row( mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       photoButton(
-                          context, 'Katriç Fotoğrafı Göster', showKatricImage),
-                      SizedBox(width: 30,),
-                      updatePhotoButton(context, "katric"),]),
+                          context, 'Katriç Fotoğrafı Göster', showKatricImage, isTablet ? 32:16),
+                      isTablet ? SizedBox(width: 60,): SizedBox(width: 30,),
+                      updatePhotoButton(context, "katric",isTablet ? 32:16),]),
                 Row( mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       photoButton(
-                          context, 'Balans Fotoğrafı Göster ', showBalansImage),
-                      SizedBox(width: 25,),
-                      updatePhotoButton(context, "balans")]),
+                          context, 'Balans Fotoğrafı Göster ', showBalansImage, isTablet ? 32:16),
+                      isTablet ? SizedBox(width: 50,): SizedBox(width: 25,),
+                      updatePhotoButton(context, "balans",isTablet ? 32:16)]),
                 SizedBox(height: 20,),
                 // Dynamically generate buttons based on the number of flow photos
                 ...generateFlowPhotoButtons(context),
 
 
-                SizedBox(height: 20,),
+                isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
                 ElevatedButton(
                   onPressed: () => showSaveAlertDialog(context, _saveChanges, OutputIPFPage()),
                   child: Text(
                     'Bitir',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                    style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.cyanAccent, // Button color
@@ -312,15 +322,15 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     elevation: 5,
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: isTablet ? 60: 30, vertical: isTablet ? 30: 15),
                   ),
                 ),
-                SizedBox(height: 30,),
+                isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
                 ElevatedButton(
                   onPressed: () => _confirmDeleteForm(),
                   child: Text(
                     'Formu Sil',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red, // Button color
@@ -329,7 +339,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     elevation: 5,
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: isTablet ? 60: 30, vertical: 15),
                   ),
                 ),
               ],
@@ -413,10 +423,10 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
     await InProgressFormRepo.instance.updateInProgressForm(widget.formIPF.id!, widget.formIPF);
   }
 
-  Widget updatePhotoButton(BuildContext context, String text) {
+  Widget updatePhotoButton(BuildContext context, String text,double updatePhotoButtonSize) {
     return ElevatedButton.icon(
       icon: Icon(Icons.camera_alt),
-      label: Text('Güncelle/Çek'),
+      label: Text('Güncelle/Çek',style: TextStyle(fontSize: updatePhotoButtonSize*0.75)),
       onPressed: () => pickAndUpdateImage(text),
       style: ElevatedButton.styleFrom(
         primary: Colors.cyanAccent,
@@ -426,19 +436,19 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
         ),
         elevation: 5,
         padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.01, // Adjust as needed
-          vertical: 15,
+          horizontal: updatePhotoButtonSize, // Adjust as needed
+          vertical: updatePhotoButtonSize,
         ),
       ),
     );
   }
 
-  Widget photoButton(BuildContext context, String text, Function showImage) {
+  Widget photoButton(BuildContext context, String text, Function showImage,double photoButtonSize) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding:  EdgeInsets.symmetric(vertical: photoButtonSize/2),
       child: ElevatedButton.icon(
         icon: Icon(Icons.image, color: Colors.white),
-        label: Text(text),
+        label: Text(text,style: TextStyle(fontSize: photoButtonSize*0.75),),
         onPressed: () => showImage(context),  // <-- Error is here
         style: ElevatedButton.styleFrom(
           primary: Colors.redAccent,
@@ -448,7 +458,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
           ),
           padding: EdgeInsets.symmetric(
             horizontal: MediaQuery.of(context).size.width * 0.01,
-            vertical: 15,
+            vertical: photoButtonSize,
           ),
         ),
       ),

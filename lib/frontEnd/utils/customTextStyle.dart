@@ -24,6 +24,12 @@ class CustomTextStyle {
     fontWeight: FontWeight.bold, // Bold text for the title
     letterSpacing: 0.5, // Letter spacing for better readability
   );
+  static const appBarTabletTextStyle = TextStyle(
+    color: Colors.cyanAccent, // Accent color for readability
+    fontSize: 40.0, // Appropriate size for AppBar titles
+    fontWeight: FontWeight.bold, // Bold text for the title
+    letterSpacing: 0.5, // Letter spacing for better readability
+  );
 
 
 

@@ -31,13 +31,15 @@ class _FourthStepPageState extends State<FourthStepPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Ön Tespit"),
-      bottomNavigationBar: bottomNav(),
+      bottomNavigationBar: bottomNav(context),
       body: Stack(children: [
         background(context),
         SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(isTablet ? 100 : 16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -51,13 +53,14 @@ class _FourthStepPageState extends State<FourthStepPage> {
                 labelText: 'Ön Tespit',
                 errorText: 'Lütfen ön tespiti girin',
                 onSave: (value) => onTespit = value,
+                isTablet: isTablet,
               ),
               SizedBox(height: 20,),
               ElevatedButton(
                 onPressed: _saveAndContinue,
                 child: Text(
                   'Devam',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                  style: TextStyle(fontSize: isTablet ? 30 : 16, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.cyanAccent, // Button color
@@ -66,7 +69,7 @@ class _FourthStepPageState extends State<FourthStepPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   elevation: 5,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
                 ),
               ),
             ],

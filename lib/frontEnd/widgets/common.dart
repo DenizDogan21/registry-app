@@ -21,8 +21,6 @@ class BottomNavigationController extends GetxController {
   }
 }
 
-
-
 Widget background(BuildContext context) {
   return Scaffold(
     body: SafeArea(
@@ -45,24 +43,24 @@ Widget background(BuildContext context) {
   );
 }
 
-
 PreferredSizeWidget? appBar(BuildContext context, String pageTitle) {
+  final isTablet = MediaQuery.of(context).size.width > 600;
   return AppBar(
     backgroundColor: Colors.grey.shade900,
+    toolbarHeight: isTablet ? 110 : null, // Adjust toolbar height conditionally
     title: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Assuming you have an asset image for the logo
         Image.asset(
           'assets/images/logo.png',
           fit: BoxFit.contain,
-          height: 22,
+          height: isTablet ? 44 : 22,
         ),
         Container(
           padding: const EdgeInsets.all(8),
           child: Text(
             pageTitle,
-            style: CustomTextStyle.appBarTextStyle,
+            style: CustomTextStyle.appBarTextStyle.copyWith(fontSize: isTablet ? 40 : 20),
           ),
         ),
       ],
@@ -74,28 +72,31 @@ class CustomTextButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String buttonText;
   final Color textColor;
+  final BuildContext context; // Added context parameter
   const CustomTextButton({
-    super.key,
+    Key? key,
     required this.onPressed,
     required this.buttonText,
     this.textColor = Colors.cyanAccent,
+    required this.context, // Added context parameter
   });
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.width > 600;
     return TextButton(
       onPressed: onPressed,
       child: Text(
         buttonText,
-        style: TextStyle(color: textColor),
+        style: TextStyle(color: textColor, fontSize: isTablet ? 20 : 16),
       ),
     );
   }
 }
 
-
-Widget bottomNav() {
+Widget bottomNav(BuildContext context) {
   final BottomNavigationController navigationController = Get.find<BottomNavigationController>();
+  final isTablet = MediaQuery.of(context).size.width > 600;
 
   return Obx(() => BottomNavigationBar(
     backgroundColor: Colors.grey.shade900,
@@ -103,7 +104,7 @@ Widget bottomNav() {
     unselectedItemColor: Colors.grey.shade600,
     currentIndex: navigationController.currentIndex.value,
     onTap: navigationController.changeIndex,
-    items: const [
+    items: [
       BottomNavigationBarItem(
         icon: Icon(Icons.handyman),
         label: "Ekle",
@@ -113,6 +114,11 @@ Widget bottomNav() {
         label: "Göster",
       ),
     ],
+    selectedFontSize: isTablet ? 30 : 15, // Adjust font size conditionally
+    unselectedFontSize: isTablet ? 24 : 12, // Adjust font size conditionally
+    iconSize: isTablet ? 50 : 25, // Adjust icon size conditionally
   ));
 }
+
+
 

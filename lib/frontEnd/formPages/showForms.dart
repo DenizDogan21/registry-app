@@ -23,8 +23,10 @@ class _ShowFormsPageState extends State<ShowFormsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
-      appBar: appBar(context, "FORM GÖSTER"),
+      appBar: appBar(context, "FORM GÖSTER",),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -36,13 +38,13 @@ class _ShowFormsPageState extends State<ShowFormsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  buildButton(context, "İş Emri Formları", const OutputWOFPage()),
-                  SizedBox(height: 40,),
+                  buildButton(context, "İş Emri Formları", const OutputWOFPage(),),
+                  isTablet ? SizedBox(height: 80,): SizedBox(height: 40,),
                   buildButton(context, "Süreç Formları", const OutputIPFPage()),
                 ],
               ),
             ),
-      bottomNavigationBar: bottomNav(),
+      bottomNavigationBar: bottomNav(context),
     );
   }
 

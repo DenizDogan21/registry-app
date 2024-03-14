@@ -35,25 +35,54 @@ Widget background(BuildContext context) {
 }
 
 
+Widget background2(BuildContext context) {
+  return Scaffold(
+    body: SafeArea(
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.1, 0.9],
+            colors: [
+              Colors.grey.shade400,
+              Colors.grey.shade600,
+            ],
+          ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/finance_pattern.avif"),
+            fit: BoxFit.cover,
+            opacity: 0.2, // Adjust opacity for a subtle appearance
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+
 
 
 PreferredSizeWidget? appBar(BuildContext context, String pageTitle) {
+  final isTablet = MediaQuery.of(context).size.width > 600;
   return AppBar(
-    backgroundColor: Colors.grey.shade700,
+    backgroundColor: Colors.grey.shade900,
+    toolbarHeight: isTablet ? 110 : null, // Adjust toolbar height conditionally
     title: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Assuming you have an asset image for the logo
         Image.asset(
           'assets/images/logo.png',
           fit: BoxFit.contain,
-          height: 22,
+          height: isTablet ? 44 : 22,
         ),
         Container(
           padding: const EdgeInsets.all(8),
           child: Text(
             pageTitle,
-            style: CustomTextStyle.appBarTextStyle,
+            style: CustomTextStyle.appBarTextStyle.copyWith(fontSize: isTablet ? 40 : 20),
           ),
         ),
       ],
@@ -79,8 +108,9 @@ class BottomNavigationControllerAcc extends GetxController {
   }
 }
 
-Widget bottomNavAcc() {
+Widget bottomNavAcc(BuildContext context) {
   final BottomNavigationControllerAcc navigationController = Get.find<BottomNavigationControllerAcc>();
+  final isTablet = MediaQuery.of(context).size.width > 600;
 
   return Obx(() => BottomNavigationBar(
     backgroundColor: Colors.grey.shade800,
@@ -96,7 +126,9 @@ Widget bottomNavAcc() {
       BottomNavigationBarItem(
         icon: Icon(Icons.cloud_download),
         label: "İndir",
-      ),
-    ],
+      ),],
+      selectedFontSize: isTablet ? 30 : 15, // Adjust font size conditionally
+      unselectedFontSize: isTablet ? 20 : 10, // Adjust font size conditionally
+      iconSize: isTablet ? 40 : 20, // Adjust icon size conditionally
   ));
 }

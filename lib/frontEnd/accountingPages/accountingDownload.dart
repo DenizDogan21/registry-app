@@ -126,7 +126,7 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
     if (selectedRange == null) {
       // Alert the user to select a date range first
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lütfen Önce Tarih Seçin')),
+        SnackBar(content: Text('Lütfen Önce Tarih Seçin',style: TextStyle(color: Colors.redAccent),)),
       );
       return;
     }
@@ -162,14 +162,16 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Dosya İndir"),
-      bottomNavigationBar: bottomNavAcc(),
+      bottomNavigationBar: bottomNavAcc(context),
       body: SafeArea(
         child: Stack(children: [
           background(context),
           SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(isTablet ? 200 : 16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -177,7 +179,7 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
               ElevatedButton(
                 onPressed: _selectDateRange,
             child: Text('Aralık Seçin',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                  style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.cyanAccent, // Button color
@@ -186,23 +188,36 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   elevation: 5,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding: EdgeInsets.symmetric(horizontal: isTablet ? 30:15, vertical: isTablet ? 15:8),
                 ),
               ),
-              SizedBox(height: 20),
-              Text(
-                selectedRange == null
-                    ? 'Lütfen iki tane tarih seçin'
-                    : 'Seçilen aralık: ${selectedRange!.start.toLocal()} ile ${selectedRange!.end.toLocal()} arası',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              isTablet ? SizedBox(height: 40):SizedBox(height: 20),
+              Column(
+                children: [
+                  Text(
+                    selectedRange == null
+                        ? 'Lütfen İki Tane Tarih Seçin'
+                        : 'SEÇİLEN ARALIK:',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.greenAccent),
+                  ),
+                  isTablet ? SizedBox(height: 10):SizedBox(height: 5), // Adjust the spacing between lines if needed
+                  Text(
+                    selectedRange == null
+                        ? ''
+                        : '${DateFormat('dd-MM-yyyy').format(selectedRange!.start)}\n${DateFormat('dd-MM-yyyy').format(selectedRange!.end)} ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.w300, color: Colors.white),
+                  ),
+                ],
               ),
+
               SizedBox(height: 80),
               ElevatedButton(
                 onPressed: _downloadData,
                 child: Text(
                   'Excel Olarak İndir',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                  style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.cyanAccent, // Button color
@@ -211,17 +226,28 @@ class _AccountingDownloadPageState extends State<AccountingDownloadPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   elevation: 5,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding: EdgeInsets.symmetric(horizontal: isTablet ? 30:15, vertical: isTablet ? 15:8),
                 ),
               ),
               SizedBox(height: 10,),
               if (downloadedFilePath != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                    'İndirilen Excel Dosyası Yolu: $downloadedFilePath',
-                    textAlign: TextAlign.center,
-                    style: CustomTextStyle.outputListTextStyle,
+                  child: Column(
+                    children: [
+                      Text(
+                        'DOSYA YOLU:',
+                        textAlign: TextAlign.center,
+                        style: CustomTextStyle.outputListTextStyle.copyWith(fontSize: isTablet ? 32:16, color: Colors.greenAccent,
+                        fontWeight: FontWeight.w600),
+                      ),
+                      isTablet ? SizedBox(height: 10):SizedBox(height: 5), // Adjust the spacing between lines if needed
+                      Text(
+                        '$downloadedFilePath',
+                        textAlign: TextAlign.center,
+                        style: CustomTextStyle.outputListTextStyle.copyWith(fontSize: isTablet ? 32:16),
+                      ),
+                    ],
                   ),
                 ),
               // Add other widgets here if needed

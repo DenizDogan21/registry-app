@@ -14,7 +14,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  late String email, fullname, role= "Teknik", password;
+  late String email, fullname, role = "Teknik", password;
   final formkey = GlobalKey<FormState>();
   final firebaseAuth = FirebaseAuth.instance;
   final authService = AuthService();
@@ -22,42 +22,44 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
     String logo = "assets/images/logo.png";
     return Scaffold(
-      body: Stack(children:[
-        background(context),
-        appBody(height, logo),
-      ]
+      body: Stack(
+        children: [
+          background(context),
+          appBody(height, width, logo),
+        ],
       ),
     );
   }
 
-  SingleChildScrollView appBody(double height, String logo) {
+  SingleChildScrollView appBody(double height, double width, String logo) {
     return SingleChildScrollView(
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            logoContainer(height, logo),
+            logoContainer(height, width, logo),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: width * 0.1),
               child: Form(
                 key: formkey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 75,),
-                    emailTextField(),
-                    customSizedBox(),
-                    fullNameTextField(),
-                    customSizedBox(),
-                    roleDropdownField(),
-                    customSizedBox(),
-                    passwordTextField(),
-                    customSizedBox(),
-                    signUpButton(),
-                    customSizedBox(),
-                    backToLoginPage()
+                    SizedBox(height: height * 0.075),
+                    emailTextField(width),
+                    customSizedBox(height),
+                    fullNameTextField(width),
+                    customSizedBox(height),
+                    roleDropdownField(width),
+                    customSizedBox(height),
+                    passwordTextField(width),
+                    customSizedBox(height),
+                    signUpButton(width,height),
+                    customSizedBox(height),
+                    backToLoginPage(width),
                   ],
                 ),
               ),
@@ -68,8 +70,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-
-  TextFormField emailTextField() {
+  TextFormField emailTextField(double width) {
     return TextFormField(
       validator: (value) {
         if (value!.isEmpty) {
@@ -79,12 +80,12 @@ class _SignUpState extends State<SignUp> {
       onSaved: (value) {
         email = value!;
       },
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.white, fontSize: width * 0.04),
       decoration: customInputDecoration("Email"),
     );
   }
 
-  TextFormField fullNameTextField() {
+  TextFormField fullNameTextField(double width) {
     return TextFormField(
       validator: (value) {
         if (value!.isEmpty) {
@@ -94,12 +95,12 @@ class _SignUpState extends State<SignUp> {
       onSaved: (value) {
         fullname = value!;
       },
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.white, fontSize: width * 0.04),
       decoration: customInputDecoration("Ad Soyad"),
     );
   }
 
-  DropdownButtonFormField<String> roleDropdownField() {
+  DropdownButtonFormField<String> roleDropdownField(double width) {
     return DropdownButtonFormField<String>(
       value: role, // Make sure 'role' is initialized properly
       validator: (value) {
@@ -113,21 +114,20 @@ class _SignUpState extends State<SignUp> {
           role = newValue!;
         });
       },
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.white, fontSize: width * 0.04),
       decoration: customDropdownDecoration("Görev"),
       dropdownColor: Colors.grey[800],
       items: <String>['Muhasebe', 'Teknik']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value, style: TextStyle(color: Colors.white)),
+          child: Text(value, style: TextStyle(color: Colors.white, fontSize: width * 0.04)),
         );
       }).toList(),
     );
   }
 
-
-  TextFormField passwordTextField() {
+  TextFormField passwordTextField(double width) {
     return TextFormField(
       validator: (value) {
         if (value!.isEmpty) {
@@ -138,46 +138,47 @@ class _SignUpState extends State<SignUp> {
         password = value!;
       },
       obscureText: true,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Colors.white, fontSize: width * 0.04),
       decoration: customInputDecoration("Şifre"),
     );
   }
 
-  Center signUpButton() {
+  Center signUpButton(double width, double height) {
     return Center(
       child: TextButton(
         onPressed: signUp,
         child: Container(
-          height: 50,
-          width: 150,
-          margin: EdgeInsets.symmetric(horizontal: 60),
+          height: height * 0.08,
+          width: width * 0.4,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Color(0xff31274F)),
+            borderRadius: BorderRadius.circular(50),
+            color: Color(0xff31274F),
+          ),
           child: Center(
-            child: customText("Hesap Oluştur", CustomColors.loginButtonTextColor),
+            child: customText("Hesap Oluştur", CustomColors.loginButtonTextColor, fontSize: width * 0.04),
           ),
         ),
       ),
     );
   }
 
-
-  Center backToLoginPage() {
+  Center backToLoginPage(double width) {
     return Center(
       child: TextButton(
         onPressed: () => Navigator.pushNamed(context, "/login"),
         child: customText(
           "Giriş Sayfasına Geri Dön",
           CustomColors.pinkColor,
+          fontSize: width * 0.04,
         ),
       ),
     );
   }
 
-  Container logoContainer(double height, String logo) {
+  Container logoContainer(double height, double width, String logo) {
     return Container(
       height: height * .25,
+      width: width,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(logo),
@@ -186,15 +187,12 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget customSizedBox() => SizedBox(
-    height: 20,
-  );
+  Widget customSizedBox(double height) => SizedBox(height: height * 0.04);
 
-  Widget customText(String text, Color color) => Text(
+  Widget customText(String text, Color color, {double fontSize = 16}) => Text(
     text,
-    style: TextStyle(color: color),
+    style: TextStyle(color: color, fontSize: fontSize),
   );
-
 
   void signUp() async {
     if (formkey.currentState!.validate()) {
@@ -202,7 +200,7 @@ class _SignUpState extends State<SignUp> {
 
       if (email.endsWith("@egeturbo.com")) {
         try {
-          await authService.signUp(email, fullname,role, password);
+          await authService.signUp(email, fullname, role, password);
 
           // Send email verification link
           User? user = firebaseAuth.currentUser;

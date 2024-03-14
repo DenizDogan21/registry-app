@@ -93,17 +93,17 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
     final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(isTablet ? 80 : 40), // Adjust height for tablets
+        preferredSize: Size.fromHeight(isTablet ? 80 : 50), // Adjust height for tablets
         child: AppBar(
           backgroundColor: Colors.grey.shade900,
           title: Padding(
-            padding: isTablet ? EdgeInsets.only(top: 20): EdgeInsets.only(top: 10),
+            padding: isTablet ? EdgeInsets.only(top: 20): EdgeInsets.only(top: 5),
             child: TextField(
               controller: _searchController,
               style: TextStyle(color: Colors.white, fontSize: isTablet ? 50 : 25), // Increase font size for tablets
               decoration: InputDecoration(
                 hintText: "Ara...",
-                hintStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.grey),
                 border: InputBorder.none,
               ),
               onChanged: (value) => _filterForms(value),
@@ -148,10 +148,10 @@ class _OutputIPFPageState extends State<OutputIPFPage> {
               child: ListTile(
                 leading: Icon(Icons.build_circle_outlined),
                 title: Text('${formatDate(form.tarihIPF)}', style: CustomTextStyle.outputTitleTextStyle.copyWith(
-                  fontSize: isTablet ? 30 : 15,
+                  fontSize: isTablet ? 30 : 20,
                 ),),
                 subtitle: Text('Turbo No: ${form.turboNo} \nEge Turbo No: ${form.egeTurboNo}',style: CustomTextStyle.outputListTextStyle.copyWith(
-                  fontSize: isTablet ? 20 : 10,
+                  fontSize: isTablet ? 20 : 15,
                 ),),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {

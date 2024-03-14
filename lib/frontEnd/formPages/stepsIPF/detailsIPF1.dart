@@ -186,7 +186,7 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
       body: SafeArea(
         child: Stack(
         children: [
-          background(context),
+          background2(context),
           SingleChildScrollView(padding: EdgeInsets.all(isTablet ? 64 : 16),
             child:
           Column(

@@ -43,6 +43,33 @@ Widget background(BuildContext context) {
   );
 }
 
+Widget background2(BuildContext context) {
+  return Scaffold(
+    body: SafeArea(
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: [0.1, 0.9],
+            colors: [
+              Colors.grey.shade300,
+              Colors.grey.shade500,
+              /*
+              Colors.grey.shade600,
+              Colors.grey.shade800,
+
+               */
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 PreferredSizeWidget? appBar(BuildContext context, String pageTitle) {
   final isTablet = MediaQuery.of(context).size.width > 600;
   return AppBar(
@@ -88,7 +115,7 @@ class CustomTextButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         buttonText,
-        style: TextStyle(color: textColor, fontSize: isTablet ? 20 : 16),
+        style: TextStyle(color: textColor, fontSize: isTablet ? 30 : 15),
       ),
     );
   }
@@ -115,8 +142,8 @@ Widget bottomNav(BuildContext context) {
       ),
     ],
     selectedFontSize: isTablet ? 30 : 15, // Adjust font size conditionally
-    unselectedFontSize: isTablet ? 24 : 12, // Adjust font size conditionally
-    iconSize: isTablet ? 50 : 25, // Adjust icon size conditionally
+    unselectedFontSize: isTablet ? 20 : 10, // Adjust font size conditionally
+    iconSize: isTablet ? 40 : 20, // Adjust icon size conditionally
   ));
 }
 

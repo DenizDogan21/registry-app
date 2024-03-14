@@ -27,7 +27,7 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: fieldSize), // Adjust font size for label
-          fillColor: Colors.amber[100], // Set the fill color to white
+          fillColor: Colors.amber[50], // Set the fill color to white
           filled: true, // Enable the fill color
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.all(fieldSize), // Adjust content padding based on fieldSize

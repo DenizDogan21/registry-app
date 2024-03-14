@@ -58,37 +58,45 @@ class _AccountingRatingPageState extends State<AccountingRatingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Muhasebe"),
-      bottomNavigationBar: bottomNavAcc(),
+      bottomNavigationBar: bottomNavAcc(context),
       body: SafeArea(
           child: Stack(
               children: [
-                background(context),
-                SingleChildScrollView( child:
+                background2(context),
+                SingleChildScrollView(
+                  padding: EdgeInsets.all(isTablet ? 64 : 16), child:
                 Column(
                   children: [
                     CustomTextField(
                         controller: _controllerTamirUcreti,
-                        label: 'Tamir Ücreti'
+                        label: 'Tamir Ücreti',
+                        fieldSize: isTablet ? 30: 20,
                     ),CustomTextField(
                         controller: _controllerOdemeSekli,
-                        label: 'Ödeme Şekli'
+                        label: 'Ödeme Şekli',
+                        fieldSize: isTablet ? 30: 20,
                       // ... other properties ...
                     ),CustomTextField(
                       controller: _controllerTaksitSayisi,
                       label: 'Taksit Sayısı',
+                      fieldSize: isTablet ? 30: 20,
                       // ... other properties ...
                     ),CustomTextField(
                         controller: _controllerMuhasebeNotlari,
-                        label: 'Nuhasebe Notları'
+                        label: 'Muhasebe Notları',
+                        fieldSize: isTablet ? 30: 20,
                       // ... other properties ...
                     ),
+                    isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
                     ElevatedButton(
                       onPressed: () => showSaveAlertDialog(context, _saveChanges, AccountingAddShowPage()),
                       child: Text(
                         'Kaydet',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                        style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
                       ),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.cyanAccent, // Button color
@@ -97,15 +105,15 @@ class _AccountingRatingPageState extends State<AccountingRatingPage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         elevation: 5,
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        padding: EdgeInsets.symmetric(horizontal: isTablet ? 60: 30, vertical: isTablet ? 30: 15),
                       ),
                     ),
-                    SizedBox(height: 30,),
+                    isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
                     ElevatedButton(
                       onPressed: () => _confirmDeleteForm(),
                       child: Text(
                         'Formu Sil',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.red, // Button color
@@ -114,7 +122,7 @@ class _AccountingRatingPageState extends State<AccountingRatingPage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         elevation: 5,
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        padding: EdgeInsets.symmetric(horizontal: isTablet ? 60: 30, vertical: 15),
                       ),
                     ),
 

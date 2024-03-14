@@ -59,22 +59,26 @@ Widget buildYanindaGelenlerSection(Map<String, bool> yanindaGelenler, ThemeData 
 
 
 void showSaveAlertDialog(BuildContext context, VoidCallback onSave, Widget nextPage) {
+  final screenSize = MediaQuery.of(context).size;
+  final isTablet = screenSize.width > 600;
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Değişiklikleri Kaydet'),
-        content: Text('Bu değişiklikleri kaydetmek istiyor musunuz?'),
+        title: Text('Değişiklikleri Kaydet',style: TextStyle(fontSize: isTablet ?40:20),),
+        titlePadding: EdgeInsets.all(isTablet ? 30:15),
+        content: Text('Bu değişiklikleri kaydetmek istiyor musunuz?',style: TextStyle(fontSize: isTablet ?30:15),),
         actions: <Widget>[
           TextButton(
-            child: Text('Vazgeç'),
+            child: Text('Vazgeç',style: TextStyle(fontSize: isTablet ?20:10),),
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => nextPage));
             },
           ),
+          isTablet ? SizedBox(width: 10,):SizedBox(width: 5,),
           TextButton(
-            child: Text('Kaydet'),
+            child: Text('Kaydet',style: TextStyle(fontSize: isTablet ?20:10),),
             onPressed: onSave,
           ),
         ],

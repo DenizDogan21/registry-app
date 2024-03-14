@@ -23,26 +23,6 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  Widget rememberMeCheckbox() {
-    return Padding(padding: EdgeInsets.only(left: 115), child:
-    Row(
-      children: [
-        Checkbox(
-          value: rememberMe,
-          onChanged: (bool? value) {
-            setState(() {
-              rememberMe = value!;
-            });
-          },
-        ),
-        Text("Beni hatırla", style: TextStyle(color: Colors.white)),
-      ],
-    )
-    );
-  }
-
-
-
   @override
   void initState() {
     super.initState();
@@ -62,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
   @override
   void dispose() {
     emailController.dispose();
@@ -70,183 +49,194 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    String logo = "assets/images/logo.png";
-    return Scaffold(
+    return SafeArea(child: Scaffold(
       body: Stack(
         children: [
           background(context),
-          appBody(height, logo),
+          SingleChildScrollView( child:
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth > 600) {
+                // Use a different layout for larger screens (tablets)
+                return _buildTabletLayout();
+              } else {
+                // Use the existing layout for smaller screens
+                return _buildMobileLayout();
+              }
+            },
+          ),)
         ],
-      ),
+      ),),
     );
   }
 
-  SingleChildScrollView appBody(double height, String logo) {
-    return SingleChildScrollView(
-      child: Center(
+  Widget _buildTabletLayout() {
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 600),
+        padding: EdgeInsets.all(50),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            logoContainer(height, logo),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Form(
-                key: formkey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 75,),
-                    emailTextField(),
-                    customSizedBox(),
-                    passwordTextField(),
-                    customSizedBox(),
-                    customSizedBox(),
-                    forgotPasswordButton(),
-                    rememberMeCheckbox(),
-                    customSizedBox(),
-                    signInButton(),
-                    customSizedBox(),
-                    CustomTextButton(
-                      onPressed: () => Navigator.pushNamed(context, "/signUp"),
-                      buttonText: "Hesap Oluştur", context: context,
-                    ),
-                  ],
-                ),
-              ),
-            )
+            _buildLogo(),
+            SizedBox(height: 100),
+            _buildForm(),
           ],
         ),
       ),
     );
   }
 
-
-  TextFormField emailTextField() {
-    return TextFormField(
-      controller: emailController,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Bilgileri Eksiksiz Doldurunuz";
-        }
-      },
-      onSaved: (value) {
-        email = value!;
-      },
-      style: TextStyle(color: Colors.white),
-      decoration: customInputDecoration("Email"),
-    );
-  }
-
-  TextFormField passwordTextField() {
-    return TextFormField(
-      controller: passwordController,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return "Bilgileri Eksiksiz Doldurunuz";
-        }
-      },
-      onSaved: (value) {
-        password = value!;
-      },
-      obscureText: true,
-      style: TextStyle(color: Colors.white),
-      decoration: customInputDecoration("Şifre"),
-    );
-  }
-
-  Center forgotPasswordButton() {
-    return Center(
-      child: TextButton(
-        onPressed: () => Navigator.pushNamed(context, "/forgotPassword"),
-        child: customText(
-          "Şifremi Unuttum",
-          CustomColors.pinkColor,
+  Widget _buildMobileLayout() {
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLogo(),
+            SizedBox(height: 30),
+            _buildForm(),
+          ],
         ),
       ),
     );
   }
 
-
-  Center signInButton() {
-    return Center(
-      child: TextButton(
-        onPressed: signIn,
-        child: Container(
-          height: 50,
-          width: 150,
-          margin: EdgeInsets.symmetric(horizontal: 60),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: Color(0xff31274F),
-          ),
-          child: Center(
-            child: customText(
-              "Giriş Yap",
-              CustomColors.loginButtonTextColor,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Center signUpButton() {
-    return Center(
-      child: TextButton(
-        onPressed: () => Navigator.pushNamed(context, "/signUp"),
-        child: customText(
-          "Hesap Oluştur",
-          CustomColors.pinkColor,
-        ),
-      ),
-    );
-  }
-
-  Container logoContainer(double height, String logo) {
+  Widget _buildLogo() {
     return Container(
-      height: height * .25,
+      height: 150,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage(logo),
+          image: AssetImage("assets/images/logo.png"),
+          fit: BoxFit.contain,
         ),
       ),
     );
   }
 
-  Widget customSizedBox() => SizedBox(
-    height: 20,
-  );
+  Widget _buildForm() {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: isTablet ? 40:20),
+      child: Form(
+        key: formkey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            isTablet ? SizedBox(height: 40):SizedBox(height: 20),
+            TextFormField(
+              controller: emailController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Bilgileri Eksiksiz Doldurunuz";
+                }
+              },
+              onSaved: (value) {
+                email = value!;
+              },
+              style: TextStyle(color: Colors.white, fontSize: isTablet ? 30:15),
+              decoration: InputDecoration(
+                hintText: "Email",
+                hintStyle: TextStyle(color: Colors.grey),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+            isTablet ? SizedBox(height: 40):SizedBox(height: 20),
+            TextFormField(
+              controller: passwordController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Bilgileri Eksiksiz Doldurunuz";
+                }
+              },
+              onSaved: (value) {
+                password = value!;
+              },
+              obscureText: true,
+              style: TextStyle(color: Colors.white, fontSize: isTablet ? 30:15),
+              decoration: InputDecoration(
+                hintText: "Şifre",
+                hintStyle: TextStyle(color: Colors.grey, fontSize: isTablet ? 30:15),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+            isTablet ? SizedBox(height: 40):SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Checkbox(
+                  value: rememberMe,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      rememberMe = value!;
+                    });
+                  },
+                ),
+                Text(
+                  "Beni hatırla",
+                  style: TextStyle(color: Colors.white,fontSize: isTablet ? 30:15),
+                ),
+              ],
+            ),
+            isTablet ? SizedBox(height: 80):SizedBox(height: 40),
+            TextButton(
+              onPressed: () => signIn(),
+              child: Container(
+                height: isTablet ?100:50,
+                width: isTablet ?300:150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Color(0xff31274F),
+                ),
+                child: Center(
+                  child: Text(
+                    "Giriş Yap",
+                    style: TextStyle(color: Colors.white,fontSize: isTablet ? 30:15),
+                  ),
+                ),
+              ),
+            ),
+            isTablet ? SizedBox(height: 40):SizedBox(height: 20),
+            CustomTextButton(
+              onPressed: () => Navigator.pushNamed(context, "/signUp"),
+              buttonText: "Hesap Oluştur",
+              context: context,
 
-  Widget customText(String text, Color color) => Text(
-    text,
-    style: TextStyle(color: color),
-  );
-
-  InputDecoration customInputDecoration(String hintText) {
-    return InputDecoration(
-      hintText: hintText,
-      hintStyle: TextStyle(color: Colors.grey),
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey,
-        ),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.grey,
+            ),
+            isTablet ? SizedBox(height: 20):SizedBox(height: 10),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, "/forgotPassword"),
+              child: Text(
+                "Şifremi Unuttum",
+                style: TextStyle(color: CustomColors.pinkColor,fontSize: isTablet ? 30:15),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
-
-
 
   void signIn() async {
     if (formkey.currentState!.validate()) {
@@ -275,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                 (route) => false,
           );
         }
-      }else {
+      } else {
         showDialog(
           context: context,
           builder: (context) {

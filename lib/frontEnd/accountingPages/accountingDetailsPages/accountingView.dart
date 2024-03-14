@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:turboapp/backEnd/repositories/accountingForm_repo.dart';
 import 'package:turboapp/backEnd/repositories/inProgressForm_repo.dart';
 import 'package:turboapp/frontEnd/utils/customTextField.dart';
@@ -43,7 +44,7 @@ class _AccountingViewPageState extends State<AccountingViewPage> {
     super.initState();
 
     // Initialize controllers with initial values from widget.formAF
-    _controllerTarihWOF.text = widget.formAF.tarihWOF.toString();
+    _controllerTarihWOF.text = DateFormat('yyyy-MM-dd HH:mm').format(widget.formAF.tarihWOF);
     _controllerEgeTurboNo.text = widget.formAF.egeTurboNo.toString();
     _controllerTurboNo.text = widget.formAF.turboNo;
     _controllerAracBilgileri.text = widget.formAF.aracBilgileri;
@@ -57,7 +58,7 @@ class _AccountingViewPageState extends State<AccountingViewPage> {
     _controllerTurboyuGetiren.text = widget.formAF.turboyuGetiren;
     _controllerTasimaUcreti.text = widget.formAF.tasimaUcreti.toString();
     _controllerTeslimAdresi.text = widget.formAF.teslimAdresi;
-    _controllerTarihIPF.text = widget.formAF.tarihIPF.toString();
+    _controllerTarihIPF.text = DateFormat('yyyy-MM-dd HH:mm').format(widget.formAF.tarihIPF);
     _controllerTespitEdilen.text = widget.formAF.tespitEdilen;
     _controllerYapilanIslemler.text = widget.formAF.yapilanIslemler;
 
@@ -133,7 +134,7 @@ class _AccountingViewPageState extends State<AccountingViewPage> {
   Future<void> _saveChanges() async {
     // Check if there are any changes before saving
     if (_hasChanges) {
-      widget.formAF.tarihWOF = DateTime.parse(_controllerTarihWOF.text);
+      _controllerTarihWOF.text = DateFormat('yyyy-MM-dd HH:mm').format(widget.formAF.tarihWOF);
       widget.formAF.turboNo = _controllerTurboNo.text;
       widget.formAF.aracBilgileri = _controllerAracBilgileri.text;
       widget.formAF.aracKm = int.parse(_controllerAracKm.text);
@@ -184,109 +185,128 @@ class _AccountingViewPageState extends State<AccountingViewPage> {
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.width > 600;
     return Scaffold(
       appBar: appBar(context, "Detaylar"),
-      bottomNavigationBar: bottomNavAcc(),
+      bottomNavigationBar: bottomNavAcc(context),
       body: SafeArea(
         child: Stack(
           children: [
-            background(context),
+            background2(context),
             SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(isTablet ? 64 : 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ... (existing code)
-
-
-                  // Update other detailSections using CustomTextField
                   CustomTextField(
                     controller: _controllerTarihWOF,
                     label: 'Süreç Tarihi',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerTurboNo,
                     label: 'Turbo No',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerAracBilgileri,
                     label: 'Araç Bilgileri',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerAracKm,
                     label: 'Araç Km',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerAracPlaka,
                     label: 'Araç Plakası',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerMusteriAdi,
                     label: 'Müşteri Ad Soyad',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerMusteriNumarasi,
                     label: 'Müşteri Numarası',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerMusteriSikayetleri,
                     label: 'Müşteri Şikayetleri',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerYanindaGelenler,
                     label: 'Yanında Gelenler',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerOnTespit,
                     label: 'Ön Tespit',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerTurboyuGetiren,
                     label: 'Turboyu Getiren',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerTasimaUcreti,
                     label: 'Taşıma Ücreti',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerTeslimAdresi,
                     label: 'Teslim Adresi',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerTarihIPF,
                     label: 'Süreç Tarihi',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerTespitEdilen,
                     label: 'Tespit Edilen',
+                    fieldSize: isTablet ? 30: 20,
                   ),
                   CustomTextField(
                     controller: _controllerYapilanIslemler,
                     label: 'Yapılan İşlemler',
+                    fieldSize: isTablet ? 30: 20,
                   ),
-
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_hasChanges) {
-                        showSaveAlertDialog(context, _saveChanges, AccountingRatingPage(formAF: widget.formAF));
-                      } else {
-                        // If no changes, navigate directly to the next page
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountingRatingPage(formAF: widget.formAF)));
-                      }
-                    },
-                    child: Text(
-                      'Devam',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.cyanAccent,
-                      onPrimary: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end, // Align items to the end of the row
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_hasChanges) {
+                            showSaveAlertDialog(context, _saveChanges, AccountingRatingPage(formAF: widget.formAF));
+                          } else {
+                            // If no changes, navigate directly to the next page
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountingRatingPage(formAF: widget.formAF)));
+                          }
+                        },
+                        child: Text(
+                          'Devam',
+                          style: TextStyle(fontSize: isTablet ? 32:16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.cyanAccent,
+                          onPrimary: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                          padding: EdgeInsets.symmetric(horizontal: isTablet ? 60:30, vertical: isTablet ? 30:15),
+                        ),
                       ),
-                      elevation: 5,
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    ),
+                    ],
                   ),
                 ],
               ),

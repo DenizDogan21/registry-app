@@ -172,7 +172,7 @@ class _DetailsWOFState extends State<DetailsWOFPage> {
       body: SafeArea(
           child: Stack(
               children: [
-                background(context),
+                background2(context),
                 SingleChildScrollView(
                   padding: EdgeInsets.all(isTablet ? 64 : 16),
                   child:

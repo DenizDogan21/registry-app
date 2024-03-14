@@ -281,7 +281,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
       body: SafeArea(
         child: Stack(
           children: [
-            background(context),
+            background2(context),
             SingleChildScrollView(padding: EdgeInsets.all(isTablet ? 64 : 16),
               child:
             Column(

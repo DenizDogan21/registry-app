@@ -82,17 +82,17 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(isTablet ? 80 : 40), // Adjust height for tablets
+        preferredSize: Size.fromHeight(isTablet ? 80 : 50), // Adjust height for tablets
         child: AppBar(
           backgroundColor: Colors.grey.shade900,
           title: Padding(
-            padding: isTablet ? EdgeInsets.only(top: 20): EdgeInsets.only(top: 10),
+            padding: isTablet ? EdgeInsets.only(top: 20): EdgeInsets.only(top: 5),
             child: TextField(
               controller: _searchController,
               style: TextStyle(color: Colors.white, fontSize: isTablet ? 50 : 25), // Increase font size for tablets
               decoration: InputDecoration(
                 hintText: "Ara...",
-                hintStyle: TextStyle(color: Colors.white),
+                hintStyle: TextStyle(color: Colors.grey),
                 border: InputBorder.none,
               ),
               onChanged: (value) => _filterForms(value),
@@ -100,11 +100,11 @@ class _OutputWOFPageState extends State<OutputWOFPage> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.cancel,size: isTablet ? 40 : 20,),
-              onPressed: () {
-                _searchController.clear();
-              },
-              padding: isTablet ? EdgeInsets.only(top: 20,right: 20): EdgeInsets.only(top: 10,right: 10)
+                icon: Icon(Icons.cancel,size: isTablet ? 40 : 20,),
+                onPressed: () {
+                  _searchController.clear();
+                },
+                padding: isTablet ? EdgeInsets.only(top: 20,right: 20): EdgeInsets.only(top: 10,right: 10)
             ),
           ],
         ),

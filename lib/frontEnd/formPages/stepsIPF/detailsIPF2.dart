@@ -95,6 +95,9 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
                       // ... other properties ...
                     ),
                     isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children :[
                     ElevatedButton(
                       onPressed: () {
                         if (_hasChanges) {
@@ -117,7 +120,7 @@ class _DetailsIPF2State extends State<DetailsIPF2> {
                         elevation: 5,
                         padding: EdgeInsets.symmetric(horizontal:isTablet ?  60:30, vertical: isTablet ?  30:15,),
                       ),
-                    ),
+                    ),])
                   ],
                 ),)])
       ),

@@ -288,21 +288,21 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
               children: [ Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     photoButton(
-                        context, 'Turbo Fotoğrafı Göster', showTurboImage, isTablet ? 32:16),
+                        context, 'Turbo Fotoğrafı Göster', showTurboImage, isTablet ? 32:14),
                     isTablet ? SizedBox(width: 60,): SizedBox(width: 30,),
-                    updatePhotoButton(context, "turbo",isTablet ? 32:16)]),
+                    updatePhotoButton(context, "turbo",isTablet ? 32:14)]),
                 Row( mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       photoButton(
-                          context, 'Katriç Fotoğrafı Göster', showKatricImage, isTablet ? 32:16),
+                          context, 'Katriç Fotoğrafı Göster', showKatricImage, isTablet ? 32:14),
                       isTablet ? SizedBox(width: 60,): SizedBox(width: 30,),
-                      updatePhotoButton(context, "katric",isTablet ? 32:16),]),
+                      updatePhotoButton(context, "katric",isTablet ? 32:14),]),
                 Row( mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       photoButton(
-                          context, 'Balans Fotoğrafı Göster ', showBalansImage, isTablet ? 32:16),
+                          context, 'Balans Fotoğrafı Göster ', showBalansImage, isTablet ? 32:14),
                       isTablet ? SizedBox(width: 50,): SizedBox(width: 25,),
-                      updatePhotoButton(context, "balans",isTablet ? 32:16)]),
+                      updatePhotoButton(context, "balans",isTablet ? 32:14)]),
                 SizedBox(height: 20,),
                 // Dynamically generate buttons based on the number of flow photos
                 ...generateFlowPhotoButtons(context),
@@ -339,7 +339,7 @@ class _DetailsIPF3PageState extends State<DetailsIPF3Page> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     elevation: 5,
-                    padding: EdgeInsets.symmetric(horizontal: isTablet ? 60: 30, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: isTablet ? 60: 30, vertical: isTablet ? 15:10),
                   ),
                 ),
               ],

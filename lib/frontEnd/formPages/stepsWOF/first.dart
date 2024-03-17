@@ -103,6 +103,8 @@ class _FirstStepPageState extends State<FirstStepPage> {
                     isTablet: isTablet, // Pass the isTablet value
                   ),
                   SizedBox(height: 20), // Spacing
+                  Row(mainAxisAlignment:MainAxisAlignment.end,
+                    children: [
                   ElevatedButton(
                     onPressed: _saveAndContinue,
                     child: Text(
@@ -119,6 +121,8 @@ class _FirstStepPageState extends State<FirstStepPage> {
                       padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
                     ),
                   ),
+                    ]
+                  )
                 ],
               ),
             ),

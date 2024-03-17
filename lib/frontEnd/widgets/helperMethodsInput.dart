@@ -114,7 +114,14 @@ Future<int> getAndUpdateEgeTurboNo() async {
   final prefs = await SharedPreferences.getInstance();
   int? currentNo = prefs.getInt('egeTurboNo'); // get the current number
   print("Current egeTurboNo from prefs: $currentNo"); // Debug log
-  currentNo = (currentNo ?? 0) + 1; // Increment the counter
+
+  if (currentNo == null || currentNo <= 999) {
+    currentNo = 1000; // Start from 1000 if it's null
+  } else {
+    currentNo++; // Increment the counter
+  }
+
   await prefs.setInt('egeTurboNo', currentNo); // Save it back
   return currentNo;
 }
+

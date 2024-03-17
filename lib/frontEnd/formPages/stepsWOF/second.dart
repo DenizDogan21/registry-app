@@ -79,22 +79,26 @@ class _SecondStepPageState extends State<SecondStepPage> {
                 isTablet: isTablet,
               ),
               SizedBox(height: 20,),
-              ElevatedButton(
-                onPressed: _saveAndContinue,
-                child: Text(
-                  'Devam',
-                  style: TextStyle(fontSize: isTablet ? 30 : 16, fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.cyanAccent, // Button color
-                  onPrimary: Colors.black, // Text color when button is pressed
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  elevation: 5,
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
-                ),
-              ),
+              Row(mainAxisAlignment:MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _saveAndContinue,
+                      child: Text(
+                        'Devam',
+                        style: TextStyle(fontSize: isTablet ? 30 : 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.cyanAccent, // Button color
+                        onPrimary: Colors.black, // Text color when button is pressed
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 5,
+                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
+                      ),
+                    ),
+                  ]
+              )
             ],
           ),
         ),

@@ -264,6 +264,9 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
               // ... other properties ...
             ),
             isTablet ? SizedBox(height: 60,):SizedBox(height: 30,),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
             ElevatedButton(
               onPressed: () {
                 if (_hasChanges) {
@@ -286,7 +289,7 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
                 elevation: 5,
                 padding: EdgeInsets.symmetric(horizontal:isTablet ?  60:30, vertical: isTablet ?  30:15,),
               ),
-            ),
+            ),])
           ],
         ),)])
       ),

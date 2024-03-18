@@ -29,19 +29,37 @@ class _FifthStepPageState extends State<FifthStepPage> {
 
   void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
-
       if (turboyuGetiren == 'kargo' && shippingOption != null) {
         turboyuGetiren = "$turboyuGetiren, $shippingOption";
       }
-
-
       _formKey.currentState!.save();
-      widget.formData['turboyuGetiren'] = turboyuGetiren;
-      widget.formData['tasimaUcreti'] = tasimaUcreti;
-      widget.formData['teslimAdresi'] = teslimAdresi;
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SixthStepPage(formData: widget.formData),
-      ));
+      double? parsedValue = double.tryParse(tasimaUcreti.toString());
+      if (parsedValue == null) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Uyarı'),
+              content: Text('Taşıma ücreti sayı olmalıdır.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('Tamam'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        widget.formData['turboyuGetiren'] = turboyuGetiren;
+        widget.formData['tasimaUcreti'] = tasimaUcreti;
+        widget.formData['teslimAdresi'] = teslimAdresi;
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SixthStepPage(formData: widget.formData),
+        ));
+      }
     }
   }
 

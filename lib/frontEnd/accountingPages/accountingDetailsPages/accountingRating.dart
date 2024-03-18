@@ -9,6 +9,7 @@ import '../../widgets/helperMethodsDetails.dart';
 import 'package:turboapp/frontEnd/accountingPages/accountingAddShow.dart';
 
 
+
 class AccountingRatingPage extends StatefulWidget {
 
   final AccountingFormModel formAF;
@@ -41,13 +42,26 @@ class _AccountingRatingPageState extends State<AccountingRatingPage> {
       Get.snackbar("Error", "Form numarası bulunamadı", backgroundColor: Colors.red);
       return;
     }
-    widget.formAF.tamirUcreti = double.parse(_controllerTamirUcreti.text);
+
+    double? parsedTamirUcreti = double.tryParse(_controllerTamirUcreti.text);
+    int? parsedTaksitSayisi = int.tryParse(_controllerTaksitSayisi.text);
+
+    if (parsedTamirUcreti == null) {
+      Get.snackbar("Error", "Lütfen geçerli bir tamir ücreti girin", backgroundColor: Colors.red);
+      return;
+    }
+
+    if (parsedTaksitSayisi == null) {
+      Get.snackbar("Error", "Lütfen geçerli bir taksit sayısı girin", backgroundColor: Colors.red);
+      return;
+    }
+
+    widget.formAF.tamirUcreti = parsedTamirUcreti;
     widget.formAF.odemeSekli = _controllerOdemeSekli.text;
-    widget.formAF.taksitSayisi = int.parse(_controllerTaksitSayisi.text);
+    widget.formAF.taksitSayisi = parsedTaksitSayisi;
     widget.formAF.muhasebeNotlari = _controllerMuhasebeNotlari.text;
 
     await AccountingFormRepo.instance.updateAccountingForm(widget.formAF.id!, widget.formAF);
-
 
     // Navigate to the next page or go back
     // Logic to save changes to Firebase

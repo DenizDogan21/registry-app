@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:turboapp/backEnd/repositories/accountingForm_repo.dart';
 import 'package:turboapp/backEnd/repositories/inProgressForm_repo.dart';
@@ -134,53 +135,69 @@ class _AccountingViewPageState extends State<AccountingViewPage> {
   Future<void> _saveChanges() async {
     // Check if there are any changes before saving
     if (_hasChanges) {
-      _controllerTarihWOF.text = DateFormat('yyyy-MM-dd HH:mm').format(widget.formAF.tarihWOF);
-      widget.formAF.turboNo = _controllerTurboNo.text;
-      widget.formAF.aracBilgileri = _controllerAracBilgileri.text;
-      widget.formAF.aracKm = int.parse(_controllerAracKm.text);
-      widget.formAF.aracPlaka = _controllerAracPlaka.text;
-      widget.formAF.musteriAdi = _controllerMusteriAdi.text;
-      widget.formAF.musteriNumarasi = int.parse(_controllerMusteriNumarasi.text);
-      widget.formAF.musteriSikayetleri = _controllerMusteriSikayetleri.text;
-      widget.formAF.yanindaGelenler = parseYanindaGelenlerForSave(_controllerYanindaGelenler.text);
-      widget.formAF.onTespit = _controllerOnTespit.text;
-      widget.formAF.turboyuGetiren = _controllerTurboyuGetiren.text;
-      widget.formAF.tasimaUcreti = double.parse(_controllerTasimaUcreti.text);
-      widget.formAF.teslimAdresi = _controllerTeslimAdresi.text;
-      widget.formAF.tarihIPF = DateTime.parse(_controllerTarihIPF.text);
-      widget.formAF.tespitEdilen = _controllerTespitEdilen.text;
-      widget.formAF.yapilanIslemler = _controllerYapilanIslemler.text;
+      try {
+        _controllerTarihWOF.text = DateFormat('yyyy-MM-dd HH:mm').format(widget.formAF.tarihWOF);
+        widget.formAF.turboNo = _controllerTurboNo.text;
+        widget.formAF.aracBilgileri = _controllerAracBilgileri.text;
+        widget.formAF.aracKm = int.tryParse(_controllerAracKm.text)!;
+        widget.formAF.aracPlaka = _controllerAracPlaka.text;
+        widget.formAF.musteriAdi = _controllerMusteriAdi.text;
+        widget.formAF.musteriNumarasi = int.tryParse(_controllerMusteriNumarasi.text)!;
+        widget.formAF.musteriSikayetleri = _controllerMusteriSikayetleri.text;
+        widget.formAF.yanindaGelenler = parseYanindaGelenlerForSave(_controllerYanindaGelenler.text);
+        widget.formAF.onTespit = _controllerOnTespit.text;
+        widget.formAF.turboyuGetiren = _controllerTurboyuGetiren.text;
+        widget.formAF.tasimaUcreti = double.tryParse(_controllerTasimaUcreti.text)!;
+        widget.formAF.teslimAdresi = _controllerTeslimAdresi.text;
+        widget.formAF.tarihIPF = DateTime.parse(_controllerTarihIPF.text);
+        widget.formAF.tespitEdilen = _controllerTespitEdilen.text;
+        widget.formAF.yapilanIslemler = _controllerYapilanIslemler.text;
 
-      // Save the updated model to Firebase
-      await AccountingFormRepo.instance.updateAccountingForm(widget.formAF.id!, widget.formAF);
-      var inProgressForm = await InProgressFormRepo.instance.getFormByEgeTurboNo(widget.formAF.egeTurboNo);
-      if (inProgressForm != null) {
-        inProgressForm.tarihWOF = widget.formAF.tarihWOF;
-        inProgressForm.turboNo = widget.formAF.turboNo;
-        inProgressForm.aracBilgileri = widget.formAF.aracBilgileri;
-        inProgressForm.aracKm = widget.formAF.aracKm;
-        inProgressForm.aracPlaka = widget.formAF.aracPlaka;
-        inProgressForm.musteriAdi = widget.formAF.musteriAdi;
-        inProgressForm.musteriNumarasi = widget.formAF.musteriNumarasi;
-        inProgressForm.musteriSikayetleri = widget.formAF.musteriSikayetleri;
-        inProgressForm.yanindaGelenler = widget.formAF.yanindaGelenler;
-        inProgressForm.onTespit = widget.formAF.onTespit;
-        inProgressForm.turboyuGetiren = widget.formAF.turboyuGetiren;
-        inProgressForm.tasimaUcreti = widget.formAF.tasimaUcreti;
-        inProgressForm.teslimAdresi = widget.formAF.teslimAdresi;
-        inProgressForm.tarihIPF = widget.formAF.tarihIPF;
-        inProgressForm.tespitEdilen = widget.formAF.tespitEdilen;
-        inProgressForm.yapilanIslemler = widget.formAF.yapilanIslemler;
+        // Save the updated model to Firebase
+        await AccountingFormRepo.instance.updateAccountingForm(widget.formAF.id!, widget.formAF);
+        var inProgressForm = await InProgressFormRepo.instance.getFormByEgeTurboNo(widget.formAF.egeTurboNo);
+        if (inProgressForm != null) {
+          inProgressForm.tarihWOF = widget.formAF.tarihWOF;
+          inProgressForm.turboNo = widget.formAF.turboNo;
+          inProgressForm.aracBilgileri = widget.formAF.aracBilgileri;
+          inProgressForm.aracKm = widget.formAF.aracKm;
+          inProgressForm.aracPlaka = widget.formAF.aracPlaka;
+          inProgressForm.musteriAdi = widget.formAF.musteriAdi;
+          inProgressForm.musteriNumarasi = widget.formAF.musteriNumarasi;
+          inProgressForm.musteriSikayetleri = widget.formAF.musteriSikayetleri;
+          inProgressForm.yanindaGelenler = widget.formAF.yanindaGelenler;
+          inProgressForm.onTespit = widget.formAF.onTespit;
+          inProgressForm.turboyuGetiren = widget.formAF.turboyuGetiren;
+          inProgressForm.tasimaUcreti = widget.formAF.tasimaUcreti;
+          inProgressForm.teslimAdresi = widget.formAF.teslimAdresi;
+          inProgressForm.tarihIPF = widget.formAF.tarihIPF;
+          inProgressForm.tespitEdilen = widget.formAF.tespitEdilen;
+          inProgressForm.yapilanIslemler = widget.formAF.yapilanIslemler;
 
-        // Save the updated accounting model to Firebase
-        await InProgressFormRepo.instance.updateInProgressForm(inProgressForm.id!, inProgressForm);
+          // Save the updated accounting model to Firebase
+          await InProgressFormRepo.instance.updateInProgressForm(inProgressForm.id!, inProgressForm);
+        }
+
+        Navigator.of(context).pop(); // Close the dialog
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountingRatingPage(formAF: widget.formAF,)));
+
+      } catch (FormatException) {
+        if (_controllerTasimaUcreti.text.isEmpty || double.tryParse(_controllerTasimaUcreti.text) == null) {
+          Get.snackbar("Hata", "Tamir ücreti sayı olmalıdır.", backgroundColor: Colors.red);
+        } else if (_controllerMusteriNumarasi.text.isEmpty || int.tryParse(_controllerMusteriNumarasi.text) == null) {
+          Get.snackbar("Hata", "Lütfen geçerli bir müşteri numarası girin", backgroundColor: Colors.red);
+
+        } else if (_controllerAracKm.text.isEmpty || int.tryParse(_controllerAracKm.text) == null) {
+          Get.snackbar("Hata", "Araç kilometresi sayı olmalıdır.",
+              backgroundColor: Colors.red);
+        }else {
+          Get.snackbar("Hata", "Lütfen geçerli bir değer girin", backgroundColor: Colors.red);
+        }
       }
     }
-
-    Navigator.of(context).pop(); // Close the dialog
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountingRatingPage(formAF: widget.formAF,)));
-
   }
+
+
 
   @override
   Widget build(BuildContext context) {

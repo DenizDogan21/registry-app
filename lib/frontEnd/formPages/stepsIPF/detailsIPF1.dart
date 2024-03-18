@@ -120,6 +120,7 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
 
 
   Future<void> _saveChanges() async {
+    try {
     if (_hasChanges) {
     if (widget.formIPF.id == null) {
       Get.snackbar("Error", "Form numarası bulunamadı", backgroundColor: Colors.red);
@@ -173,6 +174,18 @@ class _DetailsIPF1State extends State<DetailsIPF1> {
     } else {
       // If no changes, navigate directly to the next page
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailsIPF2(formIPF: widget.formIPF)));
+    } }catch (FormatException) {
+      if (_controllerTasimaUcreti.text.isEmpty || double.tryParse(_controllerTasimaUcreti.text) == null) {
+        Get.snackbar("Hata", "Tamir ücreti sayı olmalıdır.", backgroundColor: Colors.red);
+      } else if (_controllerMusteriNumarasi.text.isEmpty || int.tryParse(_controllerMusteriNumarasi.text) == null) {
+        Get.snackbar("Hata", "Lütfen geçerli bir müşteri numarası girin", backgroundColor: Colors.red);
+
+      } else if (_controllerAracKm.text.isEmpty || int.tryParse(_controllerAracKm.text) == null) {
+        Get.snackbar("Hata", "Araç kilometresi sayı olmalıdır.",
+            backgroundColor: Colors.red);
+      }else {
+        Get.snackbar("Hata", "Lütfen geçerli bir değer girin", backgroundColor: Colors.red);
+      }
     }
   }
 

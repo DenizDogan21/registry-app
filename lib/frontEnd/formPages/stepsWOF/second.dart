@@ -24,16 +24,40 @@ class _SecondStepPageState extends State<SecondStepPage> {
   void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Add the values to formData map
-      widget.formData['musteriAdi'] = musteriAdi;
-      widget.formData['musteriNumarasi'] = musteriNumarasi;
-      widget.formData['musteriSikayetleri'] = musteriSikayetleri;
-      // Navigate to the third step
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ThirdStepPage(formData: widget.formData),
-      ));
+      int? parsedValue = int.tryParse(musteriNumarasi.toString());
+      if (parsedValue == null) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Uyarı'),
+              content: Text('Lütfen geçerli bir müşteri numarası girin.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('Tamam'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Add the values to formData map
+        widget.formData['musteriAdi'] = musteriAdi;
+        widget.formData['musteriNumarasi'] = musteriNumarasi;
+        widget.formData['musteriSikayetleri'] = musteriSikayetleri;
+        // Navigate to the third step
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ThirdStepPage(formData: widget.formData),
+        ));
+      }
     }
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {

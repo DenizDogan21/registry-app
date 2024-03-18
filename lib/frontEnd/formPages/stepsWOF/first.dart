@@ -26,18 +26,42 @@ class _FirstStepPageState extends State<FirstStepPage> {
   void _saveAndContinue() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Add the values to formData map
-      widget.formData['turboNo'] = turboNo;
-      widget.formData['tarihWOF'] = tarihWOF;
-      widget.formData['aracBilgileri'] = aracBilgileri;
-      widget.formData['aracKm'] = aracKm;
-      widget.formData['aracPlaka'] = aracPlaka;
-      // Navigate to the second step
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SecondStepPage(formData: widget.formData),
-      ));
+      int? parsedValue = int.tryParse(aracKm.toString());
+      if (parsedValue == null) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Uyarı'),
+              content: Text('Araç kilometresi tam sayı olmalıdır.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('Tamam'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // Add the values to formData map
+        widget.formData['turboNo'] = turboNo;
+        widget.formData['tarihWOF'] = tarihWOF;
+        widget.formData['aracBilgileri'] = aracBilgileri;
+        widget.formData['aracKm'] = aracKm;
+        widget.formData['aracPlaka'] = aracPlaka;
+        // Navigate to the second step
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => SecondStepPage(formData: widget.formData),
+        ));
+      }
     }
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,24 +128,24 @@ class _FirstStepPageState extends State<FirstStepPage> {
                   ),
                   SizedBox(height: 20), // Spacing
                   Row(mainAxisAlignment:MainAxisAlignment.end,
-                    children: [
-                  ElevatedButton(
-                    onPressed: _saveAndContinue,
-                    child: Text(
-                      'Devam',
-                      style: TextStyle(fontSize: isTablet ? 30 : 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.cyanAccent, // Button color
-                      onPrimary: Colors.black, // Text color when button is pressed
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 5,
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
-                    ),
-                  ),
-                    ]
+                      children: [
+                        ElevatedButton(
+                          onPressed: _saveAndContinue,
+                          child: Text(
+                            'Devam',
+                            style: TextStyle(fontSize: isTablet ? 30 : 16, fontWeight: FontWeight.bold, color: Colors.black), // Text styling
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.cyanAccent, // Button color
+                            onPrimary: Colors.black, // Text color when button is pressed
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 5,
+                            padding: EdgeInsets.symmetric(horizontal: 30, vertical: isTablet ? 20 : 15),
+                          ),
+                        ),
+                      ]
                   )
                 ],
               ),

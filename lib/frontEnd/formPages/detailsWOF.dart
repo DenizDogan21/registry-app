@@ -88,78 +88,88 @@ class _DetailsWOFState extends State<DetailsWOFPage> {
 
 
   Future<void> _saveChanges() async {
-    if (widget.formWOF.id == null) {
-      Get.snackbar("Error", "Form numarası bulunamadı", backgroundColor: Colors.red);
-      return;
-    }
-    widget.formWOF.tarihWOF = DateTime.parse(_controllerTarihWOF.text);
-    widget.formWOF.turboNo = _controllerTurboNo.text;
-    widget.formWOF.yanindaGelenler = parseYanindaGelenlerForSave(_controllerYanindaGelenler.text);
-    widget.formWOF.aracBilgileri = _controllerAracBilgileri.text;
-    widget.formWOF.aracKm = int.parse(_controllerAracKm.text);
-    widget.formWOF.aracPlaka = _controllerAracPlaka.text;
-    widget.formWOF.musteriAdi = _controllerMusteriAdi.text;
-    widget.formWOF.musteriNumarasi = int.parse(_controllerMusteriNumarasi.text);
-    widget.formWOF.musteriSikayetleri = _controllerMusteriSikayetleri.text;
-    widget.formWOF.onTespit = _controllerOnTespit.text;
-    widget.formWOF.turboyuGetiren = _controllerTurboyuGetiren.text;
-    widget.formWOF.tasimaUcreti = double.parse(_controllerTasimaUcreti.text);
-    widget.formWOF.teslimAdresi = _controllerTeslimAdresi.text;
+    try {
+      if (widget.formWOF.id == null) {
+        Get.snackbar("Error", "Form numarası bulunamadı", backgroundColor: Colors.red);
+        return;
+      }
 
-    // Check if the kabulDurumu has changed to "kabul edildi"
-    if (_controllerKabulDurumu.text == "kabul edildi") {
-      // Move the form from workOrderForms to inProgressForms
-      final inProgressForm = InProgressFormModel(
-        tarihIPF: DateTime.now(),
-        turboNo: widget.formWOF.turboNo,
-        egeTurboNo: await getAndUpdateEgeTurboNo(),
-        tarihWOF: widget.formWOF.tarihWOF,
-        aracBilgileri: widget.formWOF.aracBilgileri,
-        aracKm: widget.formWOF.aracKm,
-        aracPlaka: widget.formWOF.aracPlaka,
-        musteriAdi: widget.formWOF.musteriAdi,
-        musteriNumarasi: widget.formWOF.musteriNumarasi,
-        musteriSikayetleri: widget.formWOF.musteriSikayetleri,
-        onTespit: widget.formWOF.onTespit,
-        turboyuGetiren: widget.formWOF.turboyuGetiren,
-        tasimaUcreti: widget.formWOF.tasimaUcreti,
-        teslimAdresi: widget.formWOF.teslimAdresi,
-        yanindaGelenler: widget.formWOF.yanindaGelenler, flowPhotos: [],
-      );
-      final accountingForm = AccountingFormModel(
-        tarihIPF: inProgressForm.tarihIPF,
-        turboNo: widget.formWOF.turboNo,
-        egeTurboNo: inProgressForm.egeTurboNo,
-        tarihWOF: widget.formWOF.tarihWOF, // Assuming you store DateTime objects in formData
-        aracBilgileri: widget.formWOF.aracBilgileri,
-        aracKm: widget.formWOF.aracKm,
-        aracPlaka: widget.formWOF.aracPlaka,
-        musteriAdi: widget.formWOF.musteriAdi,
-        musteriNumarasi: widget.formWOF.musteriNumarasi, // Assuming it's an int
-        musteriSikayetleri: widget.formWOF.musteriSikayetleri,
-        onTespit: widget.formWOF.onTespit,
-        turboyuGetiren: widget.formWOF.turboyuGetiren,
-        tasimaUcreti: widget.formWOF.tasimaUcreti, // Assuming it's a double
-        teslimAdresi: widget.formWOF.teslimAdresi,
-        yanindaGelenler: widget.formWOF.yanindaGelenler,
-        kabulDurumu: _controllerKabulDurumu.text,
-      );
-      // Save inProgressForm to your database or backend
-      _accountingFormRepo.createAccountingForm(accountingForm);
-      _inProgressFormRepo.createInProgressForm(inProgressForm);
-      await WorkOrderFormRepo.instance.deleteWorkOrderForm(widget.formWOF.id!);
-    } else {
-      // Update the kabulDurumu in the workOrderForm
-      widget.formWOF.kabulDurumu = _controllerKabulDurumu.text;
-      // Update the form in workOrderForms
-      await WorkOrderFormRepo.instance.updateWorkOrderForm(widget.formWOF.id!, widget.formWOF);
-    }
+      widget.formWOF.tarihWOF = DateTime.parse(_controllerTarihWOF.text);
+      widget.formWOF.turboNo = _controllerTurboNo.text;
+      widget.formWOF.yanindaGelenler = parseYanindaGelenlerForSave(_controllerYanindaGelenler.text);
+      widget.formWOF.aracBilgileri = _controllerAracBilgileri.text;
+      widget.formWOF.aracKm = int.tryParse(_controllerAracKm.text)!;
+      widget.formWOF.aracPlaka = _controllerAracPlaka.text;
+      widget.formWOF.musteriAdi = _controllerMusteriAdi.text;
+      widget.formWOF.musteriNumarasi = int.tryParse(_controllerMusteriNumarasi.text)!;
+      widget.formWOF.musteriSikayetleri = _controllerMusteriSikayetleri.text;
+      widget.formWOF.onTespit = _controllerOnTespit.text;
+      widget.formWOF.turboyuGetiren = _controllerTurboyuGetiren.text;
+      widget.formWOF.tasimaUcreti = double.tryParse(_controllerTasimaUcreti.text)!;
+      widget.formWOF.teslimAdresi = _controllerTeslimAdresi.text;
 
-    // Navigate to the next page or go back
-    // Logic to save changes to Firebase
-    Navigator.of(context).pop(); // Close the dialog
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => OutputWOFPage()));
+      if (_controllerKabulDurumu.text == "kabul edildi") {
+        final inProgressForm = InProgressFormModel(
+          tarihIPF: DateTime.now(),
+          turboNo: widget.formWOF.turboNo,
+          egeTurboNo: await getAndUpdateEgeTurboNo(),
+          tarihWOF: widget.formWOF.tarihWOF,
+          aracBilgileri: widget.formWOF.aracBilgileri,
+          aracKm: widget.formWOF.aracKm,
+          aracPlaka: widget.formWOF.aracPlaka,
+          musteriAdi: widget.formWOF.musteriAdi,
+          musteriNumarasi: widget.formWOF.musteriNumarasi,
+          musteriSikayetleri: widget.formWOF.musteriSikayetleri,
+          onTespit: widget.formWOF.onTespit,
+          turboyuGetiren: widget.formWOF.turboyuGetiren,
+          tasimaUcreti: widget.formWOF.tasimaUcreti,
+          teslimAdresi: widget.formWOF.teslimAdresi,
+          yanindaGelenler: widget.formWOF.yanindaGelenler,
+          flowPhotos: [],
+        );
+        final accountingForm = AccountingFormModel(
+          tarihIPF: inProgressForm.tarihIPF,
+          turboNo: widget.formWOF.turboNo,
+          egeTurboNo: inProgressForm.egeTurboNo,
+          tarihWOF: widget.formWOF.tarihWOF,
+          aracBilgileri: widget.formWOF.aracBilgileri,
+          aracKm: widget.formWOF.aracKm,
+          aracPlaka: widget.formWOF.aracPlaka,
+          musteriAdi: widget.formWOF.musteriAdi,
+          musteriNumarasi: widget.formWOF.musteriNumarasi,
+          musteriSikayetleri: widget.formWOF.musteriSikayetleri,
+          onTespit: widget.formWOF.onTespit,
+          turboyuGetiren: widget.formWOF.turboyuGetiren,
+          tasimaUcreti: widget.formWOF.tasimaUcreti,
+          teslimAdresi: widget.formWOF.teslimAdresi,
+          yanindaGelenler: widget.formWOF.yanindaGelenler,
+          kabulDurumu: _controllerKabulDurumu.text,
+        );
+        _accountingFormRepo.createAccountingForm(accountingForm);
+        _inProgressFormRepo.createInProgressForm(inProgressForm);
+        await WorkOrderFormRepo.instance.deleteWorkOrderForm(widget.formWOF.id!);
+      } else {
+        widget.formWOF.kabulDurumu = _controllerKabulDurumu.text;
+        await WorkOrderFormRepo.instance.updateWorkOrderForm(widget.formWOF.id!, widget.formWOF);
+      }
+
+      Navigator.of(context).pop();
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => OutputWOFPage()));
+    } catch (FormatException) {
+      if (_controllerTasimaUcreti.text.isEmpty || double.tryParse(_controllerTasimaUcreti.text) == null) {
+        Get.snackbar("Hata", "Tamir ücreti sayı olmalıdır.", backgroundColor: Colors.red);
+      } else if (_controllerMusteriNumarasi.text.isEmpty || int.tryParse(_controllerMusteriNumarasi.text) == null) {
+        Get.snackbar("Hata", "Lütfen geçerli bir müşteri numarası girin", backgroundColor: Colors.red);
+
+      } else if (_controllerAracKm.text.isEmpty || int.tryParse(_controllerAracKm.text) == null) {
+        Get.snackbar("Hata", "Araç kilometresi sayı olmalıdır.",
+            backgroundColor: Colors.red);
+      }else {
+        Get.snackbar("Hata", "Lütfen geçerli bir değer girin", backgroundColor: Colors.red);
+      }
+    }
   }
+
 
 
   @override
